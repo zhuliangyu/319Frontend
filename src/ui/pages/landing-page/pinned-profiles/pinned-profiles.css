@@ -1,0 +1,14 @@
+.pinned-profiles {
+  height: 400;
+  background-color: #26415C;
+  padding-left: 80px;
+  padding-right: 80px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.pinned-profiles-title {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 24px;
+}

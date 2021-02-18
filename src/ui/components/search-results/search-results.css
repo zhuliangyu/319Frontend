@@ -1,0 +1,15 @@
+.search-results-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  background-color: #F2F2F2;
+  min-height: 60vh;
+  height: 60vh;
+}
+
+.search-results-container {
+  width: 80%;
+  max-width: 1400px;
+  min-width: 1200px;
+}

@@ -1,22 +1,33 @@
-import logo from '../assets/logo.svg';
+import React from "react";
+import { Link, Route, Switch } from "react-router-dom";
+import LandingPage from "./pages/landing-page";
+import SearchPage from "./pages/search";
+import ProfilePage from "./pages/profile";
+import AdminPage from "./pages/admin";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Switch>
+        <Route exact path="/">
+          <LandingPage />
+        </Route>
+
+        {/*should be using async routing or hooks?: <Route path="/search/accounting?category=1"> */}
+        <Route path="/search">
+          <SearchPage />
+        </Route>
+
+        {/*should be using async routing or hooks?: <Route path="/profile/:id"> */}
+        <Route path="/profile">
+          <ProfilePage />
+        </Route>
+
+        <Route path="/admin">
+          <AdminPage />
+        </Route>
+
+      </Switch>
     </div>
   );
 }

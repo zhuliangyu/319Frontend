@@ -1,0 +1,14 @@
+.explore {
+  height: 400;
+  /* background-color: #F2F2F2; */
+  padding-left: 80px;
+  padding-right: 80px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.explore-title {
+  color: #26415C;
+  font-weight: 600;
+  font-size: 24px;
+}

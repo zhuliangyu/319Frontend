@@ -1,0 +1,1 @@
+export const FETCH_FILTERS = 'FETCH_FILTERS';
