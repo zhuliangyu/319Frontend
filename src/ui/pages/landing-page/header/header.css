@@ -1,0 +1,26 @@
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 140px;
+}
+
+.logo {
+  position: left;
+}
+
+.searchbar {
+  position: relative;
+}
+
+.nav {
+  position: relative;
+}
+
+.spacing {
+  width: 10%;
+}
+
+.iconButton {
+  padding: 10px;
+}

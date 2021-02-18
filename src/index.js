@@ -1,20 +1,24 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './css/index.css';
-import App from './ui/App';
-import reportWebVitals from './reportWebVitals';
-import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
-import reducers from './ui/redux';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./css/index.css";
+import App from "./ui/App";
+import reportWebVitals from "./reportWebVitals";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
+import reducers from "./ui/redux";
+import { ThemeProvider } from "@material-ui/core";
+import theme from './ui/MuiTheme';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={createStore(reducers, applyMiddleware(thunk))}>
-      <App />
-    </Provider>
+    <ThemeProvider theme={theme}>
+      <Provider store={createStore(reducers, applyMiddleware(thunk))}>
+        <App />
+      </Provider>
+    </ThemeProvider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function
