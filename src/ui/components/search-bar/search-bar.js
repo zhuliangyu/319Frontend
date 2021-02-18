@@ -11,7 +11,6 @@ import {
   InputAdornment,
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
-import FilterListIcon from "@material-ui/icons/FilterList";
 import { Autocomplete } from "@material-ui/lab";
 
 const dummy_data = [
@@ -24,14 +23,10 @@ const dummy_data = [
 ];
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: "2px 4px",
-    display: "flex",
-    alignItems: "center",
-  },
   autocomplete: {
     width: 500,
     display: "flex",
+    paddingRight: 0,
   },
   text_field: {
     width: "100%",
@@ -126,7 +121,7 @@ const SearchBar = (props) => {
 
                 // ),
                 endAdornment: (
-                  <InputAdornment position="end">
+                  <InputAdornment positionEnd>
                     <IconButton type="button" className={classes.iconButton}>
                       <SearchIcon color="primary" />
                     </IconButton>

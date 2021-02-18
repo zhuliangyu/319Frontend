@@ -9,6 +9,9 @@ import Subheader from "./sub-header";
 import { Link } from "react-router-dom";
 
 const Header = (props) => {
+  const location = window.location.pathname;
+  console.log(location === "/admin");
+
   return (
     <div className="header-wrapper">
       <div className="header-box">
@@ -36,11 +39,13 @@ const Header = (props) => {
         </div>
       </div>
 
-      <div className="header-under-box-wrapper">
-        <div className="header-under-box">
-          <Subheader />
+      {location === "/admin" ? null : (
+        <div className="header-under-box-wrapper">
+          <div className="header-under-box">
+            <Subheader />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

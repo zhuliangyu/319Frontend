@@ -24,7 +24,6 @@
 
 .logo {
   position: relative;
-  
 }
 
 .nav {
@@ -32,8 +31,8 @@
 }
 
 .spacing {
-  max-width: 15%;
-  width: 15%;
+  max-width: 10%;
+  width: 10%;
 }
 
 .header-under-box-wrapper {

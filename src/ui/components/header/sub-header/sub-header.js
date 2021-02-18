@@ -1,7 +1,8 @@
-import { ListSubheader } from '@material-ui/core';
 import React from 'react';
 
 const Subheader = (props) => {
+  const location = window.location.pathname;
+  console.log(location);
   return (
     <div>
       *need to dynamically change this*
