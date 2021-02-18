@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from './header';
+import Header from './landing-header';
 import PinnedProfiles from './pinned-profiles';
 import ResumeSearch from './resume-search';
 import ExploreAELocations from './explore-ae-locations';

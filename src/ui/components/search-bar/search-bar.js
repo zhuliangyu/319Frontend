@@ -137,9 +137,9 @@ const SearchBar = (props) => {
           </>
         )}
       />
-      <IconButton type="button" className={classes.iconButton}>
+      {/* <IconButton type="button" className={classes.iconButton}>
         <FilterListIcon color="primary" />
-      </IconButton>
+      </IconButton> */}
     </>
   );
 };
