@@ -34,10 +34,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
   text_field: {
-    marginLeft: theme.spacing(1),
+    width: "100%",
   },
   iconButton: {
-    padding: 10,
   },
   divider: {
     height: 28,
@@ -84,7 +83,7 @@ const SearchBar = (props) => {
   }, [open]);
 
   return (
-    <Paper component="form" className={classes.root}>
+    <>
       <Autocomplete
         className={classes.autocomplete}
         id="async-search"
@@ -118,27 +117,31 @@ const SearchBar = (props) => {
               className={classes.text_field}
               InputProps={{
                 ...params.InputProps,
+                // endAdornment: (
+                //   <>
+                //     {loading ? (
+                //       <CircularProgress color="inherit" size={20} />
+                //     ) : null}
+                //     {/* {params.InputProps.endAdornment} */}
+
+                // ),
                 endAdornment: (
                   <>
-                    {loading ? (
-                      <CircularProgress color="inherit" size={20} />
-                    ) : null}
-                    {/* {params.InputProps.endAdornment} */}
+                    <IconButton
+                      type="submit"
+                      className={classes.iconButton}
+                      aria-label="search"
+                    >
+                      <SearchIcon />
+                    </IconButton>
                   </>
                 ),
               }}
             />
-            <IconButton
-              type="submit"
-              className={classes.iconButton}
-              aria-label="search"
-            >
-              <SearchIcon />
-            </IconButton>
           </>
         )}
       />
-    </Paper>
+    </>
   );
 };
 
