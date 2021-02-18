@@ -1,10 +1,25 @@
-import LandingPage from './pages/landing-page/landing-page';
-// import SearchBar from './components/search-bar/SearchBar';
+import React from "react";
+import { Link, Route, Switch } from "react-router-dom";
+import LandingPage from "./pages/landing-page";
+import SearchPage from "./pages/search";
+import ProfilePage from "./pages/profile";
 
 function App() {
   return (
     <div className="App">
-      <LandingPage />
+      <Switch>
+        <Route exact path="/">
+          <LandingPage />
+        </Route>
+
+        <Route path="/search">
+          <SearchPage />
+        </Route>
+
+        <Route path="/profile/:id">
+          <ProfilePage />
+        </Route>
+      </Switch>
     </div>
   );
 }

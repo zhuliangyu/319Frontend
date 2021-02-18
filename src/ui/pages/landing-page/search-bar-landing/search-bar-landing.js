@@ -37,7 +37,8 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     backgroundColor: "#EEF3F8",
   },
-  iconButton: {},
+  iconButton: {
+  },
   divider: {
     height: 28,
     margin: 4,
@@ -127,7 +128,16 @@ const SearchBar = (props) => {
                 // ),
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton type="button" className={classes.iconButton}>
+                    <IconButton
+                      type="button"
+                      className={classes.iconButton}
+                    >
+                      <FilterListIcon color="primary" />
+                    </IconButton>
+                    <IconButton
+                      type="button"
+                      className={classes.iconButton}
+                    >
                       <SearchIcon color="primary" />
                     </IconButton>
                   </InputAdornment>
@@ -137,9 +147,6 @@ const SearchBar = (props) => {
           </>
         )}
       />
-      <IconButton type="button" className={classes.iconButton}>
-        <FilterListIcon color="primary" />
-      </IconButton>
     </>
   );
 };

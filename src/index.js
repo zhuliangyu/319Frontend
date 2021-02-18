@@ -8,13 +8,16 @@ import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import reducers from "./ui/redux";
 import { ThemeProvider } from "@material-ui/core";
-import theme from './ui/MuiTheme';
+import theme from "./ui/MuiTheme";
+import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <Provider store={createStore(reducers, applyMiddleware(thunk))}>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </Provider>
     </ThemeProvider>
   </React.StrictMode>,
