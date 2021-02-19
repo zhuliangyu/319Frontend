@@ -8,7 +8,7 @@ import filters from "../services/filters";
 
 function App() {
   useEffect(()=> {
-    filters.init();
+    // filters.init(); Disabled Temporarily
   }, [] );
 
   return (
