@@ -1,0 +1,17 @@
+/* *{
+  -ms-overflow-style: none;
+}
+::-webkit-scrollbar {
+  display: none;
+} */
+
+.subheader-wrapper {
+  display: flex;
+}
+
+.filter-chips {
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  max-width: 1000px;
+}
