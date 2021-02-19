@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     color: "#ffffff",
     margin: 4,
-    padding: 4, 
+    padding: 4,
   },
 }));
 
@@ -39,24 +39,28 @@ const Subheader = (props) => {
   return (
     <div>
       <div className="subheader-wrapper">
-        <Button className={classes.button}>
-          <img width="24" height="24" src={FilterIcon}></img>
-          <Typography className={classes.buttonText}>Filter</Typography>
-        </Button>
-        <Divider
-          className={classes.divider}
-          color="primary"
-          orientation="vertical"
-        />
-        <div className="filter-chips">
-          <Chip
-            color="secondary"
-            className={classes.chip}
-            size="small"
-            label="*dynamically generate label*"
-            onDelete={handleDelete}
-          />
-        </div>
+        {location.includes("search") ? (
+          <>
+            <Button className={classes.button}>
+              <img width="24" height="24" src={FilterIcon}></img>
+              <Typography className={classes.buttonText}>Filter</Typography>
+            </Button>
+            <Divider
+              className={classes.divider}
+              color="primary"
+              orientation="vertical"
+            />
+            <div className="filter-chips">
+              <Chip
+                color="secondary"
+                className={classes.chip}
+                size="small"
+                label="*dynamically generate label*"
+                onDelete={handleDelete}
+              />
+            </div>
+          </>
+        ) : null}
       </div>
     </div>
   );
