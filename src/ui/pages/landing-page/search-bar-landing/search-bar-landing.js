@@ -13,6 +13,7 @@ import {
 import SearchIcon from "@material-ui/icons/Search";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { Autocomplete } from "@material-ui/lab";
+import FilterIcon from "../../../../assets/filter-icon.svg";
 
 const dummy_data = [
   { value: "project management", filter_name: "skill" },
@@ -36,8 +37,6 @@ const useStyles = makeStyles((theme) => ({
   text_field: {
     width: "100%",
     backgroundColor: "#EEF3F8",
-  },
-  iconButton: {
   },
   divider: {
     height: 28,
@@ -128,16 +127,10 @@ const SearchBar = (props) => {
                 // ),
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton
-                      type="button"
-                      className={classes.iconButton}
-                    >
-                      <FilterListIcon color="primary" />
+                    <IconButton type="button" className={classes.iconButton}>
+                      <img width="24" height="24" src={FilterIcon}></img>
                     </IconButton>
-                    <IconButton
-                      type="button"
-                      className={classes.iconButton}
-                    >
+                    <IconButton type="button" className={classes.iconButton}>
                       <SearchIcon color="primary" />
                     </IconButton>
                   </InputAdornment>

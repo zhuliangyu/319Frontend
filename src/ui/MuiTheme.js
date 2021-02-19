@@ -22,6 +22,15 @@ const theme = createMuiTheme({
     primary: {
       main: '#26415C',
     },
+    secondary: {
+      main: '#A9D18E',
+      contrastText: '#fff',
+    }
+  },
+
+  chip: {
+    // deleteIconColor: 'white',
+    deleteIconColorSecondary: 'white',
   },
 
 });
