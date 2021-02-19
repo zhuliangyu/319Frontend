@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, Route, Switch } from "react-router-dom";
 import LandingPage from "./pages/landing-page";
 import SearchPage from "./pages/search";
 import ProfilePage from "./pages/profile";
 import AdminPage from "./pages/admin";
+import filters from "../services/filters";
 
 function App() {
+  useEffect(()=> {
+    filters.init();
+  }, [] );
+
   return (
     <div className="App">
       <Switch>
