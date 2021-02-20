@@ -1,6 +1,6 @@
 import React from "react";
 import logo from "../../../../assets/ae-logo.svg";
-import SearchBar from "../search-bar-landing";
+import SearchBar from "../../../components/search-bar";
 import SettingsIcon from "@material-ui/icons/Settings";
 import PersonIcon from "@material-ui/icons/Person";
 import { IconButton } from "@material-ui/core";
