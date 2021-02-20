@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 
 const Header = (props) => {
   const location = window.location.pathname;
-  console.log(location === "/admin");
+  // console.log(location === "/admin");
 
   return (
     <div className="header-wrapper">

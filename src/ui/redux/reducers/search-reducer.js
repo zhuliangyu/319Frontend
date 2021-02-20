@@ -1,7 +1,7 @@
 import * as actions from '../constants/action-types';
 
 const INITIAL_STATE = {
-  filters: []
+  searchResults: [],
 };
 
 const searchReducer = (state = INITIAL_STATE, action) => {
@@ -11,6 +11,11 @@ const searchReducer = (state = INITIAL_STATE, action) => {
         ...state,
         filters: action.payload.data
       };
+    case actions.PERFORM_SEARCH_SUCCESS:
+      return {
+        ...state,
+        searchResults: action.payload.results
+      }
     default:
       return state;
   }

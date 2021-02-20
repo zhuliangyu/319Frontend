@@ -15,14 +15,16 @@ import Autocomplete, {
   createFilterOptions,
 } from "@material-ui/lab/Autocomplete";
 import FilterIcon from "../../../assets/filter-icon.svg";
+import { connect } from "react-redux";
+import { performSearch } from "../../redux/actions/search-actions";
 
 // const dummy_data = [
-//   { value: "project management", filter_name: "skill" },
-//   { value: "vancouver", filter_name: "physical location" },
-//   { value: "sales", filter_name: "department" },
-//   { value: "ceo", filter_name: "title" },
-//   { value: "accounting", filter_name: "skill" },
-//   { value: "accounting", filter_name: "department" },
+//   { value: 'project management', filter_name: 'skill' },
+//   { value: 'vancouver', filter_name: 'physical location' },
+//   { value: 'sales', filter_name: 'department' },
+//   { value: 'ceo', filter_name: 'title' },
+//   { value: 'accounting', filter_name: 'skill' },
+//   { value: 'accounting', filter_name: 'department' },
 // ];
 
 const createUniqueOptions = createFilterOptions();
@@ -52,38 +54,39 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SearchBar = (props) => {
+  const location = window.location.pathname;
   const classes = useStyles();
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState(null);
   const [inputValue, setInputValue] = useState("");
 
   const handleOnChange = (event, newValue) => {
-    // console.log("newValue: ", newValue);
+    // console.log('newValue: ', newValue);
     // // setValue(newValue);
-    // console.log("event: ", event);
+    // console.log('event: ', event);
 
-    // if (typeof newValue === "string") {
-    //   console.log("handleOnChange newValue is string");
+    // if (typeof newValue === 'string') {
+    //   console.log('handleOnChange newValue is string');
     //   setValue({
     //     value: newValue,
     //   });
     // } else if (newValue && newValue.inputValue) {
-    //   console.log("handleOnChange newValue && newValue.inputValue");
+    //   console.log('handleOnChange newValue && newValue.inputValue');
     //   // Create a new value from the user input
     //   setValue({
     //     value: newValue.inputValue,
     //   });
     // } else {
-    //   console.log("handleOnChange else");
+    //   console.log('handleOnChange else');
     //   setValue(newValue);
     // }
     setValue(newValue);
 
-    console.log('handleOnChange newValue', newValue);
+    console.log("handleOnChange newValue", newValue);
   };
 
   const handleInputChange = (event, newInputValue) => {
-    // console.log("newInputValue: ", newInputValue);
+    // console.log('newInputValue: ', newInputValue);
     setInputValue(newInputValue);
   };
 
@@ -93,7 +96,7 @@ const SearchBar = (props) => {
       // console.log('getOptionLabel option is string');
       return option;
     }
-    // Add "xxx" option created dynamically
+    // Add 'xxx' option created dynamically
     if (option.inputValue) {
       // console.log('getOptionLabel is inputValue');
       return option.inputValue;
@@ -103,23 +106,49 @@ const SearchBar = (props) => {
     return option;
   };
 
+  const handleInitiateSearch = () => {
+    console.log("search button was clicked");
+    // console.log(value);
+    props.dispatch(performSearch(value));
+  };
+
+  const handleOpenFilterModal = () => {
+    console.log("filter button was clicked");
+  };
+
   const handleCreateNewOptions = (options, params) => {
     const filtered = createUniqueOptions(options, params);
 
     if (params.inputValue !== "") {
-      filtered.push({
-        inputValue: params.inputValue,
-        filter_name: "Name",
-      });
-      filtered.push({
-        inputValue: params.inputValue,
-        filter_name: "Phone Number",
-      });
-      filtered.push({
-        inputValue: params.inputValue,
-        filter_name: "Email",
-      });
+      if (params.inputValue.includes("@")) {
+        filtered.push({
+          inputValue: params.inputValue,
+          filter_name: "Email",
+        });
+      } else if (/^[0-9-()\-]+$/i.test(params.inputValue)) {
+        filtered.push(
+          {
+            inputValue: params.inputValue,
+            filter_name: "Work Cell",
+          },
+          {
+            inputValue: params.inputValue,
+            filter_name: "Work Phone",
+          }
+        );
+      } else {
+        filtered.push({
+          inputValue: params.inputValue,
+          filter_name: "Name",
+        });
+        filtered.push({
+          inputValue: params.inputValue,
+          filter_name: "Email",
+        });
+      }
     }
+
+    // console.log(filtered);
 
     return filtered;
   };
@@ -171,10 +200,20 @@ const SearchBar = (props) => {
                 endAdornment: (
                   <>
                     <InputAdornment position="end">
-                      <IconButton type="button" className={classes.iconButton}>
-                        <img width="24" height="24" src={FilterIcon}></img>
-                      </IconButton>
-                      <IconButton type="button" className={classes.iconButton}>
+                      {location.includes("search") ? null : (
+                        <IconButton
+                          type="button"
+                          className={classes.iconButton}
+                          onClick={handleOpenFilterModal}
+                        >
+                          <img width="24" height="24" src={FilterIcon}></img>
+                        </IconButton>
+                      )}
+                      <IconButton
+                        type="button"
+                        className={classes.iconButton}
+                        onClick={handleInitiateSearch}
+                      >
                         <SearchIcon color="primary" />
                       </IconButton>
                     </InputAdornment>
@@ -189,4 +228,10 @@ const SearchBar = (props) => {
   );
 };
 
-export default SearchBar;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    performSearch: (value) => dispatch(performSearch(value)),
+  };
+};
+
+export default connect(mapDispatchToProps)(SearchBar);
