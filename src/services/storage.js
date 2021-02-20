@@ -40,4 +40,15 @@ storage.db.clearTable = async(table) => {
 
 // Session Storage
 
+storage.ss.setFlag = (key) => {
+    sessionStorage.setItem(key, true);
+}
+
+storage.ss.getFlag = (key) => {
+    const res = sessionStorage.getItem(key);
+    return (res === 'true');
+}
+
+
+
 export default storage;

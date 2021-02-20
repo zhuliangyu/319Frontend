@@ -7,8 +7,12 @@ import AdminPage from "./pages/admin";
 import filters from "../services/filters";
 
 function App() {
-  useEffect(()=> {
-    // filters.init(); Disabled Temporarily
+  useEffect(async()=> {
+    filters.init();
+
+
+    /*const list = await filters.getFilterList();
+    console.table(list);*/
   }, [] );
 
   return (
