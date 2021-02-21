@@ -14,10 +14,10 @@ const SearchPage = () => {
   // const [loading, setLoading] = useState(true);
 
   useEffect(async () => {
-    console.log('running query string...');
+    // console.log('running query string...');
     postSearchResults(qs.parse(location.search))
       .then(res => {
-        console.log(res);
+        // console.log(res);
         setSearchResults(res);
       })
   }, []);

@@ -5,7 +5,7 @@ import ProfileCard from '../profile-card';
 const SearchResults = (props) => {
   let searchResults = props.data;
 
-  console.log(searchResults);
+  // console.log(searchResults);
 
   return (
     <div className='search-results-wrapper'>

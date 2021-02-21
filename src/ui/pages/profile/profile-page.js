@@ -6,9 +6,11 @@ import ReportingManagerField from "../../components/reporting-manager-field";
 import ProfileAccordion from "../../components/profile-accordion";
 import Footer from "../../components/footer/footer";
 // import "../page.css";
+import { useLocation } from 'react-router-dom';
 
-const ProfilePage = () => {
+const ProfilePage = (props) => {
   const heading_text = "Employee Profile";
+  const location = useLocation();
 
   return (
     <div>

@@ -4,7 +4,7 @@ const search = {};
 const util = {};
 
 export const postSearchResults = (queries) => {
-  console.log('search service queries? ', queries);
+  // console.log('search service queries? ', queries);
 
   // not accurate, need to get ALL values including those from filter?
 
@@ -20,14 +20,14 @@ export const postSearchResults = (queries) => {
         ? createBodyForNameSearch(inputValue)
         : createBodyNameForNumberOrEmail(filterName, inputValue);
 
-    console.log('performing search action...');
+    // console.log('performing search action...');
 
-    console.log(body);
+    // console.log(body);
 
     return axios.post('/api/search', body)
       .then((response) => {
         return response.data;
-        console.log(response);
+        // console.log(response);
       },
       (error) => {
         console.log(error);
