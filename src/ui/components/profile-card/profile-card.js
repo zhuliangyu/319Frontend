@@ -1,18 +1,16 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
 import {
   Avatar,
-  Box,
-  CardMedia,
-  Divider,
   Grid,
-  Icon,
   withStyles,
+  CardActionArea,
+  Typography,
+  CardContent,
+  Card
 } from "@material-ui/core";
 import profile from "../../../assets/profile.jpg";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -83,41 +81,53 @@ const SubheaderTypography = withStyles({
 
 const ProfileCard = (props) => {
   const classes = useStyles();
+  let history = useHistory();
+  let name = props.data.firstName + ' ' + props.data.lastName;
+  let title = props.data.title;
+  let groupCode = props.data.groupCode;
+  let officeCode = props.data.officeCode;
+
+  const handleCardOnClick = async () => {
+    history.push(`/profile/${props.data.employeeNumber}`);
+  };
+
   return (
     <Card className={classes.root}>
-      <Grid container spacing={0}>
-        <Grid
-          container
-          item
-          xs={4}
-          justify={"center"}
-          alignItems="center"
-          paddingright={0}
-          spacing={0}
-        >
-          <Avatar
-            alt={props.data.firstName}
-            src={profile}
-            className={classes.profilePic}
-            pr={0}
-          />
+      <CardActionArea onClick={handleCardOnClick}>
+        <Grid container spacing={0}>
+          <Grid
+            container
+            item
+            xs={4}
+            justify={"center"}
+            alignItems="center"
+            paddingright={0}
+            spacing={0}
+          >
+            <Avatar
+              alt={name}
+              src={profile}
+              className={classes.profilePic}
+              pr={0}
+            />
+          </Grid>
+          <Grid container item xs={8} justify={"flex-start"}>
+            <div className={classes.details}>
+              <CardContent padding={0}>
+                <HeaderTypography align={"left"}>
+                  {name}
+                </HeaderTypography>
+                <SubheaderTypography align={"left"}>
+                  {title}
+                </SubheaderTypography>
+                <ParagraphTypography align={"left"}>
+                  Group: {groupCode} & Office: {officeCode}
+                </ParagraphTypography>
+              </CardContent>
+            </div>
+          </Grid>
         </Grid>
-        <Grid container item xs={8} justify={"flex-start"}>
-          <div className={classes.details}>
-            <CardContent padding={0}>
-              <HeaderTypography align={"left"}>
-                {props.data.firstName} {props.data.lastName}
-              </HeaderTypography>
-              <SubheaderTypography align={"left"}>
-                {props.data.title}
-              </SubheaderTypography>
-              <ParagraphTypography align={"left"}>
-                Group {props.data.groupCode} - Office {props.data.officeCode}
-              </ParagraphTypography>
-            </CardContent>
-          </div>
-        </Grid>
-      </Grid>
+      </CardActionArea>
     </Card>
   );
 };

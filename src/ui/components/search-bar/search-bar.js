@@ -53,10 +53,10 @@ const SearchBar = (props) => {
   const [inputValue, setInputValue] = useState("");
   const [selectedFilters, setSelectedFilters] = useState([]);
 
-  useEffect(() => {
-    const currentPath = location.pathname;
-    const searchParams = new URLSearchParams(location.search);
-  }, [location]);
+  // useEffect(() => {
+  //   const currentPath = location.pathname;
+  //   const searchParams = new URLSearchParams(location.search);
+  // }, [location]);
 
   const handleOnChange = (event, newValue) => {
     setValue(newValue);
@@ -64,7 +64,7 @@ const SearchBar = (props) => {
     // TODO: not accurate. needs to set the value filter, not the whole array
     setSelectedFilters([newValue]);
 
-    console.log("handleOnChange newValue", newValue);
+    // console.log("handleOnChange newValue", newValue);
   };
 
   const handleInputChange = (event, newInputValue) => {
@@ -123,7 +123,7 @@ const SearchBar = (props) => {
       if (params.inputValue.includes("@")) {
         filtered.push({
           inputValue: params.inputValue,
-          filterName: "Email",
+          filter_name: "Email",
           queryId: "email",
         });
       } else if (/^[0-9-()\-]+$/i.test(params.inputValue)) {

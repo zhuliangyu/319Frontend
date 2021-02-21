@@ -7,9 +7,13 @@ import ProfileAccordion from "../../components/profile-accordion";
 import Footer from "../../components/footer/footer";
 import {getProfileResults} from "../../../services/profile";
 // import "../page.css";
+import { useLocation, useParams } from 'react-router-dom';
 
-const ProfilePage = () => {
+const ProfilePage = (props) => {
   const heading_text = "Employee Profile";
+  const location = useLocation();
+  let { id } = useParams(); // dynamic part of url, in this case, employeeNumber
+  console.log(id);
 
   const [profileResults, setProfileResults] = useState([]);
 

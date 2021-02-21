@@ -26,9 +26,8 @@ function App() {
           <SearchPage />
         </Route>
 
-        {/*should be using async routing or hooks?: <Route path='/profile/:id'> */}
-        <Route path='/profile'>
-          <ProfilePage />
+        <Route path='/profile/:id' children={<ProfilePage />}>
+          {/* <ProfilePage /> */}
         </Route>
 
         <Route path='/admin'>
