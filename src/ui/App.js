@@ -26,8 +26,7 @@ function App() {
           <SearchPage />
         </Route>
 
-        {/*should be using async routing or hooks?: <Route path='/profile/:id'> */}
-        <Route path='/profile'>
+        <Route path='/profile/:employeeNumber'>
           <ProfilePage />
         </Route>
 
