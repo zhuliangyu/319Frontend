@@ -1,14 +1,12 @@
-import React from "react";
-import {Box, Grid, withStyles} from "@material-ui/core";
+import React, {useEffect, useState} from "react";
+import {withStyles} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
-import EmployeeCard from '../profile-card/profile-card';
-import CardContent from "@material-ui/core/CardContent";
+import ProfileCard from '../profile-card/profile-card';
+import {getProfileResults} from "../../../services/profile";
 
 const useStyles = makeStyles((theme) => ({
     reportingManagerBox: {
-        // display: 'flex',
-        height: 200,
     },
     header: {
         color: "#26415C",
@@ -42,21 +40,30 @@ const HeaderTypography = withStyles({
     }
 })(Typography);
 
-const ReportingManagerField = ({bannerName}) => {
+const ReportingManagerField = (props) => {
     const classes = useStyles();
 
+    const [profileResults, setProfileResults] = useState([]);
+
+    useEffect(async () => {
+        console.log("RUNNING useEFFECT IN ReportingManagerField");
+        getProfileResults(2).then(res => {
+            console.log(res);
+            setProfileResults(res)
+        })
+
+    }, [])
 
 
     return (
-        <Box className={classes.reportingManagerBox} >
+        <div className={classes.reportingManagerBox} >
             <div className={classes.title}>
                 <HeaderTypography align={"left"} >Reporting Managers</HeaderTypography>
             </div>
             <div className={classes.content}>
-                <EmployeeCard name={"First Last"} designation={"Designation"} officeLocation={"Location"} group={"Group"} />
-                <EmployeeCard name={"First Last"} designation={"Designation"} officeLocation={"Location"} group={"Group"} />
+                <ProfileCard data={profileResults}  />
             </div>
-        </Box>
+        </div>
     );
 }
 

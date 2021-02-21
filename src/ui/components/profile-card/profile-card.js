@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     display: "inline-block",
     width: 280,
     marginRight: 16,
-    marginBottom: 10
+    marginBottom: 10,
   },
   details: {
     display: "flex",
@@ -81,7 +81,7 @@ const SubheaderTypography = withStyles({
   },
 })(Typography);
 
-const ProfileCard = (props, { name, designation, group, officeLocation }) => {
+const ProfileCard = (props) => {
   const classes = useStyles();
   return (
     <Card className={classes.root}>
@@ -96,7 +96,7 @@ const ProfileCard = (props, { name, designation, group, officeLocation }) => {
           spacing={0}
         >
           <Avatar
-            alt={name}
+            alt={props.data.firstName}
             src={profile}
             className={classes.profilePic}
             pr={0}
@@ -112,7 +112,7 @@ const ProfileCard = (props, { name, designation, group, officeLocation }) => {
                 {props.data.title}
               </SubheaderTypography>
               <ParagraphTypography align={"left"}>
-                Group: {props.data.groupCode} & Office: {props.data.officeCode}
+                Group {props.data.groupCode} - Office {props.data.officeCode}
               </ParagraphTypography>
             </CardContent>
           </div>

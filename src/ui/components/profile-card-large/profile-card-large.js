@@ -110,7 +110,7 @@ const IconTypography = withStyles({
     }
 })(Typography);
 
-const ProfileCardLarge = ({name, designation, group, officeLocation, description, phone, email, hours, employeeStatus}) => {
+const ProfileCardLarge = (props) => {
     const classes = useStyles();
     return (
         <Box mt={3} mb={3}>
@@ -118,39 +118,40 @@ const ProfileCardLarge = ({name, designation, group, officeLocation, description
                 <Grid container spacing={0}>
                     <Grid container item xs={2} justify={"center"} alignItems="center" paddingRight={0}>
                         <div className={classes.profileDiv}>
-                            <Avatar alt={name} src={profile} className={classes.profilePic} pr={0}/>
+                            <Avatar alt={props.data.firstName} src={profile} className={classes.profilePic} pr={0}/>
                         </div>
                     </Grid>
                     <Grid container item xs={5} justify={"flex-start"}>
                         <div className={classes.details}>
                             <CardContent>
-                                <HeaderTypography align={"left"}>{name}</HeaderTypography>
-                                <SubheaderTypography align={"left"}>{designation}</SubheaderTypography>
-                                <SubheaderTypography align={"left"}>{group} & {officeLocation}</SubheaderTypography>
-                                <ParagraphTypography align={"left"}> {description}</ParagraphTypography>
+                                <HeaderTypography align={"left"}>{props.data.firstName} {props.data.lastName}</HeaderTypography>
+                                <SubheaderTypography align={"left"}>{props.data.title}</SubheaderTypography>
+                                <SubheaderTypography align={"left"}>Group {props.data.groupCode} - Office {props.data.officeCode}</SubheaderTypography>
+                                <ParagraphTypography align={"left"}>{"My 3 line description is Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eros libero, dignissim in lacus nec, tempor luctus mauris."}</ParagraphTypography>
+                                {/*<ParagraphTypography align={"left"}> {props.data.description}</ParagraphTypography>*/}
                             </CardContent>
                         </div>
                     </Grid>
                     <Grid container item xs={5} >
                         <div className={classes.cardContent}>
-                            <div className={classes.outerBox} direction={"row"} alignItems={"center"}>
-                                <div className={classes.content} direction="row" alignItems={"center"}>
+                            <div className={classes.outerBox}>
+                                <div className={classes.content}>
                                     <PhoneIcon className={classes.icon} align={"left"}/>
-                                    <IconTypography align={"left"}> {phone} </IconTypography> <br/>
+                                    <IconTypography align={"left"}> {props.data.workCell} </IconTypography> <br/>
                                 </div>
-                                <div className={classes.content} direction="row" alignItems={"center"}>
+                                <div className={classes.content}>
                                     <EmailIcon className={classes.icon} align={"left"}/>
-                                    <IconTypography align={"left"}> {email} </IconTypography><br/>
+                                    <IconTypography align={"left"}> {props.data.email} </IconTypography><br/>
                                 </div>
-                                <div className={classes.content} direction="row" alignItems={"center"}>
+                                <div className={classes.content}>
                                     <TodayIcon className={classes.icon} align={"left"}/>
-                                    <IconTypography align={"left"}> {hours} </IconTypography><br/>
+                                    <IconTypography align={"left"}> {props.data.hireDate} </IconTypography><br/>
                                 </div>
-                                <div className={classes.content} direction="row" alignItems={"center"}>
+                                <div className={classes.content}>
                                     <WorkIcon className={classes.icon} align={"left"}/>
-                                    <IconTypography align={"left"}> {employeeStatus} </IconTypography><br/>
+                                    <IconTypography align={"left"}> {props.data.employmentType} </IconTypography><br/>
                                 </div>
-                                <div className={classes.orgChartLink} direction="row" alignItems={"center"} float={'right'}>
+                                <div className={classes.orgChartLink}>
                                     <Link
                                         component="button"
                                         variant="body2"
