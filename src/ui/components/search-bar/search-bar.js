@@ -51,7 +51,6 @@ const SearchBar = (props) => {
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState(null);
   const [inputValue, setInputValue] = useState("");
-  const [queriesJson, setQueriesJson] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState([]);
 
   useEffect(() => {
@@ -110,7 +109,6 @@ const SearchBar = (props) => {
         [selectedFilters[i].queryId]: selectedFilters[i].inputValue,
       };
     }
-    setQueriesJson(queries);
     return queries;
   }
 
