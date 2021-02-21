@@ -20,7 +20,7 @@ const ProfilePage = (props) => {
   useEffect(async () => {
       console.log("RUNNING useEFFECT IN ProfilePage");
       //todo: employeeID is hardCoded here - is should be given to the page when directed!
-      getProfileResults(4).then(res => {
+      getProfileResults(id).then(res => {
           console.log(res);
           setProfileResults(res)
       })
