@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
-import { Link, Route, Switch } from "react-router-dom";
-import LandingPage from "./pages/landing-page";
-import SearchPage from "./pages/search";
-import ProfilePage from "./pages/profile";
-import AdminPage from "./pages/admin";
-import filters from "../services/filters";
+import React, { useEffect } from 'react';
+import { Link, Route, Switch } from 'react-router-dom';
+import LandingPage from './pages/landing-page';
+import SearchPage from './pages/search';
+import ProfilePage from './pages/profile';
+import AdminPage from './pages/admin';
+import filters from '../services/filters';
 
 function App() {
   useEffect(async()=> {
@@ -16,23 +16,22 @@ function App() {
   }, [] );
 
   return (
-    <div className="App">
+    <div className='App'>
       <Switch>
-        <Route exact path="/">
+        <Route exact path='/'>
           <LandingPage />
         </Route>
 
-        {/*should be using async routing or hooks?: <Route path="/search/accounting?category=1"> */}
-        <Route path="/search">
+        <Route path='/search'>
           <SearchPage />
         </Route>
 
-        {/*should be using async routing or hooks?: <Route path="/profile/:id"> */}
-        <Route path="/profile">
+        {/*should be using async routing or hooks?: <Route path='/profile/:id'> */}
+        <Route path='/profile'>
           <ProfilePage />
         </Route>
 
-        <Route path="/admin">
+        <Route path='/admin'>
           <AdminPage />
         </Route>
 

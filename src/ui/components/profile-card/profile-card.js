@@ -80,7 +80,7 @@ const ProfileCard = ({name, designation, group, officeLocation}) => {
     return (
         <Card className={classes.root}>
             <Grid container spacing={0}>
-                <Grid container item xs={4} justify={"center"} alignItems="center" paddingRight={0} spacing={0}>
+                <Grid container item xs={4} justify={"center"} alignItems="center" paddingright={0} spacing={0}>
                     <Avatar alt={name} src={profile} className={classes.profilePic} pr={0}/>
                 </Grid>
                 <Grid container item xs={8} justify={"flex-start"}>

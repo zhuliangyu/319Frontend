@@ -1,9 +1,7 @@
 import { React, useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
-  Paper,
   IconButton,
-  CircularProgress,
   TextField,
   Card,
   CardContent,
@@ -17,15 +15,8 @@ import Autocomplete, {
 import FilterIcon from "../../../assets/filter-icon.svg";
 import { connect } from "react-redux";
 import { performSearch } from "../../redux/actions/search-actions";
-
-// const dummy_data = [
-//   { value: 'project management', filter_name: 'skill' },
-//   { value: 'vancouver', filter_name: 'physical location' },
-//   { value: 'sales', filter_name: 'department' },
-//   { value: 'ceo', filter_name: 'title' },
-//   { value: 'accounting', filter_name: 'skill' },
-//   { value: 'accounting', filter_name: 'department' },
-// ];
+import { useHistory, useLocation } from "react-router-dom";
+import * as qs from "query-string";
 
 const createUniqueOptions = createFilterOptions();
 
@@ -54,33 +45,25 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SearchBar = (props) => {
-  const location = window.location.pathname;
+  const location = useLocation();
+  let history = useHistory();
   const classes = useStyles();
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState(null);
   const [inputValue, setInputValue] = useState("");
+  const [queriesJson, setQueriesJson] = useState(null);
+  const [selectedFilters, setSelectedFilters] = useState([]);
+
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const searchParams = new URLSearchParams(location.search);
+  }, [location]);
 
   const handleOnChange = (event, newValue) => {
-    // console.log('newValue: ', newValue);
-    // // setValue(newValue);
-    // console.log('event: ', event);
-
-    // if (typeof newValue === 'string') {
-    //   console.log('handleOnChange newValue is string');
-    //   setValue({
-    //     value: newValue,
-    //   });
-    // } else if (newValue && newValue.inputValue) {
-    //   console.log('handleOnChange newValue && newValue.inputValue');
-    //   // Create a new value from the user input
-    //   setValue({
-    //     value: newValue.inputValue,
-    //   });
-    // } else {
-    //   console.log('handleOnChange else');
-    //   setValue(newValue);
-    // }
     setValue(newValue);
+
+    // TODO: not accurate. needs to set the value filter, not the whole array
+    setSelectedFilters([newValue]);
 
     console.log("handleOnChange newValue", newValue);
   };
@@ -106,11 +89,30 @@ const SearchBar = (props) => {
     return option;
   };
 
-  const handleInitiateSearch = () => {
+  const handleInitiateSearch = async () => {
     console.log("search button was clicked");
     // console.log(value);
-    props.dispatch(performSearch(value));
+    let queries = await makeQueries();
+
+    const stringified = await qs.stringify(queries);
+
+    history.push(`/search?${stringified}`);
+
+    // props.dispatch(performSearch(value));
   };
+
+  const makeQueries = async () => {
+    let queries;
+
+    for (let i = 0; i < selectedFilters.length; i++) {
+      queries = {
+        ...queries,
+        [selectedFilters[i].queryId]: selectedFilters[i].inputValue,
+      };
+    }
+    setQueriesJson(queries);
+    return queries;
+  }
 
   const handleOpenFilterModal = () => {
     console.log("filter button was clicked");
@@ -123,27 +125,32 @@ const SearchBar = (props) => {
       if (params.inputValue.includes("@")) {
         filtered.push({
           inputValue: params.inputValue,
-          filter_name: "Email",
+          filterName: "Email",
+          queryId: "email",
         });
       } else if (/^[0-9-()\-]+$/i.test(params.inputValue)) {
         filtered.push(
           {
             inputValue: params.inputValue,
             filter_name: "Work Cell",
+            queryId: "workCell",
           },
           {
             inputValue: params.inputValue,
             filter_name: "Work Phone",
+            queryId: "workPhone",
           }
         );
       } else {
         filtered.push({
           inputValue: params.inputValue,
           filter_name: "Name",
+          queryId: "name",
         });
         filtered.push({
           inputValue: params.inputValue,
           filter_name: "Email",
+          queryId: "email",
         });
       }
     }
@@ -200,7 +207,7 @@ const SearchBar = (props) => {
                 endAdornment: (
                   <>
                     <InputAdornment position="end">
-                      {location.includes("search") ? null : (
+                      {location.pathname.includes("search") ? null : (
                         <IconButton
                           type="button"
                           className={classes.iconButton}

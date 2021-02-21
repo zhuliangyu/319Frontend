@@ -19,18 +19,25 @@ export const performSearchFailure = (error) => ({
 export const performSearch = (value) => (dispatch) => {
   console.log(value);
 
-  let body = value.filter_name == 'Name' ? createBodyForNameSearch(value) :  createBodyNameForNumberOrEmail(value);
+  if (value == null) {
+    dispatch(performSearchFailure);
+  } else {
+    let body =
+      value.filter_name == "Name"
+        ? createBodyForNameSearch(value)
+        : createBodyNameForNumberOrEmail(value);
 
-  console.log("performing search action...");
-  axios.post("/api/search", body).then(
-    (response) => {
-      console.log(response);
-      dispatch(performSearchSuccess);
-    },
-    (error) => {
-      console.log(error);
-    }
-  );
+    console.log("performing search action...");
+    axios.post("/api/search", body).then(
+      (response) => {
+        console.log(response);
+        dispatch(performSearchSuccess);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
 };
 
 const determineFilterString = (value) => {
@@ -48,37 +55,39 @@ const determineFilterString = (value) => {
 
 const createBodyForNameSearch = (value) => {
   let body = {};
-  if (value.inputValue.includes(' ')) {
-    let firstName = value.inputValue.substring(0, value.inputValue.indexOf(' '));
-    let lastName = value.inputValue.substring(value.inputValue.indexOf(' ') + 1);
-    let firstNameObj = 
-    {
+  if (value.inputValue.includes(" ")) {
+    let firstName = value.inputValue.substring(
+      0,
+      value.inputValue.indexOf(" ")
+    );
+    let lastName = value.inputValue.substring(
+      value.inputValue.indexOf(" ") + 1
+    );
+    let firstNameObj = {
       FirstName: {
         type: "AND",
         values: [firstName],
       },
     };
-    let lastNameObj = 
-    {
+    let lastNameObj = {
       LastName: {
         type: "AND",
         values: [lastName],
       },
     };
-    body = {firstNameObj, lastNameObj};
+    body = { firstNameObj, lastNameObj };
   } else {
-    let nameObj = 
-    {
+    let nameObj = {
       Name: {
         type: "AND",
         values: [value.inputValue],
       },
     };
-    body = {nameObj};
+    body = { nameObj };
   }
-  
+
   return body;
-}
+};
 
 const createBodyNameForNumberOrEmail = (value) => {
   let keyword_filter = determineFilterString(value);
@@ -94,5 +103,4 @@ const createBodyNameForNumberOrEmail = (value) => {
   } else if (keyword_filter == "Email") {
     body[keyword_filter].values.push(value.inputValue);
   }
-
-}
+};
