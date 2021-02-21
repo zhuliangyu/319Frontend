@@ -14,10 +14,6 @@ const ProfilePage = (props) => {
   let { id } = useParams(); // dynamic part of url, in this case, employeeNumber
   console.log(id);
 
-  useEffect(() => {
-    console.log(location);
-  }, []);
-
   return (
     <div>
       <PageHeader />
