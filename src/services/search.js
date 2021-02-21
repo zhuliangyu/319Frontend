@@ -1,10 +1,10 @@
-import axios from 'axios';
+import axios from "axios";
 
 const search = {};
 const util = {};
 
 export const postSearchResults = (queries) => {
-  // console.log('search service queries? ', queries);
+  console.log("search service queries? ", queries);
 
   // not accurate, need to get ALL values including those from filter?
 
@@ -13,10 +13,10 @@ export const postSearchResults = (queries) => {
   const inputValue = value[filterName];
 
   if (value == null) {
-    console.log('error: value is null');
+    console.log("error: value is null");
   } else {
     let body =
-      filterName === 'name'
+      filterName === "name"
         ? createBodyForNameSearch(inputValue)
         : createBodyNameForNumberOrEmail(filterName, inputValue);
 
@@ -24,8 +24,8 @@ export const postSearchResults = (queries) => {
 
     console.log(body);
 
-    return axios.post('/api/search', body)
-      .then((response) => {
+    return axios.post("/api/search", body).then(
+      (response) => {
         return response.data;
         // console.log(response);
       },
@@ -39,26 +39,19 @@ export const postSearchResults = (queries) => {
 const createBodyForNameSearch = (inputValue) => {
   let body = {};
   if (inputValue.includes(" ")) {
-    let firstName = inputValue.substring(
-      0,
-      inputValue.indexOf(" ")
-    );
-    let lastName = inputValue.substring(
-      inputValue.indexOf(" ") + 1
-    );
-    let firstNameObj = {
+    let firstName = inputValue.substring(0, inputValue.indexOf(" "));
+    let lastName = inputValue.substring(inputValue.indexOf(" ") + 1);
+    let firstAndLastNameObj = {
       FirstName: {
         type: "AND",
         values: [firstName],
       },
-    };
-    let lastNameObj = {
       LastName: {
         type: "AND",
         values: [lastName],
       },
     };
-    body = { firstNameObj, lastNameObj };
+    body = firstAndLastNameObj;
   } else {
     let nameObj = {
       Name: {
