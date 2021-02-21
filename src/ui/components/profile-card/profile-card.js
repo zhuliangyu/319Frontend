@@ -16,10 +16,10 @@ import profile from "../../../assets/profile.jpg";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
-    height: 110,
+    display: "inline-block",
     width: 280,
     marginRight: 16,
+    marginBottom: 10
   },
   details: {
     display: "flex",
