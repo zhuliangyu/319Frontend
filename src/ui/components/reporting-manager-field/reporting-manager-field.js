@@ -53,8 +53,8 @@ const ReportingManagerField = ({bannerName}) => {
                 <HeaderTypography align={"left"} >Reporting Managers</HeaderTypography>
             </div>
             <div className={classes.content}>
-                <EmployeeCard name={"First Last"} designation={"Designation"} officeLocation={"Location"} group={"Group"} />
-                <EmployeeCard name={"First Last"} designation={"Designation"} officeLocation={"Location"} group={"Group"} />
+                {/* <EmployeeCard name={"First Last"} designation={"Designation"} officeLocation={"Location"} group={"Group"} />
+                <EmployeeCard name={"First Last"} designation={"Designation"} officeLocation={"Location"} group={"Group"} /> */}
             </div>
         </Box>
     );

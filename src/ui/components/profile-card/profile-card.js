@@ -2,11 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Avatar,
-  Box,
-  CardMedia,
-  Divider,
   Grid,
-  Icon,
   withStyles,
   CardActionArea,
   Typography,
@@ -14,7 +10,7 @@ import {
   Card
 } from "@material-ui/core";
 import profile from "../../../assets/profile.jpg";
-import { useHistory, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -83,17 +79,20 @@ const SubheaderTypography = withStyles({
   },
 })(Typography);
 
-const ProfileCard = (props, { name, designation, group, officeLocation }) => {
+const ProfileCard = (props) => {
   const classes = useStyles();
   let history = useHistory();
+  let name = props.data.firstName + ' ' + props.data.lastName;
+  let title = props.data.title;
+  let groupCode = props.data.groupCode;
+  let officeCode = props.data.officeCode;
 
-  const handleCardOnClick = () => {
-    const profilePath = `/profile/${props.data.employeeNumber}`;
-    history.push(profilePath);
+  const handleCardOnClick = async () => {
+    history.push(`/profile/${props.data.employeeNumber}`);
   };
 
   return (
-    <Card  className={classes.root}>
+    <Card className={classes.root}>
       <CardActionArea onClick={handleCardOnClick}>
         <Grid container spacing={0}>
           <Grid
@@ -116,14 +115,13 @@ const ProfileCard = (props, { name, designation, group, officeLocation }) => {
             <div className={classes.details}>
               <CardContent padding={0}>
                 <HeaderTypography align={"left"}>
-                  {props.data.firstName} {props.data.lastName}
+                  {name}
                 </HeaderTypography>
                 <SubheaderTypography align={"left"}>
-                  {props.data.title}
+                  {title}
                 </SubheaderTypography>
                 <ParagraphTypography align={"left"}>
-                  Group: {props.data.groupCode} & Office:{" "}
-                  {props.data.officeCode}
+                  Group: {groupCode} & Office: {officeCode}
                 </ParagraphTypography>
               </CardContent>
             </div>

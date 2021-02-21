@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PageHeader from "../../components/header";
 import PageTitle from "../../components/page-title-banner";
 import ProfileCardLarge from "../../components/profile-card-large";
@@ -6,11 +6,17 @@ import ReportingManagerField from "../../components/reporting-manager-field";
 import ProfileAccordion from "../../components/profile-accordion";
 import Footer from "../../components/footer/footer";
 // import "../page.css";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 const ProfilePage = (props) => {
   const heading_text = "Employee Profile";
   const location = useLocation();
+  let { id } = useParams(); // dynamic part of url, in this case, employeeNumber
+  console.log(id);
+
+  useEffect(() => {
+    console.log(location);
+  }, []);
 
   return (
     <div>

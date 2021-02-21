@@ -16,7 +16,7 @@ export const postSearchResults = (queries) => {
     console.log('error: value is null');
   } else {
     let body =
-      filterName == 'name'
+      filterName === 'name'
         ? createBodyForNameSearch(inputValue)
         : createBodyNameForNumberOrEmail(filterName, inputValue);
 

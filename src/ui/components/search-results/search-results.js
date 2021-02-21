@@ -16,7 +16,8 @@ const SearchResults = (props) => {
           <ProfileCard key={searchResults.indexOf(result)} data={result} />)
         ) : 
         (
-          <div style={{ paddingLeft: 20 }}>No results found</div>
+          // <div style={{ paddingLeft: 20 }}>No results found</div>
+          null
         )
         }
       </div>

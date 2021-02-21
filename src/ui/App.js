@@ -26,8 +26,8 @@ function App() {
           <SearchPage />
         </Route>
 
-        <Route path='/profile/:employeeNumber'>
-          <ProfilePage />
+        <Route path='/profile/:id' children={<ProfilePage />}>
+          {/* <ProfilePage /> */}
         </Route>
 
         <Route path='/admin'>
