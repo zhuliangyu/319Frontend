@@ -20,7 +20,7 @@ const SearchPage = () => {
         // console.log(res);
         setSearchResults(res);
       })
-  });
+  }, []);
 
   return (
     <div>

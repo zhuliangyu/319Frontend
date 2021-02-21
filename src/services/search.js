@@ -22,7 +22,7 @@ export const postSearchResults = (queries) => {
 
     // console.log('performing search action...');
 
-    // console.log(body);
+    console.log(body);
 
     return axios.post('/api/search', body)
       .then((response) => {
