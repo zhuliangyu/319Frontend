@@ -10,7 +10,7 @@ const SearchPage = () => {
   const heading_text = 'Search Results';
   const location = useLocation();
   // const [queries, setQueries] = useState([]);
-  const [searchResults, setSearchResults] = useState(null);
+  const [searchResults, setSearchResults] = useState([]);
   // const [loading, setLoading] = useState(true);
 
   useEffect(async () => {

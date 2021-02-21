@@ -10,9 +10,15 @@ const SearchResults = (props) => {
   return (
     <div className='search-results-wrapper'>
       <div className='search-results-container'>
-        {searchResults.map(result => 
-          <ProfileCard key={searchResults.indexOf(result)} data={result} />
-        )}
+        {searchResults.length !== 0 ? 
+        (
+          searchResults.map(result => 
+          <ProfileCard key={searchResults.indexOf(result)} data={result} />)
+        ) : 
+        (
+          <div style={{ paddingLeft: 20 }}>No results found</div>
+        )
+        }
       </div>
     </div>
   );
