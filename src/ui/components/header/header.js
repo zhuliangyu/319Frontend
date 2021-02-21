@@ -21,13 +21,9 @@ const Header = (props) => {
           </Link>
         </div>
 
-        <div className="spacing"></div>
-
         <div className="searchbar">
           <SearchBar />
         </div>
-
-        <div className="spacing"></div>
 
         <div className="nav">
           <IconButton type="button" className="iconButton">
