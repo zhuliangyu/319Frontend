@@ -2,14 +2,44 @@ import React, {useEffect, useState} from "react";
 import PageHeader from "../../components/header";
 import PageTitle from "../../components/page-title-banner";
 import ProfileCardLarge from "../../components/profile-card-large";
-import ReportingManagerField from "../../components/reporting-manager-field";
 import ProfileAccordion from "../../components/profile-accordion";
 import Footer from "../../components/footer/footer";
 import {getProfileResults} from "../../../services/profile";
 // import "../page.css";
 import { useLocation, useParams } from 'react-router-dom';
+import ProfileCard from "../../components/profile-card";
+import {withStyles} from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
+import {makeStyles} from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+    reportingManagerBox: {
+    },
+    header: {
+        color: "#26415C",
+        fontWeight: 600,
+        fontSize: 30,
+        fontFamily: 'Poppins',
+        flexDirection: 'row',
+    },
+    title: {
+        padding: 16,
+    }, content: {
+        display: 'flex'
+    }
+}))
+
+const HeaderTypography = withStyles({
+    root: {
+        color: "#26415C",
+        fontWeight: 600,
+        fontSize: 30,
+        fontFamily: 'Poppins',
+    }
+})(Typography);
 
 const ProfilePage = (props) => {
+    const classes = useStyles();
   const heading_text = "Employee Profile";
   const location = useLocation();
   let { id } = useParams(); // dynamic part of url, in this case, employeeNumber
@@ -27,7 +57,7 @@ const ProfilePage = (props) => {
 
   }, [])
 
-
+  //todo: update ProfileCard data to have supervisor's results (currently only has profile results)
   return (
     <div>
       <PageHeader />
@@ -37,7 +67,15 @@ const ProfilePage = (props) => {
             <ProfileCardLarge
                 data={profileResults}
             />
-            <ReportingManagerField />
+            <div className={classes.reportingManagerBox} >
+                <div className={classes.title}>
+                    <HeaderTypography align={"left"} >Reporting Managers</HeaderTypography>
+                </div>
+                <div className={classes.content}>
+
+                    <ProfileCard data={profileResults}  />
+                </div>
+            </div>
             <ProfileAccordion
                 title={"Skills"}
                 description={"Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar diam eros in elit. Pellentesque convallis laoreet laoreet."}/>
