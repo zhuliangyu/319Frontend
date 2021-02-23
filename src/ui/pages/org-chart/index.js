@@ -1,1 +1,1 @@
-export { default } from './org-chart';
+export { default } from './org-chart-page';

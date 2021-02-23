@@ -5,6 +5,7 @@ import SearchPage from './pages/search';
 import ProfilePage from './pages/profile';
 import AdminPage from './pages/admin';
 import filters from '../services/filters';
+import OrgChartPage from "./pages/org-chart";
 
 function App() {
   useEffect(async()=> {
@@ -32,6 +33,10 @@ function App() {
 
         <Route path='/admin'>
           <AdminPage />
+        </Route>
+
+        <Route path='/orgchart/:id' children={<OrgChartPage />}>
+          {/* <OrgChartPage /> */}
         </Route>
 
       </Switch>
