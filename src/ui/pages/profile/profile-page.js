@@ -48,6 +48,7 @@ const ProfilePage = (props) => {
 
   const [profileResults, setProfileResults] = useState([]);
   const [skills, setSkills] = useState([]);
+  const [supervisorResults, setSupervisorResults] = useState([]);
 
   useEffect(async () => {
       console.log("RUNNING useEFFECT IN ProfilePage");
@@ -56,6 +57,7 @@ const ProfilePage = (props) => {
           console.log(res);
           setProfileResults(res)
           setSkills(res.skills)
+          setSupervisorResults(res.supervisor)
       })
 
   }, [])
@@ -76,7 +78,7 @@ const ProfilePage = (props) => {
                 </div>
                 <div className={classes.content}>
 
-                    <ProfileCard data={profileResults}  />
+                    <ProfileCard data={supervisorResults}  />
                 </div>
             </div>
             <SkillsAccordion data={skills}/>
