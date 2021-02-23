@@ -41,7 +41,7 @@ const Subheader = (props) => {
       <div className="subheader-wrapper">
         {location.includes("search") ? (
           <>
-            <Button className={classes.button}>
+            <Button className={classes.button} id="filter_open_button">
               <img width="24" height="24" src={FilterIcon}></img>
               <Typography className={classes.buttonText}>Filter</Typography>
             </Button>
