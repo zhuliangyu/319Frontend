@@ -89,6 +89,7 @@ const ProfileCard = (props) => {
 
   const handleCardOnClick = async () => {
     history.push(`/profile/${props.data.employeeNumber}`);
+    window.location.reload();
   };
 
   return (

@@ -54,15 +54,17 @@ const ProfilePage = (props) => {
       console.log("RUNNING useEFFECT IN ProfilePage");
       //todo: employeeID is hardCoded here - is should be given to the page when directed!
       getProfileResults(id).then(res => {
-          console.log(res);
           setProfileResults(res)
           setSkills(res.skills)
+          res.supervisor.employeeNumber = res.supervisorEmployeeNumber
+          res.supervisor.groupCode = res.supervisor.group_id
+          res.supervisor.officeCode = res.supervisor.office_id
           setSupervisorResults(res.supervisor)
+          console.log(res);
       })
 
   }, [])
 
-  //todo: update ProfileCard data to have supervisor's results (currently only has profile results)
   return (
     <div>
       <PageHeader />
