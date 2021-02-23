@@ -47,9 +47,11 @@ filters.getFilterList = async(filterType = "Keyword") => {
     });
 }
 
-filters.set = (selection) => {
-    return new Promise(resolve => {
-        selection.forEach(async(e) => {
+filters.set = async(selection) => {
+    return new Promise(async(resolve) => {
+        console.log(selection);
+        console.log("hi");
+        for (const e of selection) {
             let data = e.split(",");
             let filterName = data[0];
             let dbResult = await storage.db.searchDocument('filters', {call_name: filterName});
@@ -74,9 +76,10 @@ filters.set = (selection) => {
             obj[filterMetadata.selection_id] = data[idx];
     
             util.queryObj[filterName].values.push(obj);
-            resolve();
     
-        })
+        }
+        console.log(util.queryObj);
+        resolve();
     })
 
 }
