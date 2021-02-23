@@ -208,6 +208,7 @@ const SearchBar = (props) => {
                       {location.pathname.includes("search") ? null : (
                         <IconButton
                           type="button"
+                          id = "filter_open_button"
                           className={classes.iconButton}
                           onClick={handleOpenFilterModal}
                         >

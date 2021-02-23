@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import filters from "./filters";
 const search = {};
 const util = {};
 
@@ -37,11 +37,19 @@ export const postSearchResults = (queries) => {
 };
 
 const createBodyForNameSearch = (inputValue) => {
-  let body = {};
+  let body = filters.get();
   if (inputValue.includes(" ")) {
     let firstName = inputValue.substring(0, inputValue.indexOf(" "));
     let lastName = inputValue.substring(inputValue.indexOf(" ") + 1);
-    let firstAndLastNameObj = {
+    body.FirstName = {
+      type: "AND",
+      values: [firstName],
+    }
+    body.LastName = {
+      type: "AND",
+      values: [lastName],
+    }
+    /*let firstAndLastNameObj = {
       FirstName: {
         type: "AND",
         values: [firstName],
@@ -50,16 +58,20 @@ const createBodyForNameSearch = (inputValue) => {
         type: "AND",
         values: [lastName],
       },
-    };
-    body = firstAndLastNameObj;
+    };*/
+    //body = firstAndLastNameObj;
   } else {
-    let nameObj = {
+    /*let nameObj = {
       Name: {
         type: "AND",
         values: [inputValue],
       },
-    };
-    body = nameObj;
+    };*/
+    
+    body.Name = {
+      type: "AND",
+      values: [inputValue]
+    }
   }
 
   return body;
@@ -67,12 +79,19 @@ const createBodyForNameSearch = (inputValue) => {
 
 const createBodyNameForNumberOrEmail = (filter_name, inputValue) => {
   let filterName = determineFilterString(filter_name);
-  let body = {
+  /*let body = {
     [filterName]: {
       type: null,
       values: [],
     },
-  };
+  };*/
+
+  let body = filters.get();
+
+  body[filterName] = {
+    type: null,
+    values: [],
+  }
 
   if (filterName == "WorkCell" || filterName == "WorkPhone") {
     body[filterName].values.push(inputValue);
