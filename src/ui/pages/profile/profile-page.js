@@ -11,6 +11,7 @@ import ProfileCard from "../../components/profile-card";
 import {withStyles} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
+import SkillsAccordion from "../../components/skills-accordion";
 
 const useStyles = makeStyles((theme) => ({
     reportingManagerBox: {
@@ -46,6 +47,7 @@ const ProfilePage = (props) => {
   console.log(id);
 
   const [profileResults, setProfileResults] = useState([]);
+  const [skills, setSkills] = useState([]);
 
   useEffect(async () => {
       console.log("RUNNING useEFFECT IN ProfilePage");
@@ -53,6 +55,7 @@ const ProfilePage = (props) => {
       getProfileResults(id).then(res => {
           console.log(res);
           setProfileResults(res)
+          setSkills(res.skills)
       })
 
   }, [])
@@ -76,9 +79,7 @@ const ProfilePage = (props) => {
                     <ProfileCard data={profileResults}  />
                 </div>
             </div>
-            <ProfileAccordion
-                title={"Skills"}
-                description={"Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar diam eros in elit. Pellentesque convallis laoreet laoreet."}/>
+            <SkillsAccordion data={skills}/>
             <ProfileAccordion
                 title={"Profile Section 2"}
                 description={"Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar diam eros in elit. Pellentesque convallis laoreet laoreet."}/>
