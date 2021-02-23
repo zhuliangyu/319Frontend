@@ -79,12 +79,19 @@ const createBodyForNameSearch = (inputValue) => {
 
 const createBodyNameForNumberOrEmail = (filter_name, inputValue) => {
   let filterName = determineFilterString(filter_name);
-  let body = {
+  /*let body = {
     [filterName]: {
       type: null,
       values: [],
     },
-  };
+  };*/
+
+  let body = filters.get();
+
+  body[filterName] = {
+    type: null,
+    values: [],
+  }
 
   if (filterName == "WorkCell" || filterName == "WorkPhone") {
     body[filterName].values.push(inputValue);
