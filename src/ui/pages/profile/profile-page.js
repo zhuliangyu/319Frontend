@@ -74,15 +74,22 @@ const ProfilePage = (props) => {
             <ProfileCardLarge
                 data={profileResults}
             />
-            <div className={classes.reportingManagerBox} >
-                <div className={classes.title}>
-                    <HeaderTypography align={"left"} >Reporting Managers</HeaderTypography>
-                </div>
-                <div className={classes.content}>
+            {profileResults.employeeNumber !== supervisorResults.employeeNumber ?
+                (
+                    <div className={classes.reportingManagerBox}>
+                        <div className={classes.title}>
+                            <HeaderTypography align={"left"}>Reporting Managers</HeaderTypography>
+                        </div>
+                        <div className={classes.content}>
 
-                    <ProfileCard data={supervisorResults}  />
-                </div>
-            </div>
+                            <ProfileCard data={supervisorResults}/>
+                        </div>
+                    </div>
+                ) :
+                (
+                    <div className={classes.reportingManagerBox}/>
+                )
+            }
             <SkillsAccordion data={skills}/>
             <ProfileAccordion
                 title={"Profile Section 2"}
