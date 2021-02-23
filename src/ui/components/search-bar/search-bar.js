@@ -17,6 +17,7 @@ import { connect } from "react-redux";
 import { performSearch } from "../../redux/actions/search-actions";
 import { useHistory, useLocation } from "react-router-dom";
 import * as qs from "query-string";
+import storage from "../../../services/storage";
 
 const createUniqueOptions = createFilterOptions();
 
@@ -109,6 +110,17 @@ const SearchBar = (props) => {
         [selectedFilters[i].queryId]: selectedFilters[i].inputValue,
       };
     }
+
+    //ONLY FOR DEMO, REMOVE LATER
+    if (selectedFilters.length > 0) {
+      storage.ss.setPair('search_key', JSON.stringify(queries));
+    } else {
+      let resp = storage.ss.getPair('search_key');
+      if (resp != undefined || resp != null) {
+        queries = JSON.parse(resp);
+      }
+    }
+    console.log(selectedFilters.length);
     return queries;
   }
 
@@ -218,6 +230,7 @@ const SearchBar = (props) => {
                       <IconButton
                         type="button"
                         className={classes.iconButton}
+                        id="search_button_target"
                         onClick={handleInitiateSearch}
                       >
                         <SearchIcon color="primary" />

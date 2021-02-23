@@ -49,6 +49,14 @@ storage.ss.getFlag = (key) => {
     return (res === 'true');
 }
 
+storage.ss.setPair = (key,value) => {
+    sessionStorage.setItem(key, value);
+}
+
+storage.ss.getPair = (key) => {
+    const res = sessionStorage.getItem(key);
+    return res;
+}
 
 
 export default storage;
