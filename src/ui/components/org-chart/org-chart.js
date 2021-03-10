@@ -27,9 +27,36 @@ const OrgChart = (props) => {
         } else if (employeeLevel === 2) {
             employee.superiorID = id
         }
+        let backgroundColor = "#ffffff"
+        console.log(employeeNumber)
+        console.log(id)
+        if (Number(employeeNumber) === Number(id)) {
+            backgroundColor = "#123456"
+            console.log("background color should change!")
+        }
+        console.log("--------------------------")
         let employeeElement = [{
             v: employeeNumber.toString(),
-            f: employeeName
+            f:  '<style> ' +
+                    'img.avatar {' +
+                        '  border-radius: 50%;\n' +
+                    '} ' +
+                    'p.employeeName {' +
+                        'color: #26415C;' +
+                        'font-size: 18px;' +
+                        'font-family: Poppins;' +
+                        'font-weight: 600;' +
+                        'line-height: 1.5;' +
+                    '}' +
+                    'div.container {' +
+                        'color: "#123456" ' +
+                    '}' +
+                '</style>' +
+                '<div class="container">' +
+                    '<img class="avatar" src="https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" alt="Avatar" height="50" width="50" /> <br />'  +
+                    '<p class="employeeName">' + employeeName + '</p>' +
+                '</div>'
+
         },
             employee.superiorID.toString(),
             employeeName
@@ -48,28 +75,16 @@ const OrgChart = (props) => {
             loader={<div>Loading Chart</div>}
             data={
                 data
-                // [
-                //     {
-                //         v: 'Mike',
-                //         f: 'Mike <div style="color:red; font-style:italic">President</div>',
-                //     },
-                //     '',
-                //     'The President',
-                // ],
-                // [
-                //     // in the first {}, put 1) the node's ID
-                //     //                      2) the information inside of it
-                //     {
-                //         v: 'Jim',
-                //         f:  '<style> ' +
-
             }
             options={{
                 allowHtml: true,
-                allowCollapse: true
+                color: "#FFFFFF",
+                selectionColor: "#cae0ef",
+                size: "small",
             }}
             rootProps={{ 'data-testid': '1' }}
         />
+
     );
 };
 
