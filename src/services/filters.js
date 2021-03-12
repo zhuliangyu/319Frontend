@@ -47,35 +47,39 @@ filters.getFilterList = async(filterType = "Keyword") => {
     });
 }
 
-filters.set = (selection) => {
-
-    selection.forEach(async(e) => {
-        let data = e.split(",");
-        let filterName = data[0];
-        let dbResult = await storage.db.searchDocument('filters', {call_name: filterName});
-        let filterMetadata = dbResult[0];
-
-        if (!(filterName in util.queryObj)) {
-            util.queryObj[filterName] = {
-                type: "OR",
-                values: []
-            };
+filters.set = async(selection) => {
+    return new Promise(async(resolve) => {
+        console.log(selection);
+        console.log("hi");
+        for (const e of selection) {
+            let data = e.split(",");
+            let filterName = data[0];
+            let dbResult = await storage.db.searchDocument('filters', {call_name: filterName});
+            let filterMetadata = dbResult[0];
+    
+            if (!(filterName in util.queryObj)) {
+                util.queryObj[filterName] = {
+                    type: "OR",
+                    values: []
+                };
+            }
+    
+            let obj = {};
+            let idx = 1;
+            if (filterMetadata.attach_parent == "true") {
+                filterMetadata.attachment.forEach((parentId) => {
+                    obj[parentId] = data[idx];
+                    idx++;
+                })
+            }
+    
+            obj[filterMetadata.selection_id] = data[idx];
+    
+            util.queryObj[filterName].values.push(obj);
+    
         }
-
-        let obj = {};
-        let idx = 1;
-        if (filterMetadata.attach_parent == "true") {
-            filterMetadata.attachment.forEach((parentId) => {
-                obj[parentId] = data[idx];
-                idx++;
-            })
-        }
-
-        obj[filterMetadata.selection_id] = data[idx];
-
-        util.queryObj[filterName].values.push(obj);
-
-
+        console.log(util.queryObj);
+        resolve();
     })
 
 }

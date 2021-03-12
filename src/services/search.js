@@ -73,7 +73,7 @@ const createBodyForNameSearch = (inputValue) => {
       values: [inputValue]
     }
   }
-
+  filters.clear();
   return body;
 };
 
@@ -98,6 +98,8 @@ const createBodyNameForNumberOrEmail = (filter_name, inputValue) => {
   } else if (filterName == "Email") {
     body[filterName].values.push(inputValue);
   }
+  filters.clear();
+  return body;
 };
 
 const determineFilterString = (filter_name) => {

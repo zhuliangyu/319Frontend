@@ -16,6 +16,7 @@ import Box from '@material-ui/core/Box';
 import filters from "../../../services/filters";
 import Button from '@material-ui/core/Button';
 
+
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
   
@@ -93,9 +94,10 @@ function TabPanel(props) {
         }
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async() => {
         setOpen(false);
-        filters.set(selection);
+        await filters.set(selection);
+        document.getElementById("search_button_target").click();
     }
 
   const handleChange = (event, newValue) => {
