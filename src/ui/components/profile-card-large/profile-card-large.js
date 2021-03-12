@@ -9,10 +9,12 @@ import EmailIcon from '@material-ui/icons/Email';
 import TodayIcon from '@material-ui/icons/Today';
 import WorkIcon from '@material-ui/icons/Work';
 import profile from '../../../assets/profile.jpg';
+import { useHistory } from "react-router-dom";
 import TrendingFlatIcon from '@material-ui/icons/TrendingFlat';
 // main color scheme: primary (blue) & secondary (grey)
 const PRIMARY = '#26415C'
 const SECONDARY = '#C4C4C4'
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -112,6 +114,7 @@ const IconTypography = withStyles({
 
 const ProfileCardLarge = (props) => {
     const classes = useStyles();
+    let history = useHistory();
     return (
         <Box mt={3} mb={3}>
             <Card className={classes.root}>
@@ -156,8 +159,8 @@ const ProfileCardLarge = (props) => {
                                         component="button"
                                         variant="body2"
                                         onClick={() => {
-                                            console.info("I'm a button.");
-                                            // todo: link this to the org chart
+                                            history.push(`/orgchart/${props.data.employeeNumber}`);
+                                            window.location.reload();
                                         }}
                                     >
                                         View on Organization Chart →

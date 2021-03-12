@@ -8,6 +8,7 @@ import {getProfileResults} from "../../../services/profile";
 import {useParams} from "react-router-dom";
 import OrgChart from "../../components/org-chart";
 import {getOrgChartResults} from "../../../services/org-chart";
+import './org-chart-page.css';
 
 const OrgChartPage = () => {
     const heading_text = "Organizational Chart";
