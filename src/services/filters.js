@@ -144,10 +144,10 @@ util.parse = async(data) => {
 
 util.generateMetadata = async() => {
 
+        await storage.db.clearTable('metadata');
         const dataset = await filters.getFilterList('Selection')
-        let records = [];
-        dataset.forEach((filter) => {
-            filter.input.forEach((value => {
+        for (let filter of dataset) {
+            for (let value of filter.input) {
                 let record = {};
 
                 record.call_name = filter.call_name;
@@ -156,17 +156,17 @@ util.generateMetadata = async() => {
                 let id_format = [`${filter.call_name}_`];
                 if (filter.attach_parent == "true") {
                     id_format = id_format.concat(filter.attachment);
+                    record.id = `${filter.call_name}_${value.value_id.toString().replaceAll(",","")}`
+                } else {
+                    record.id = `${filter.call_name}_${value.value_id[value.value_id.length - 1]}`
                 }
-                id_format.push(filter.selection_id);
-                
-                record.id_format = id_format;
-                record.id = `${filter.call_name}_${value.value_id.toString().replaceAll(",","")}`
-                records.push(record);
-            }))
-        })
 
-        console.table(records[10].id_format);
-        console.table(records);
+                id_format.push(filter.selection_id);
+                record.id_format = id_format;
+
+                await storage.db.addDocument('metadata', record);
+            }
+        }
 }
 
 
