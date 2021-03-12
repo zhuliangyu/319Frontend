@@ -49,8 +49,7 @@ filters.getFilterList = async(filterType = "Keyword") => {
 
 filters.set = async(selection) => {
     return new Promise(async(resolve) => {
-        console.log(selection);
-        console.log("hi");
+
         for (const e of selection) {
             let data = e.split(",");
             let filterName = data[0];
@@ -78,7 +77,6 @@ filters.set = async(selection) => {
             util.queryObj[filterName].values.push(obj);
     
         }
-        console.log(util.queryObj);
         resolve();
     })
 
