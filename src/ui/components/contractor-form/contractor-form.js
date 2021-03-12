@@ -1,63 +1,27 @@
 import React, {useEffect, useState} from "react";
-import {MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers';
+import {KeyboardDatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
 import DateFnsUtils from "@date-io/date-fns";
 import filters from "../../../services/filters";
 
-import {
-    TextField,
-    Paper,
-    Grid,
-    Button,
-    InputAdornment
-} from '@material-ui/core';
+import {Button, Grid, Paper, TextField} from '@material-ui/core';
 import DropDown from "./dropdown";
 import {
     getCompaniesFromFilters,
-    getGroupsFromLocation,
+    getGroupsFromOffice,
     getLocationsFromFilters,
     getOfficesFromCompany
 } from "../../../services/filterUtil";
-
-const useForm = (initialFValues, validateOnChange = false, validate) => {
-
-
-    const [values, setValues] = useState(initialFValues);
-    const [errors, setErrors] = useState({});
-
-    const handleInputChange = e => {
-        const { name, value } = e.target
-        setValues({
-            ...values,
-            [name]: value
-        })
-        if (validateOnChange)
-            validate({ [name]: value })
-    }
-
-    const resetForm = () => {
-        setValues(initialFValues);
-        setErrors({})
-    }
-
-
-    return {
-        values,
-        setValues,
-        errors,
-        setErrors,
-        handleInputChange,
-        resetForm
-    }
-}
+import {useForm} from "./useForm";
 
 const ContractorForm = (props) => {
-    const formTitle = "Add a contractor";
+    const formTitle = props.data.hasData ? "Edit Contractor" : "Add a contractor";
     const [selectionFilters, setSelectionFilters] = useState([]);
     const [companies, setCompanies] = useState([]);
     const [offices, setOffices] = useState([{value_id: -1, value_name: "Please select a Company"}]);
     const [groups, setGroups] = useState([{value_id: -1, value_name: "Please select an Office"}]);
     const [locations, setLocations] = useState([])
 
+    // set the initial companies and locations selections
     useEffect(() => {
         filters.getFilterList("Selection").then(filters => {
             // console.log(filters);
@@ -69,27 +33,8 @@ const ContractorForm = (props) => {
         })
     }, [])
 
-    const handleHierarchyChange = e => {
-        const { name, value } = e.target
-        console.log(name)
-        console.log(value)
-        switch (name) {
-            case "companyCode":
-                setOffices(getOfficesFromCompany(selectionFilters, value));
-                break;
-            case "officeCode":
-                setGroups(getGroupsFromLocation(selectionFilters, value));
-                break;
-            default:
-                break;
-        }
-
-        setValues({
-            ...values,
-            [name]: value
-        })
-    }
-
+    // initial form values
+    // TODO: pass down from prop for edit
     let initialFValues = {
         lastName: '',
         firstName: '',
@@ -110,18 +55,31 @@ const ContractorForm = (props) => {
         extraInfo: '',
     }
 
-    // TODO
-    // required fields: lastName, firstName, companyCode, OfficeCode, groupCode, supervisorEmpNo
+    // validation logic
     const validate = (fieldValues = values) => {
+        let fieldName = Object.keys(fieldValues)[0];
         let temp = { ...errors }
+
         if ('lastName' in fieldValues)
             temp.lastName = fieldValues.lastName ? "" : "This field is required."
+        if ('firstName' in fieldValues)
+            temp.firstName = fieldValues.firstName ? "" : "This field is required."
+        if ('companyCode' in fieldValues)
+            temp.companyCode = fieldValues.companyCode ? "" : "This field is required."
+        if ('officeCode' in fieldValues)
+            temp.officeCode = fieldValues.officeCode && fieldValues.officeCode !== -1 ? "" : "This field is required."
+        if ('groupCode' in fieldValues)
+            temp.groupCode = fieldValues.groupCode && fieldValues.groupCode !== -1 ? "" : "This field is required."
+        if ('supervisorEmployeeNumber' in fieldValues)
+            temp.supervisorEmployeeNumber = fieldValues.supervisorEmployeeNumber ? "" : "This field is required."
         if ('email' in fieldValues)
             temp.email = (/$^|.+@.+..+/).test(fieldValues.email) ? "" : "Email is not valid."
-        if ('mobile' in fieldValues)
-            temp.mobile = fieldValues.mobile.length > 9 ? "" : "Minimum 10 numbers required."
-        if ('departmentId' in fieldValues)
-            temp.departmentId = fieldValues.departmentId.length !== 0 ? "" : "This field is required."
+        if ('workPhone' in fieldValues && fieldValues.workPhone !== "")
+            temp.workPhone = (/^\d{3}\-\d{3}\-\d{4}$/).test(fieldValues.workPhone) ? "" : "Phone number is not valid."
+        if ('workCell' in fieldValues && fieldValues.workCell !== "")
+            temp.workCell = (/^\d{3}\-\d{3}\-\d{4}$/).test(fieldValues.workCell) && temp.workPhone !== "" ?
+                "" : "Phone number is not valid."
+
         setErrors({
             ...temp
         })
@@ -130,6 +88,7 @@ const ContractorForm = (props) => {
             return Object.values(temp).every(x => x === "")
     }
 
+    // get useForm hooks
     const {
         values,
         setValues,
@@ -139,6 +98,32 @@ const ContractorForm = (props) => {
         resetForm
     } = useForm(initialFValues, true, validate);
 
+    // set lower hierarchy members' selection when a hierarchy member is changed
+    const handleHierarchyChange = e => {
+        const { name, value } = e.target
+        // console.log(name)
+        // console.log(value)
+        switch (name) {
+            case "companyCode":
+                setOffices(getOfficesFromCompany(selectionFilters, value));
+                break;
+            case "officeCode":
+                if (value !== -1) {
+                    setGroups(getGroupsFromOffice(selectionFilters, value));
+                }
+                break;
+            default:
+                break;
+        }
+
+        setValues({
+            ...values,
+            [name]: value
+        })
+    }
+
+    // submit function
+    // TODO
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()){
@@ -147,6 +132,7 @@ const ContractorForm = (props) => {
         }
     }
 
+    // for date
     const convertToDefEventPara = (name, value) => ({
         target: {
             name, value
@@ -178,6 +164,8 @@ const ContractorForm = (props) => {
                             name="firstName"
                             value={values.firstName}
                             onChange={handleInputChange}
+                            error =  {errors.firstName}
+                            helperText={errors.firstName}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -188,6 +176,8 @@ const ContractorForm = (props) => {
                             value={values.companyCode.value_name}
                             onChange={handleHierarchyChange}
                             options={companies}
+                            error =  {errors.companyCode}
+                            helperText={errors.companyCode}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -198,6 +188,8 @@ const ContractorForm = (props) => {
                             value={values.officeCode.value_name}
                             onChange={handleHierarchyChange}
                             options={offices}
+                            error =  {errors.officeCode}
+                            helperText={errors.officeCode}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -208,7 +200,8 @@ const ContractorForm = (props) => {
                             value={values.groupCode.value_name}
                             onChange={handleInputChange}
                             options={groups}
-                            // error={errors.groupCode}
+                            error =  {errors.groupCode}
+                            helperText={errors.groupCode}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -218,7 +211,6 @@ const ContractorForm = (props) => {
                             value={values.locationId.value_name}
                             onChange={handleInputChange}
                             options={locations}
-                            // error={errors.groupCode}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -228,6 +220,8 @@ const ContractorForm = (props) => {
                             name="email"
                             value={values.email}
                             onChange={handleInputChange}
+                            error =  {errors.email}
+                            helperText={errors.email}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -237,7 +231,8 @@ const ContractorForm = (props) => {
                             name="workPhone"
                             value={values.workPhone}
                             onChange={handleInputChange}
-                            helperText="Format: xxx-xxx-xxxx"
+                            error =  {errors.workPhone}
+                            helperText={"Format: xxx-xxx-xxxx"}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -247,22 +242,27 @@ const ContractorForm = (props) => {
                             name="workCell"
                             value={values.workCell}
                             onChange={handleInputChange}
-                            helperText="Format: xxx-xxx-xxxx"
+                            error =  {errors.workCell}
+                            helperText={"Format: xxx-xxx-xxxx"}
                         />
                     </Grid>
                     <Grid item xs={12} sm={3}>
                         <TextField
                             fullWidth={true}
                             required
+                            type="number"
                             label="Supervisor Employee No."
                             name="supervisorEmployeeNumber"
                             value={values.supervisorEmployeeNumber}
                             onChange={handleInputChange}
+                            error =  {errors.supervisorEmployeeNumber}
+                            helperText={errors.supervisorEmployeeNumber}
                         />
                     </Grid>
                     <Grid item xs={12} sm={3}>
                         <TextField
                             fullWidth={true}
+                            type="number"
                             label="Years of Prior Experience"
                             name="yearsPriorExperience"
                             value={values.yearsPriorExperience}

@@ -4,8 +4,11 @@ import PageTitle from "../../components/page-title-banner";
 import "../page.css";
 import ContractorForm from "../../components/contractor-form";
 
+// stub
 const ContractorPage = () => {
     const heading_text = "Contractor";
+    let formData = {hasData: false, contractorData: null}
+
 
     return (
         <div>
@@ -13,7 +16,7 @@ const ContractorPage = () => {
             <PageTitle data={{ title: heading_text }} />
             <div className="page-contents-wrapper">
                 <div className="page-contents-container" >
-                    <ContractorForm />
+                    <ContractorForm data={formData}/>
                 </div>
             </div>
         </div>
