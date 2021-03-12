@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, Route, Switch } from 'react-router-dom';
 import LandingPage from './pages/landing-page';
 import SearchPage from './pages/search';
@@ -6,6 +6,7 @@ import ProfilePage from './pages/profile';
 import AdminPage from './pages/admin';
 import filters from '../services/filters';
 import OrgChartPage from "./pages/org-chart";
+import ContractorPage from "./pages/contractor";
 
 function App() {
   useEffect(async()=> {
@@ -33,6 +34,10 @@ function App() {
 
         <Route path='/admin'>
           <AdminPage />
+        </Route>
+
+        <Route path='/contractor'>
+          <ContractorPage />
         </Route>
 
         <Route path='/orgchart/:id' children={<OrgChartPage />}>
