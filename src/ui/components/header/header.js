@@ -7,6 +7,8 @@ import { IconButton } from "@material-ui/core";
 import SearchBar from "../../components/search-bar";
 import Subheader from "./sub-header";
 import { Link } from "react-router-dom";
+import filters from "../../../services/filters";
+import storage from "../../../services/storage";
 
 const Header = (props) => {
   const location = window.location.pathname;

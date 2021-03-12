@@ -10,14 +10,19 @@ const SearchResults = (props) => {
   return (
     <div className='search-results-wrapper'>
       <div className='search-results-container'>
-        {searchResults.length !== 0 ? 
+        {searchResults !== undefined ? 
         (
+         ((searchResults.length > 0) ? (
           searchResults.map(result => 
-          <ProfileCard key={searchResults.indexOf(result)} data={result} />)
+            <ProfileCard key={searchResults.indexOf(result)} data={result} />)
+         ):(
+          //<center><b>{`👀 We looked meticulously, but could find anyone maching your criteria in the directory.`}</b></center>
+          null
+         ))
         ) : 
         (
-          // <div style={{ paddingLeft: 20 }}>No results found</div>
-          null
+          <center><b>{`💬 The Server and I aren't talking right now, try again later?`}</b></center>
+          //null
         )
         }
       </div>

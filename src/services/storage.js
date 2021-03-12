@@ -12,8 +12,9 @@ storage.ss = {};
 // IndexedDB
 
 const idb = new Dexie('AE_Directory');
-idb.version(1).stores({
-    filters: `++_uuid, display_name, call_name, type, input, parent, attach_parent, is_category, selection_id, attachment`
+idb.version(2).stores({
+    filters: `++_uuid, display_name, call_name, type, input, parent, attach_parent, is_category, selection_id, attachment`,
+    metadata: `++_uuid, call_name, selection, id_format, id`
 });
 
 storage.db.addDocument = async(table, doc) => {
@@ -41,14 +42,22 @@ storage.db.clearTable = async(table) => {
 // Session Storage
 
 storage.ss.setFlag = (key) => {
-    sessionStorage.setItem(key, true);
+    sessionStorage.setItem(`_${key}Flag`, true);
 }
 
 storage.ss.getFlag = (key) => {
-    const res = sessionStorage.getItem(key);
+    const res = sessionStorage.getItem(`_${key}Flag`);
     return (res === 'true');
 }
 
+storage.ss.setPair = (key,value) => {
+    sessionStorage.setItem(key, value);
+}
+
+storage.ss.getPair = (key) => {
+    const res = sessionStorage.getItem(key);
+    return res;
+}
 
 
 export default storage;
