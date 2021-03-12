@@ -12,6 +12,7 @@ import {withStyles} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
 import SkillsAccordion from "../../components/skills-accordion";
+import Filter_modal from '../../components/filter_modal/filter_modal';
 
 const useStyles = makeStyles((theme) => ({
     reportingManagerBox: {
@@ -52,7 +53,6 @@ const ProfilePage = (props) => {
 
   useEffect(async () => {
       console.log("RUNNING useEFFECT IN ProfilePage");
-      //todo: employeeID is hardCoded here - is should be given to the page when directed!
       getProfileResults(id).then(res => {
           setProfileResults(res)
           setSkills(res.skills)
@@ -68,6 +68,7 @@ const ProfilePage = (props) => {
   return (
     <div>
       <PageHeader />
+      <Filter_modal/>
       <PageTitle data={{ title: heading_text }} />
       <div className="page-contents-wrapper">
         <div className="page-contents-container">

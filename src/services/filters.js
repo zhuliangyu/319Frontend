@@ -47,35 +47,39 @@ filters.getFilterList = async(filterType = "Keyword") => {
     });
 }
 
-filters.set = (selection) => {
-
-    selection.forEach(async(e) => {
-        let data = e.split(",");
-        let filterName = data[0];
-        let dbResult = await storage.db.searchDocument('filters', {call_name: filterName});
-        let filterMetadata = dbResult[0];
-
-        if (!(filterName in util.queryObj)) {
-            util.queryObj[filterName] = {
-                type: "OR",
-                values: []
-            };
+filters.set = async(selection) => {
+    return new Promise(async(resolve) => {
+        console.log(selection);
+        console.log("hi");
+        for (const e of selection) {
+            let data = e.split(",");
+            let filterName = data[0];
+            let dbResult = await storage.db.searchDocument('filters', {call_name: filterName});
+            let filterMetadata = dbResult[0];
+    
+            if (!(filterName in util.queryObj)) {
+                util.queryObj[filterName] = {
+                    type: "OR",
+                    values: []
+                };
+            }
+    
+            let obj = {};
+            let idx = 1;
+            if (filterMetadata.attach_parent == "true") {
+                filterMetadata.attachment.forEach((parentId) => {
+                    obj[parentId] = data[idx];
+                    idx++;
+                })
+            }
+    
+            obj[filterMetadata.selection_id] = data[idx];
+    
+            util.queryObj[filterName].values.push(obj);
+    
         }
-
-        let obj = {};
-        let idx = 1;
-        if (filterMetadata.attach_parent == "true") {
-            filterMetadata.attachment.forEach((parentId) => {
-                obj[parentId] = data[idx];
-                idx++;
-            })
-        }
-
-        obj[filterMetadata.selection_id] = data[idx];
-
-        util.queryObj[filterName].values.push(obj);
-
-
+        console.log(util.queryObj);
+        resolve();
     })
 
 }
@@ -83,6 +87,7 @@ filters.set = (selection) => {
 filters.clear = () => {
     util.queryObj = {};
 }
+
 // Private Helpers
 
 util.queryObj = {};
@@ -133,8 +138,35 @@ util.parse = async(data) => {
     }
 
     await storage.db.updateDocuments('filters', updates);
-
+    util.generateMetadata();
     storage.ss.setFlag('filters');
+}
+
+util.generateMetadata = async() => {
+
+        await storage.db.clearTable('metadata');
+        const dataset = await filters.getFilterList('Selection')
+        for (let filter of dataset) {
+            for (let value of filter.input) {
+                let record = {};
+
+                record.call_name = filter.call_name;
+                record.selection = value.value_name;
+
+                let id_format = [`${filter.call_name}_`];
+                if (filter.attach_parent == "true") {
+                    id_format = id_format.concat(filter.attachment);
+                    record.id = `${filter.call_name}_${value.value_id.toString().replaceAll(",","")}`
+                } else {
+                    record.id = `${filter.call_name}_${value.value_id[value.value_id.length - 1]}`
+                }
+
+                id_format.push(filter.selection_id);
+                record.id_format = id_format;
+
+                await storage.db.addDocument('metadata', record);
+            }
+        }
 }
 
 
