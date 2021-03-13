@@ -18,7 +18,7 @@ const ContractorForm = (props) => {
 
     // set the initial companies and locations selections
     useEffect(async() => {
-
+        console.log(await storage.db.searchDocument('metadata', {meta_id: 'Office,01,02'}));
         setCompanies(await storage.db.searchDocument('metadata', {call_name: 'Company'}));
         setLocations(await storage.db.searchDocument('metadata', {call_name: 'Location'}));
         setSelectionFilters(await filters.getFilterList("Selection"));
