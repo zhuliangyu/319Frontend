@@ -14,7 +14,7 @@ const ContractorForm = (props) => {
     const [companies, setCompanies] = useState([]);
     const [offices, setOffices] = useState([{value_id: -1, value_name: "Please select a Company"}]);
     const [groups, setGroups] = useState([{value_id: -1, value_name: "Please select an Office"}]);
-    const [locations, setLocations] = useState([])
+    const [locations, setLocations] = useState([]);
 
     // set the initial companies and locations selections
     useEffect(async() => {
