@@ -5,13 +5,8 @@ import filters from "../../../services/filters";
 
 import {Button, Grid, Paper, TextField} from '@material-ui/core';
 import DropDown from "./dropdown";
-import {
-    getCompaniesFromFilters,
-    getGroupsFromOffice,
-    getLocationsFromFilters,
-    getOfficesFromCompany
-} from "../../../services/filterUtil";
 import {useForm} from "./useForm";
+import storage from "../../../services/storage";
 
 const ContractorForm = (props) => {
     const formTitle = props.data.hasData ? "Edit Contractor" : "Add a contractor";
@@ -22,15 +17,11 @@ const ContractorForm = (props) => {
     const [locations, setLocations] = useState([])
 
     // set the initial companies and locations selections
-    useEffect(() => {
-        filters.getFilterList("Selection").then(filters => {
-            // console.log(filters);
-            setSelectionFilters(filters)
-            setCompanies(getCompaniesFromFilters(filters));
-            setLocations(getLocationsFromFilters(filters));
-        }).catch(err => {
-            console.log(err);
-        })
+    useEffect(async() => {
+
+        setCompanies(await storage.db.searchDocument('metadata', {call_name: 'Company'}));
+        setLocations(await storage.db.searchDocument('metadata', {call_name: 'Location'}));
+        setSelectionFilters(await filters.getFilterList("Selection"));
     }, [])
 
     // initial form values
@@ -99,17 +90,17 @@ const ContractorForm = (props) => {
     } = useForm(initialFValues, true, validate);
 
     // set lower hierarchy members' selection when a hierarchy member is changed
-    const handleHierarchyChange = e => {
+    const handleHierarchyChange = async(e) => {
         const { name, value } = e.target
         // console.log(name)
         // console.log(value)
         switch (name) {
             case "companyCode":
-                setOffices(getOfficesFromCompany(selectionFilters, value));
+                setOffices(await filters.getChildFromAncestor("Office", value));
                 break;
             case "officeCode":
                 if (value !== -1) {
-                    setGroups(getGroupsFromOffice(selectionFilters, value));
+                    setGroups(await filters.getChildFromAncestor("Group", value));
                 }
                 break;
             default:

@@ -29,8 +29,7 @@ filters.init = async() => {
 
         }
     }
-} 
-
+}
 
 filters.get = () => {
 
@@ -84,6 +83,13 @@ filters.set = async(selection) => {
 
 filters.clear = () => {
     util.queryObj = {};
+}
+
+filters.getChildFromAncestor = async(child_call_name, ancestorIds) => {
+    let records = await storage.db.searchDocument('metadata', {call_name: child_call_name});
+    let matches = records.filter(record => record.meta_id.includes(`${child_call_name},${ancestorIds.toString()}`));
+
+    return matches;
 }
 
 // Private Helpers
@@ -143,32 +149,29 @@ util.parse = async(data) => {
 util.generateMetadata = async() => {
 
         await storage.db.clearTable('metadata');
-        const dataset = await filters.getFilterList('Selection')
+        const dataset = await filters.getFilterList('Selection');
         for (let filter of dataset) {
             for (let value of filter.input) {
                 let record = {};
 
                 record.call_name = filter.call_name;
-                record.selection = value.value_name;
+                record.value_name = value.value_name;
+                record.value_id = value.value_id;
 
-                let id_format = [`${filter.call_name}_`];
+                let meta_id_format = [`${filter.call_name}`];
                 if (filter.attach_parent == "true") {
-                    id_format = id_format.concat(filter.attachment);
-                    record.id = `${filter.call_name}_${value.value_id.toString().replaceAll(",","")}`
+                    meta_id_format = meta_id_format.concat(filter.attachment);
+                    record.meta_id = `${filter.call_name},${value.value_id.toString()}`
                 } else {
-                    record.id = `${filter.call_name}_${value.value_id[value.value_id.length - 1]}`
+                    record.meta_id = `${filter.call_name},${value.value_id[value.value_id.length - 1]}`
                 }
 
-                id_format.push(filter.selection_id);
-                record.id_format = id_format;
+                meta_id_format.push(filter.selection_id);
+                record.meta_id_format = meta_id_format;
 
                 await storage.db.addDocument('metadata', record);
             }
         }
 }
-
-
-
-
 
 export default filters;
