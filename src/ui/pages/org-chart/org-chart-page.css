@@ -1,0 +1,47 @@
+img.avatar {
+  border-radius: 50%;
+}
+
+p.employeeName {
+    color: #26415C;
+    font-size: 18px;
+    font-family: Poppins, serif;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+div.selectedEmployeeContainer {
+    height: 100%;
+    width: 97%;
+    background-color: #CAE0EF;
+    padding: 2px;
+    border-radius: 5px;
+}
+
+div.container {
+    height: 100%;
+    width: 97%;
+    padding: 2px;
+    border-radius: 5px;
+}
+
+td.google-visualization-orgchart-node.google-visualization-orgchart-node-small {
+    border: 1px solid #26415C;
+    padding: 0;
+}
+
+td.google-visualization-orgchart-linebottom {
+    border-bottom: 2px solid #26415C;
+}
+
+td.google-visualization-orgchart-lineleft {
+    border-left: 2px solid #26415C;
+}
+
+td.google-visualization-orgchart-lineright {
+    border-right: 2px solid #26415C;
+}
+
+td.google-visualization-orgchart-linetop {
+    border-top: 2px solid #26415C;
+}

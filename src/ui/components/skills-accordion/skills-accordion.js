@@ -49,6 +49,10 @@ const ParagraphTypography = withStyles({
         fontWeight: 400
     }
 })(Typography);
+//
+// export async function getSkills(skillArray) {
+//     return await storage.db.searchDocument('metadata', {filter_name: "skills"});
+// }
 
 const SkillsAccordion = (props) => {
     const classes = useStyles();
@@ -59,6 +63,7 @@ const SkillsAccordion = (props) => {
     };
 
     let skillArray = props.data;
+
 
     return (
         <Box marginTop={2} marginBottom={2}>
