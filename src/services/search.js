@@ -3,8 +3,8 @@ import filters from "./filters";
 const search = {};
 const util = {};
 
-export const postSearchResults = (queries) => {
-  console.log("search service queries? ", queries);
+search.postSearchResults = (queries) => {
+  // console.log("search service queries? ", queries);
 
   // not accurate, need to get ALL values including those from filter?
 
@@ -22,10 +22,12 @@ export const postSearchResults = (queries) => {
 
     // console.log('performing search action...');
 
-    console.log(body);
+    // console.log(body);
 
     return axios.post("/api/search", body).then(
       (response) => {
+        sessionStorage.setItem('current_search', JSON.stringify(body));
+        window.dispatchEvent(new Event('update_search'));
         return response.data;
         // console.log(response);
       },
@@ -93,9 +95,9 @@ const createBodyNameForNumberOrEmail = (filter_name, inputValue) => {
     values: [],
   }
 
-  if (filterName == "WorkCell" || filterName == "WorkPhone") {
+  if (filterName === "WorkCell" || filterName === "WorkPhone") {
     body[filterName].values.push(inputValue);
-  } else if (filterName == "Email") {
+  } else if (filterName === "Email") {
     body[filterName].values.push(inputValue);
   }
   filters.clear();
@@ -114,3 +116,5 @@ const determineFilterString = (filter_name) => {
       return "";
   }
 };
+
+export default search;

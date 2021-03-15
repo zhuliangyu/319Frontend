@@ -1,11 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './search-results.css';
 import ProfileCard from '../profile-card';
+import ProfileCardList from '../profile-card-list';
 
 const SearchResults = (props) => {
   let searchResults = props.data;
+  const [view, syncLocalStorageview] = useState(localStorage.getItem('searchResultsView'));
 
-  // console.log(searchResults);
+  const changeViewFn = e => {
+    syncLocalStorageview(localStorage.getItem('searchResultsView'));
+  };
+
+  useEffect(() => {
+    window.addEventListener('storage', changeViewFn);
+    return () => {
+      window.removeEventListener('storage', changeViewFn);
+    }
+  }, []);
 
   return (
     <div className='search-results-wrapper'>
@@ -14,7 +25,12 @@ const SearchResults = (props) => {
         (
          ((searchResults.length > 0) ? (
           searchResults.map(result => 
-            <ProfileCard key={searchResults.indexOf(result)} data={result} />)
+            (
+              view === 'card' ? 
+              <ProfileCard key={searchResults.indexOf(result)} data={result} /> :
+              <ProfileCardList key={searchResults.indexOf(result)} data={result} />
+            )
+            )
          ):(
           //<center><b>{`👀 We looked meticulously, but could find anyone maching your criteria in the directory.`}</b></center>
           null

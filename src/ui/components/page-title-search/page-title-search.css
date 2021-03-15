@@ -5,6 +5,7 @@
   position: relative;
   z-index: 0;
   width: 100%;
+  display: flex;
 }
 
 .page-title-search-box {
@@ -15,6 +16,7 @@
 }
 
 .page-title-search {
+  display: flex;
   width: 80%;
   padding-left: 20px;
   max-width: 1400px;
@@ -22,6 +24,17 @@
   font-size: 28px;
   font-weight: 600;
   color: #26415C;
+  padding-bottom: 16px;
+  position: absolute;
+  bottom: 0px;
+}
+
+.page-title-search-toggle {
+  display: flex;
+  justify-content: flex-end;
+  width: 80%;
+  max-width: 1400px;
+  min-width: 800px;
   padding-bottom: 16px;
   position: absolute;
   bottom: 0px;

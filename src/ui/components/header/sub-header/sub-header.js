@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./sub-header.css";
 import FilterIcon from "../../../../assets/filter-icon.svg";
 import CloseIcon from "../../../../assets/close-icon.svg";
-import { Button, Chip, Divider, Typography } from "@material-ui/core";
+import { Button, Divider, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import FilterChip from '../../filter-chip';
+import filters from "../../../../services/filters";
+import storage from "../../../../services/storage";
 
 const useStyles = makeStyles((theme) => ({
   button: {},
@@ -31,10 +34,32 @@ const useStyles = makeStyles((theme) => ({
 const Subheader = (props) => {
   const classes = useStyles();
   const location = window.location.pathname;
+  const [selectedFilters, setSelectedFilters] = useState(null);
+
+  const [searchState, syncStorageSearch] = useState(sessionStorage.getItem('current_search'));
+
+  const updateSearch = async (e) => {
+    syncStorageSearch(sessionStorage.getItem('current_search'));
+    // console.log('--', await storage.db.searchDocument("metadata", {meta_id: "Office,01,02"}));
+    console.log(JSON.parse(sessionStorage.getItem('current_search')));
+  };
+
+  useEffect(() => {
+    window.addEventListener('update_search', updateSearch);
+    return () => {
+      window.removeEventListener('update_search', updateSearch);
+    }
+  }, []);
 
   const handleDelete = () => {
     console.info("You clicked the delete icon.");
   };
+
+  // useEffect(() => {
+  //   console.log(filters.get());
+  //   console.log('--', await storage.db.searchDocument("metadata", {meta_id: "Office,01,02"}));
+
+  // }, []);
 
   return (
     <div>
@@ -51,13 +76,7 @@ const Subheader = (props) => {
               orientation="vertical"
             />
             <div className="filter-chips">
-              <Chip
-                color="secondary"
-                className={classes.chip}
-                size="small"
-                label="*dynamically generate label*"
-                onDelete={handleDelete}
-              />
+              
             </div>
           </>
         ) : null}
