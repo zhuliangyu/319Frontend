@@ -131,7 +131,6 @@ const ProfileCardLarge = (props) => {
                                 <SubheaderTypography align={"left"}>{props.data.title}</SubheaderTypography>
                                 <SubheaderTypography align={"left"}>Group {props.data.groupCode} - Office {props.data.officeCode}</SubheaderTypography>
                                 <ParagraphTypography align={"left"}>{"My 3 line description is Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eros libero, dignissim in lacus nec, tempor luctus mauris."}</ParagraphTypography>
-                                {/*<ParagraphTypography align={"left"}> {props.data.description}</ParagraphTypography>*/}
                             </CardContent>
                         </div>
                     </Grid>

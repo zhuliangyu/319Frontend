@@ -51,7 +51,7 @@ const ParagraphTypography = withStyles({
 
 const ProfileAccordion = ({title, description}) => {
     const classes = useStyles();
-    const [expanded, setExpanded] = React.useState(false);
+    const [expanded, setExpanded] = React.useState('accordionPanel');
 
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
@@ -60,7 +60,7 @@ const ProfileAccordion = ({title, description}) => {
     return (
         <Box marginTop={2} marginBottom={2}>
             <div className={classes.root}>
-                <Accordion expanded={expanded === 'accordionPanel'} onChange={handleChange('accordionPanel')}>
+                <Accordion defaultExpanded={true} expanded={expanded === 'accordionPanel'} onChange={handleChange('accordionPanel')}>
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls="accordion-panel-content"
