@@ -13,13 +13,9 @@ const ParagraphTypography = withStyles({
 })(Typography);
 
 const ProfileSkill = (props) => {
-    let searchResults = props.data;
-
-    // console.log(searchResults);
-
     return (
         <div>
-            <ParagraphTypography>{searchResults.skillCategoryId} - {searchResults.skillId}</ParagraphTypography>
+            <ParagraphTypography>{props.data}</ParagraphTypography>
         </div>
     );
 };

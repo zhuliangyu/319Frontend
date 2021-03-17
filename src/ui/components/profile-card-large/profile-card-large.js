@@ -10,10 +10,7 @@ import TodayIcon from '@material-ui/icons/Today';
 import WorkIcon from '@material-ui/icons/Work';
 import profile from '../../../assets/profile.jpg';
 import { useHistory } from "react-router-dom";
-import TrendingFlatIcon from '@material-ui/icons/TrendingFlat';
-// main color scheme: primary (blue) & secondary (grey)
-const PRIMARY = '#26415C'
-const SECONDARY = '#C4C4C4'
+import './profile-card-large.css';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -68,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'inline-block',
         lineHeight: 12,
         align: 'left'
-    }
+    },
 
 }));
 
@@ -115,6 +112,22 @@ const IconTypography = withStyles({
 const ProfileCardLarge = (props) => {
     const classes = useStyles();
     let history = useHistory();
+    let email = props.data.email
+    let emailLink= "mailto:" + email
+    let hiredDate = new Date(props.data.hireDate);
+    let month = ["January","February","March","April","May","June","July","August","September","October","November","December"]
+    // month[0] = "January";
+    // month[1] = "February";
+    // month[2] = "March";
+    // month[3] = "April";
+    // month[4] = "May";
+    // month[5] = "June";
+    // month[6] = "July";
+    // month[7] = "August";
+    // month[8] = "September";
+    // month[9] = "October";
+    // month[10] = "November";
+    // month[11] = "December";
     return (
         <Box mt={3} mb={3}>
             <Card className={classes.root}>
@@ -130,7 +143,7 @@ const ProfileCardLarge = (props) => {
                                 <HeaderTypography align={"left"}>{props.data.firstName} {props.data.lastName}</HeaderTypography>
                                 <SubheaderTypography align={"left"}>{props.data.title}</SubheaderTypography>
                                 <SubheaderTypography align={"left"}>Group {props.data.groupCode} - Office {props.data.officeCode}</SubheaderTypography>
-                                <ParagraphTypography align={"left"}>{"My 3 line description is Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eros libero, dignissim in lacus nec, tempor luctus mauris."}</ParagraphTypography>
+                                <ParagraphTypography align={"left"}>{props.data.bio}</ParagraphTypography>
                             </CardContent>
                         </div>
                     </Grid>
@@ -143,11 +156,11 @@ const ProfileCardLarge = (props) => {
                                 </div>
                                 <div className={classes.content}>
                                     <EmailIcon className={classes.icon} align={"left"}/>
-                                    <IconTypography align={"left"}> {props.data.email} </IconTypography><br/>
+                                    <IconTypography align={"left"}> <a class="link-wrapper" href={emailLink}> {email} </a> </IconTypography><br/>
                                 </div>
                                 <div className={classes.content}>
                                     <TodayIcon className={classes.icon} align={"left"}/>
-                                    <IconTypography align={"left"}> {props.data.hireDate} </IconTypography><br/>
+                                    <IconTypography align={"left"}> Hired on {month[hiredDate.getMonth()]} {hiredDate.getDate()}, {hiredDate.getFullYear()} </IconTypography><br/>
                                 </div>
                                 <div className={classes.content}>
                                     <WorkIcon className={classes.icon} align={"left"}/>

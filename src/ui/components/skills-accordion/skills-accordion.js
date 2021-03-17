@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -7,6 +7,8 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Box, withStyles} from "@material-ui/core";
 import ProfileSkill from "../profile-skill/profile-skill";
+import {getOrgChartResults} from "../../../services/org-chart";
+import storage from "../../../services/storage";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -49,21 +51,43 @@ const ParagraphTypography = withStyles({
         fontWeight: 400
     }
 })(Typography);
-//
-// export async function getSkills(skillArray) {
-//     return await storage.db.searchDocument('metadata', {filter_name: "skills"});
-// }
+
+
 
 const SkillsAccordion = (props) => {
     const classes = useStyles();
+    const [skills, setSkills] = useState()
     const [expanded, setExpanded] = React.useState('accordionPanel');
 
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
 
-    let skillArray = props.data;
+    useEffect(async () => {
+       storage.db.searchDocument('metadata', {call_name: "Skill"}).then((res) => {
+           console.log(res)
+           setSkills(res)
+       })
+    }, [])
 
+    let skillIdArray = props.data;
+    let skillArray = []
+    console.log(skillIdArray)
+
+    skillIdArray.forEach((skill) => {
+        let skillName;
+        console.log(skill)
+        skills.forEach((skillListing) => {
+            console.log(skillListing.value_id[0])
+            console.log("checking if " + skill.skillCategoryId + "===" +skillListing.value_id[0]+ " and "+skill.skillId +"==="+ skillListing.value_id[1])
+            if (skill.skillCategoryId === skillListing.value_id[0] && skill.skillId === skillListing.value_id[1]) {
+                skillName = skillListing.value_name
+            }
+        })
+        skillArray.push(skillName)
+    })
+
+    console.log(skillArray)
 
     return (
         <Box marginTop={2} marginBottom={2}>
@@ -81,7 +105,7 @@ const SkillsAccordion = (props) => {
                     <AccordionDetails>
                         <div >
                                 {skillArray.map((skill) =>
-                                    <ProfileSkill key={skillArray.indexOf(skill)} data={skill} />
+                                    <ProfileSkill data={skill} />
                                     )
                                 }
                         </div>
