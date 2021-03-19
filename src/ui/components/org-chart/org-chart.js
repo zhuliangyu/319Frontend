@@ -6,7 +6,7 @@ import {useParams} from "react-router-dom";
 
 
 const OrgChart = (props) => {
-    let linkBase = "http://localhost:3000"
+    let linkBase = window.location.origin
     let managerEmployeeId;
     let { id } = useParams(); // dynamic part of url, in this case, employeeNumber
     let data = [['Name', 'Manager', 'ToolTip']]
@@ -80,7 +80,7 @@ const OrgChart = (props) => {
             options={{
                 allowHtml: true,
                 color: "#FFFFFF",
-                selectionColor: "#cae0ef",
+                selectionColor: "#FFFFFF",
                 size: "small",
             }}
             rootProps={{ 'data-testid': '1' }}
