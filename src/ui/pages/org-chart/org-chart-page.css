@@ -11,23 +11,36 @@ p.employeeName {
 }
 
 div.selectedEmployeeContainer {
-    height: 100%;
     width: 97%;
     background-color: #CAE0EF;
     padding: 2px;
     border-radius: 5px;
+    flex-flow: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-div.container {
-    height: 100%;
-    width: 97%;
-    padding: 2px;
-    border-radius: 5px;
+a.link-wrapper {
+    font-size: 0.875rem;
+    font-family: Poppins,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    font-weight: 400;
+    line-height: 1.43;
+    text-decoration: none;
+}
+
+a.link-wrapper:hover {
+    text-decoration: underline;
+}
+
+div.loader {
+    height: 1000px;
 }
 
 td.google-visualization-orgchart-node.google-visualization-orgchart-node-small {
     border: 1px solid #26415C;
     padding: 0;
+    min-width: 130px;
 }
 
 td.google-visualization-orgchart-linebottom {

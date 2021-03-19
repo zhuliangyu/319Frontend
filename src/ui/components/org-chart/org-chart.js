@@ -6,6 +6,7 @@ import {useParams} from "react-router-dom";
 
 
 const OrgChart = (props) => {
+    let linkBase = "http://localhost:3000"
     let managerEmployeeId;
     let { id } = useParams(); // dynamic part of url, in this case, employeeNumber
     let data = [['Name', 'Manager', 'ToolTip']]
@@ -23,24 +24,31 @@ const OrgChart = (props) => {
         } else if (employeeLevel === 2) {
             employee.superiorID = id
         }
-        let link = "http://localhost:3000/orgchart/" + employeeNumber.toString()
-        console.log(link)
+
+
+        let orgChartLink = linkBase + "/orgchart/" + employeeNumber.toString()
+        let profilePageLink = linkBase + "/profile/" + employeeNumber.toString()
         let nodeHtml =
-                        '<div class="container">' +
-                            '<img class="avatar" src="https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" alt="Avatar" height="50" width="50" /> <br />'  +
-                            '<a class="link-wrapper" href='+link+' style="text-decoration:none;">' +
-                                '<p class="employeeName">' + employeeName + '</p>' +
-                            '</a>' +
-                        '</div>'
+                        '<img class="avatar" src="https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" alt="Avatar" height="50" width="50" /> <br />'  +
+                        '<p class="employeeName">' + employeeName + '</p>' +
+                        '<a class="link-wrapper" href='+profilePageLink+'> ' +
+                            'View Profile →' +
+                        '</a>' +
+                        '<br/>' +
+                        '<a class="link-wrapper" href='+orgChartLink+'> ' +
+                            'View Org Chart →' +
+                        '</a>'
 
         if (Number(employeeNumber) === Number(id)) {
             selectedEmployeeCount = employeeCounter
-            nodeHtml =  '<div class="selectedEmployeeContainer">' +
-                            '<img class="avatar" src="https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" alt="Avatar" height="50" width="50" /> <br />'  +
-                            '<a class="link-wrapper" href='+link+' style="text-decoration:none;">' +
-                                '<p class="employeeName">' + employeeName + '</p>' +
-                            '</a>' +
-                        '</div>'
+            nodeHtml =
+                '<div class="selectedEmployeeContainer">' +
+                    '<img class="avatar" src="https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" alt="Avatar" height="50" width="50" /> <br />'  +
+                    '<p class="employeeName">' + employeeName + '</p>' +
+                    '<a class="link-wrapper" href=' + profilePageLink +'>' +
+                        'View Profile →' +
+                    '</a>' +
+                '</div>'
         }
         console.log("--------------------------")
         let employeeElement = [{
