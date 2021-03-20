@@ -8,18 +8,19 @@ import {
   Typography,
   CardContent,
   Card,
-  Badge,
 } from "@material-ui/core";
 import profile from "../../../assets/profile.jpg";
 import { useHistory } from "react-router-dom";
-import './profile-card.css';
+import arrow from "../../../assets/arrow.svg";
+import "./profile-card-list.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "inline-block",
-    width: 280,
+    width: "100%",
     marginRight: 16,
     marginBottom: 10,
+    flexGrow: 1,
   },
   details: {
     display: "flex",
@@ -97,32 +98,22 @@ const ProfileCard = (props) => {
 
   return (
     <Card className={classes.root}>
-      <CardActionArea onClick={handleCardOnClick}>
+      <CardActionArea style={{ paddingLeft: 20 }} onClick={handleCardOnClick}>
         <Grid container spacing={0}>
           <Grid
             container
             item
-            xs={4}
+            xs={1}
             justify={"center"}
             alignItems="center"
-            paddingright={0}
             spacing={0}
           >
-            <Badge
-              overlap="circle"
-              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              badgeContent={isContractor ? 
-                (<div className='contractor-badge'>
-                  C
-                </div>) : null}
-            >
-              <Avatar
-                alt={name}
-                src={profile}
-                className={classes.profilePic}
-                pr={0}
-              />
-            </Badge>
+            <Avatar
+              alt={name}
+              src={profile}
+              className={classes.profilePic}
+              pr={0}
+            />
           </Grid>
           <Grid container item xs={8} justify={"flex-start"}>
             <div className={classes.details}>
@@ -136,6 +127,20 @@ const ProfileCard = (props) => {
                 </ParagraphTypography>
               </CardContent>
             </div>
+          </Grid>
+          <Grid container item xs={2} alignItems="center" justify="center">
+            {isContractor ? (
+              <div className="profile-card-list-button-contractor">
+                <Typography>Contractor</Typography>
+              </div>
+            ) : (
+              <div className="profile-card-list-button-permanent">
+                <Typography>Permanent</Typography>
+              </div>
+            )}
+          </Grid>
+          <Grid container item xs={1} alignItems="center" justify="center">
+            <img src={arrow} />
           </Grid>
         </Grid>
       </CardActionArea>

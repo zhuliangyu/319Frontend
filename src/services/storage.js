@@ -8,13 +8,15 @@ import Dexie from 'dexie';
 const storage = {};
 storage.db = {};
 storage.ss = {};
+storage.ls = {};
 
 // IndexedDB
 
 const idb = new Dexie('AE_Directory');
 idb.version(3).stores({
     filters: `++_uuid, display_name, call_name, type, input, parent, attach_parent, is_category, selection_id, attachment`,
-    metadata: `++_uuid, call_name, selection, meta_id_format, meta_id`
+    metadata: `++_uuid, call_name, selection, meta_id_format, meta_id`,
+    // search_history: `++_uuid, search_detail`
 });
 
 storage.db.addDocument = async(table, doc) => {
@@ -56,6 +58,15 @@ storage.ss.setPair = (key,value) => {
 
 storage.ss.getPair = (key) => {
     const res = sessionStorage.getItem(key);
+    return res;
+}
+
+storage.ls.setPair = (key,value) => {
+    localStorage.setItem(key, value);
+}
+
+storage.ls.getPair = (key) => {
+    const res = localStorage.getItem(key);
     return res;
 }
 
