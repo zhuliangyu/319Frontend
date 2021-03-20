@@ -1,3 +1,5 @@
+// TODO: make the height of sub-header change to accomodate for filters overflow
+
 import React, { useState, useEffect } from "react";
 import "./sub-header.css";
 import FilterIcon from "../../../../assets/filter-icon.svg";
@@ -6,6 +8,7 @@ import { Button, Divider, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import FilterChip from '../../filter-chip';
 import filters from "../../../../services/filters";
+import search from "../../../../services/search";
 import storage from "../../../../services/storage";
 
 const useStyles = makeStyles((theme) => ({
@@ -34,14 +37,12 @@ const useStyles = makeStyles((theme) => ({
 const Subheader = (props) => {
   const classes = useStyles();
   const location = window.location.pathname;
-  const [selectedFilters, setSelectedFilters] = useState(null);
+  const [selectedFilters, setSelectedFilters] = useState([]);
 
-  const [searchState, syncStorageSearch] = useState(sessionStorage.getItem('current_search'));
+  const [searchState, syncStorageSearch] = useState(storage.ss.getPair('current_search'));
 
   const updateSearch = async (e) => {
-    syncStorageSearch(sessionStorage.getItem('current_search'));
-    // console.log('--', await storage.db.searchDocument("metadata", {meta_id: "Office,01,02"}));
-    console.log(JSON.parse(sessionStorage.getItem('current_search')));
+    syncStorageSearch(storage.ss.getPair('current_search'));
   };
 
   useEffect(() => {
@@ -51,15 +52,19 @@ const Subheader = (props) => {
     }
   }, []);
 
-  const handleDelete = () => {
-    console.info("You clicked the delete icon.");
-  };
+  useEffect(async () => {
+    console.log('triggered chips_data update');
+    if (searchState !== null) {
+      const chips_data = await search.parseFilter(searchState);
+      setSelectedFilters(chips_data);
+    }
+    // console.log('chips data ', chips_data);
+  }, [searchState]);
 
-  // useEffect(() => {
-  //   console.log(filters.get());
-  //   console.log('--', await storage.db.searchDocument("metadata", {meta_id: "Office,01,02"}));
-
-  // }, []);
+  // TODO: needs to update filters on selected filters indexeddb
+  const handleChipDelete = (uuid_to_delete) => {
+    setSelectedFilters(selectedFilters.filter(chip => chip._uuid !== uuid_to_delete ));
+  }
 
   return (
     <div>
@@ -76,7 +81,11 @@ const Subheader = (props) => {
               orientation="vertical"
             />
             <div className="filter-chips">
-              
+              {
+                selectedFilters.map(filter_data => 
+                  <FilterChip key={filter_data._uuid} data={filter_data} handleDelete={() => handleChipDelete(filter_data._uuid)} />
+                )
+              }
             </div>
           </>
         ) : null}

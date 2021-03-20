@@ -13,18 +13,16 @@ const useStyles = makeStyles((theme) => ({
 
 const FilterChip = (props) => {
   const classes = useStyles();
-
-  const handleDelete = () => {
-    console.info("You clicked the delete icon.");
-  };
+  // console.log(props.filter_data);
+  const filter_label = props.data.call_name + ' - ' + props.data.value_name;
 
   return (
     <Chip
       color="secondary"
       className={classes.chip}
       size="small"
-      label={props.label}
-      onDelete={handleDelete}
+      label={filter_label}
+      onDelete={props.handleDelete}
     />
   );
 };

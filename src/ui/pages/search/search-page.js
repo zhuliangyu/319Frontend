@@ -23,7 +23,7 @@ const SearchPage = () => {
     search.postSearchResults(qs.parse(location.search))
       .then(res => {
         // console.log(res);
-        setSearchResults(res);
+        setSearchResults(res.results);
       })
   }, [location]);
 

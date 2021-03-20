@@ -2,6 +2,7 @@ import React from "react";
 import MuiToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import { Typography, withStyles } from "@material-ui/core";
+import storage from '../../../services/storage';
 
 const ToggleButton = withStyles({
   root: {
@@ -26,7 +27,7 @@ const ToggleButton = withStyles({
 
 const ToggleView = () => {
   const initView = () => {
-    const currView = localStorage.getItem('searchResultsView');
+    const currView = storage.ls.getPair('searchResultsView');
     return currView ? currView : 'card';
   }
   const [view, setView] = React.useState(initView);
@@ -34,7 +35,7 @@ const ToggleView = () => {
   // TODO: use local storage or session storage for list/card view state?
   const handleViewChange = (event, newView) => {
     setView(newView);
-    localStorage.setItem("searchResultsView", newView);
+    storage.ls.setPair("searchResultsView", newView);
     window.dispatchEvent(new Event("storage"));
   };
 

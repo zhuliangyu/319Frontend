@@ -94,10 +94,10 @@ const SearchBar = (props) => {
     // console.log(value);
     let queries = await makeQueries();
 
-    const stringified = await qs.stringify(queries);
+    const stringified = qs.stringify(queries);
 
     history.push(`/search?${stringified}`);
-
+    // window.dispatchEvent(new Event('update_search'));
     // props.dispatch(performSearch(value));
   };
 

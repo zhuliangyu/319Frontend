@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import './search-results.css';
 import ProfileCard from '../profile-card';
 import ProfileCardList from '../profile-card-list';
+import storage from '../../../services/storage';
 
 const SearchResults = (props) => {
   let searchResults = props.data;
-  const [view, syncLocalStorageview] = useState(localStorage.getItem('searchResultsView'));
+  const [view, syncLocalStorageview] = useState(storage.ls.getPair('searchResultsView'));
 
   const changeViewFn = e => {
-    syncLocalStorageview(localStorage.getItem('searchResultsView'));
+    syncLocalStorageview(storage.ls.getPair('searchResultsView'));
   };
 
   useEffect(() => {
