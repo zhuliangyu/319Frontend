@@ -1,12 +1,11 @@
 import axios from "axios";
 import filters from "./filters";
+import storage from "./storage";
 const search = {};
 const util = {};
 
-export const postSearchResults = (queries) => {
+search.postSearchResults = async(queries) => {
   console.log("search service queries? ", queries);
-
-  // not accurate, need to get ALL values including those from filter?
 
   const value = queries;
   const filterName = Object.keys(value)[0];
@@ -17,26 +16,52 @@ export const postSearchResults = (queries) => {
   } else {
     let body =
       filterName === "name"
-        ? createBodyForNameSearch(inputValue)
-        : createBodyNameForNumberOrEmail(filterName, inputValue);
+        ? util.createBodyForNameSearch(inputValue)
+        : util.createBodyNameForNumberOrEmail(filterName, inputValue);
 
     // console.log('performing search action...');
 
     console.log(body);
 
-    return axios.post("/api/search", body).then(
-      (response) => {
-        return response.data;
-        // console.log(response);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+    let res = await util.searchOnline(body);
+
+    return res;
   }
 };
 
-const createBodyForNameSearch = (inputValue) => {
+util.searchOnline = (body) => {
+  return new Promise(async(resolve) => {
+    return axios.post("/api/search", body).then(
+      async(response) => {
+        let results = response.data.results;
+        await util.saveResult(results);
+        resolve(results);
+      },
+      (error) => {
+        console.log(error);
+        resolve();
+      }
+    );
+  })
+}
+
+util.saveResult = async(results) => {
+  return new Promise(async(resolve) => {
+    await storage.db.clearTable('searchResults');
+    if (results) {
+      for (let result of results) {
+        let group = await storage.db.searchDocument('metadata', {meta_id: `Group,${result.companyCode},${result.officeCode},${result.groupCode}`});
+        result.groupName = group[0].value_name;
+        result.skills = result.skills.toString();
+        await storage.db.addDocument('searchResults', result);
+      }
+    }
+
+    resolve(results);
+  })
+}
+
+util.createBodyForNameSearch = (inputValue) => {
   let body = filters.get();
   if (inputValue.includes(" ")) {
     let firstName = inputValue.substring(0, inputValue.indexOf(" "));
@@ -49,42 +74,21 @@ const createBodyForNameSearch = (inputValue) => {
       type: "AND",
       values: [lastName],
     }
-    /*let firstAndLastNameObj = {
-      FirstName: {
-        type: "AND",
-        values: [firstName],
-      },
-      LastName: {
-        type: "AND",
-        values: [lastName],
-      },
-    };*/
-    //body = firstAndLastNameObj;
+
   } else {
-    /*let nameObj = {
-      Name: {
-        type: "AND",
-        values: [inputValue],
-      },
-    };*/
     
     body.Name = {
       type: "AND",
       values: [inputValue]
     }
   }
+
   filters.clear();
   return body;
 };
 
-const createBodyNameForNumberOrEmail = (filter_name, inputValue) => {
-  let filterName = determineFilterString(filter_name);
-  /*let body = {
-    [filterName]: {
-      type: null,
-      values: [],
-    },
-  };*/
+util.createBodyNameForNumberOrEmail = (filter_name, inputValue) => {
+  let filterName = util.determineFilterString(filter_name);
 
   let body = filters.get();
 
@@ -98,11 +102,12 @@ const createBodyNameForNumberOrEmail = (filter_name, inputValue) => {
   } else if (filterName == "Email") {
     body[filterName].values.push(inputValue);
   }
+
   filters.clear();
   return body;
 };
 
-const determineFilterString = (filter_name) => {
+util.determineFilterString = (filter_name) => {
   switch (filter_name) {
     case "workCell":
       return "WorkCell";
@@ -114,3 +119,5 @@ const determineFilterString = (filter_name) => {
       return "";
   }
 };
+
+export default search;

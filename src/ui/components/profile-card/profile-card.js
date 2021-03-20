@@ -9,7 +9,6 @@ import {
   CardContent,
   Card
 } from "@material-ui/core";
-import profile from "../../../assets/profile.jpg";
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -82,10 +81,9 @@ const SubheaderTypography = withStyles({
 const ProfileCard = (props) => {
   const classes = useStyles();
   let history = useHistory();
-  let name = props.data.firstName + ' ' + props.data.lastName;
+  let name = `${props.data.firstName} ${props.data.lastName}`;
   let title = props.data.title;
-  let groupCode = props.data.groupCode;
-  let officeCode = props.data.officeCode;
+  let groupName= props.data.groupName;
 
   const handleCardOnClick = async () => {
     history.push(`/profile/${props.data.employeeNumber}`);
@@ -107,7 +105,7 @@ const ProfileCard = (props) => {
           >
             <Avatar
               alt={name}
-              src={profile}
+              src={`/api/photos/${props.data.employeeNumber}`}
               className={classes.profilePic}
               pr={0}
             />
@@ -122,7 +120,7 @@ const ProfileCard = (props) => {
                   {title}
                 </SubheaderTypography>
                 <ParagraphTypography align={"left"}>
-                  Group: {groupCode} & Office: {officeCode}
+                  {groupName}
                 </ParagraphTypography>
               </CardContent>
             </div>
