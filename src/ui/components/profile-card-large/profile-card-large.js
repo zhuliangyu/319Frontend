@@ -11,6 +11,7 @@ import WorkIcon from '@material-ui/icons/Work';
 import profile from '../../../assets/profile.jpg';
 import { useHistory } from "react-router-dom";
 import './profile-card-large.css';
+import storage from '../../../services/storage';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -130,7 +131,7 @@ const ProfileCardLarge = (props) => {
                             <CardContent>
                                 <HeaderTypography align={"left"}>{props.data.firstName} {props.data.lastName}</HeaderTypography>
                                 <SubheaderTypography align={"left"}>{props.data.title}</SubheaderTypography>
-                                <SubheaderTypography align={"left"}>Group {props.data.groupCode} - Office {props.data.officeCode}</SubheaderTypography>
+                                <SubheaderTypography align={"left"}>{props.data.groupName} ({props.data.officeName})</SubheaderTypography>
                                 <ParagraphTypography align={"left"}>{props.data.bio}</ParagraphTypography>
                             </CardContent>
                         </div>
@@ -163,7 +164,27 @@ const ProfileCardLarge = (props) => {
                                             window.location.reload();
                                         }}
                                     >
-                                        View on Organization Chart →
+                                         View on Organization Chart →
+                                    </Link>
+                                </div>
+                                <div className={classes.orgChartLink}>
+                                    <Link
+                                        component="button"
+                                        variant="body2"
+                                        onClick={async() => {
+                                            let profileData = {
+                                                employeeNumber: props.data.employeeNumber,
+                                                title: props.data.title,
+                                                groupName: props.data.groupName,
+                                                lastName: props.data.lastName,
+                                                firstName: props.data.firstName,
+                                                status: "pinned"
+                                            }
+                                            await storage.db.addDocument('pinnedProfiles', profileData);
+                                            alert('Profile Pinned!');
+                                        }}
+                                    >
+                                          📌Pin this profile &ensp;
                                     </Link>
                                 </div>
                             </div>

@@ -12,3 +12,18 @@
   font-weight: 600;
   font-size: 24px;
 }
+
+.explore-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.explore-container {
+  margin-top: 15px;
+  margin-left: -1%;
+  width: 100%;
+  max-width: 1400px;
+  min-width: 800px;
+}
