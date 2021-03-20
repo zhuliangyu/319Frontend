@@ -42,7 +42,7 @@ const ToggleView = () => {
   return (
     <div>
       <ToggleButtonGroup value={view} exclusive onChange={handleViewChange}>
-        <ToggleButton value="card"><Typography>Card</Typography></ToggleButton>
+        <ToggleButton value="card"><Typography>Grid</Typography></ToggleButton>
         <ToggleButton value="list"><Typography>List</Typography></ToggleButton>
       </ToggleButtonGroup>
     </div>

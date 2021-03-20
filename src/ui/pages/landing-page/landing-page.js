@@ -24,7 +24,6 @@ const LandingPage = () => {
     <div>
       <Header />
       <PinnedProfiles />
-      <ResumeSearch />
       <ExploreAELocations />
       <Filter_modal/>
     </div>
