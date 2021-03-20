@@ -14,6 +14,10 @@ const LandingPage = () => {
   useEffect(async()=> {
     filters.clear();
     storage.ss.setPair('search_key', null);
+    storage.ss.setPair('current_search', null);
+    if (!storage.ls.getPair('searchHistory')) {
+      storage.ls.setPair('searchHistory', JSON.stringify([]));
+    }
     console.log('all clear');
   }, [] );
   return (

@@ -1,9 +1,15 @@
-import React from "react";
+// TODO: make the height of sub-header change to accomodate for filters overflow
+
+import React, { useState, useEffect } from "react";
 import "./sub-header.css";
 import FilterIcon from "../../../../assets/filter-icon.svg";
 import CloseIcon from "../../../../assets/close-icon.svg";
-import { Button, Chip, Divider, Typography } from "@material-ui/core";
+import { Button, Divider, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import FilterChip from '../../filter-chip';
+import filters from "../../../../services/filters";
+import search from "../../../../services/search";
+import storage from "../../../../services/storage";
 
 const useStyles = makeStyles((theme) => ({
   button: {},
@@ -31,10 +37,34 @@ const useStyles = makeStyles((theme) => ({
 const Subheader = (props) => {
   const classes = useStyles();
   const location = window.location.pathname;
+  const [selectedFilters, setSelectedFilters] = useState([]);
 
-  const handleDelete = () => {
-    console.info("You clicked the delete icon.");
+  const [searchState, syncStorageSearch] = useState(storage.ss.getPair('current_search'));
+
+  const updateSearch = async (e) => {
+    syncStorageSearch(storage.ss.getPair('current_search'));
   };
+
+  useEffect(() => {
+    window.addEventListener('update_search', updateSearch);
+    return () => {
+      window.removeEventListener('update_search', updateSearch);
+    }
+  }, []);
+
+  useEffect(async () => {
+    console.log('triggered chips_data update');
+    if (searchState !== null) {
+      const chips_data = await search.parseFilter(searchState);
+      setSelectedFilters(chips_data);
+    }
+    // console.log('chips data ', chips_data);
+  }, [searchState]);
+
+  // TODO: needs to update filters on selected filters indexeddb
+  const handleChipDelete = (uuid_to_delete) => {
+    setSelectedFilters(selectedFilters.filter(chip => chip._uuid !== uuid_to_delete ));
+  }
 
   return (
     <div>
@@ -51,13 +81,11 @@ const Subheader = (props) => {
               orientation="vertical"
             />
             <div className="filter-chips">
-              <Chip
-                color="secondary"
-                className={classes.chip}
-                size="small"
-                label="*dynamically generate label*"
-                onDelete={handleDelete}
-              />
+              {
+                selectedFilters.map(filter_data => 
+                  <FilterChip key={filter_data._uuid} data={filter_data} handleDelete={() => handleChipDelete(filter_data._uuid)} />
+                )
+              }
             </div>
           </>
         ) : null}

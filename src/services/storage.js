@@ -8,6 +8,7 @@ import Dexie from 'dexie';
 const storage = {};
 storage.db = {};
 storage.ss = {};
+storage.ls = {};
 
 // IndexedDB
 
@@ -57,6 +58,15 @@ storage.ss.setPair = (key,value) => {
 
 storage.ss.getPair = (key) => {
     const res = sessionStorage.getItem(key);
+    return res;
+}
+
+storage.ls.setPair = (key,value) => {
+    localStorage.setItem(key, value);
+}
+
+storage.ls.getPair = (key) => {
+    const res = localStorage.getItem(key);
     return res;
 }
 

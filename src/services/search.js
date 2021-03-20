@@ -11,6 +11,8 @@ search.postSearchResults = async(queries) => {
   const filterName = Object.keys(value)[0];
   const inputValue = value[filterName];
 
+  // TODO: separate the query string from filters to go back to the state easily?
+
   if (value == null) {
     console.log("error: value is null");
   } else {
@@ -21,20 +23,26 @@ search.postSearchResults = async(queries) => {
 
     // console.log('performing search action...');
 
-    console.log(body);
+    let searchItem = {};
 
-    let res = await util.searchOnline(body);
+    let res = await util.searchOnline(body, value);
 
     return res;
   }
 };
 
-util.searchOnline = (body) => {
+util.searchOnline = (body, value) => {
+  let searchItem = {};
   return new Promise(async(resolve) => {
     return axios.post("/api/search", body).then(
       async(response) => {
         let results = response.data.results;
         await util.saveResult(results);
+        searchItem = {
+          keyword: value,
+          filterObject: body,
+        }
+        storage.ss.setPair('current_search', JSON.stringify(searchItem));
         resolve(results);
       },
       (error) => {
@@ -43,6 +51,23 @@ util.searchOnline = (body) => {
       }
     );
   })
+  .then((res) => {
+    window.dispatchEvent(new Event('update_search'));
+
+    // TODO: handle null searches
+    // Update search history if unique search
+    let search_history = JSON.parse(storage.ls.getPair('searchHistory'));
+    search_history.push(searchItem);
+    let search_history_serialized = search_history.map(e => JSON.stringify(e));
+    let search_history_serialized_set = new Set(search_history_serialized);
+    let unique_search_history = [...search_history_serialized_set];
+    const unique_arr = unique_search_history.map(e => JSON.parse(e));
+    // console.log(unique_arr);
+
+    storage.ls.setPair('searchHistory', JSON.stringify(unique_arr));
+
+    return res;
+  });
 }
 
 util.saveResult = async(results) => {
@@ -60,6 +85,7 @@ util.saveResult = async(results) => {
     resolve(results);
   })
 }
+    
 
 util.createBodyForNameSearch = (inputValue) => {
   let body = filters.get();
@@ -97,9 +123,9 @@ util.createBodyNameForNumberOrEmail = (filter_name, inputValue) => {
     values: [],
   }
 
-  if (filterName == "WorkCell" || filterName == "WorkPhone") {
+  if (filterName === "WorkCell" || filterName === "WorkPhone") {
     body[filterName].values.push(inputValue);
-  } else if (filterName == "Email") {
+  } else if (filterName === "Email") {
     body[filterName].values.push(inputValue);
   }
 
@@ -118,6 +144,34 @@ util.determineFilterString = (filter_name) => {
     default:
       return "";
   }
+};
+
+// Create filter chips
+
+search.parseFilter = async (searchObj) => {
+  let search_params = JSON.parse(searchObj);
+  console.log('search parse filter search params', search_params);
+  let filter_chips = [];
+  if (search_params !== null) {
+    const filter_object = search_params['filterObject'];
+    for (let call_name of Object.keys(filter_object)) {
+      if (call_name !== 'Name' && call_name !== 'WorkCell' && call_name !== 'WorkPhone' && call_name !== 'Email') {
+        let value_strings = [];
+        let valueKeys = Object.keys(filter_object[call_name].values[0]);
+        for (let valueKey of valueKeys) {
+          value_strings.push(filter_object[call_name].values[0][valueKey]);
+        }
+        const meta_id_value = await util.parseFilterMetaId(`${call_name},${value_strings.join()}`);
+        filter_chips.push(meta_id_value);
+      }
+    }
+  }
+  return filter_chips;
+};
+
+util.parseFilterMetaId = async (meta_id_string) => {
+  const value = await storage.db.searchDocument("metadata", {meta_id: meta_id_string});
+  return value[0];
 };
 
 export default search;
