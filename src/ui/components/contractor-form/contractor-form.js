@@ -94,8 +94,7 @@ const ContractorForm = (props) => {
         if ('workPhone' in fieldValues && fieldValues.workPhone !== "")
             temp.workPhone = (/^\d{3}\-\d{3}\-\d{4}$/).test(fieldValues.workPhone) ? "" : "Phone number is not valid."
         if ('workCell' in fieldValues && fieldValues.workCell !== "")
-            temp.workCell = (/^\d{3}\-\d{3}\-\d{4}$/).test(fieldValues.workCell) && temp.workPhone !== "" ?
-                "" : "Phone number is not valid."
+            temp.workCell = (/^\d{3}\-\d{3}\-\d{4}$/).test(fieldValues.workCell)  ? "" : "Phone number is not valid."
 
         setErrors({
             ...temp
@@ -373,6 +372,7 @@ const ContractorForm = (props) => {
                             fullWidth={true}
                             name="bio"
                             label="Biography"
+                            onChange={handleInputChange}
                             multiline
                             rows={2}
                             value={values.bio}
@@ -384,6 +384,7 @@ const ContractorForm = (props) => {
                             fullWidth={true}
                             name="extraInfo"
                             label="Exra Information"
+                            onChange={handleInputChange}
                             multiline
                             rows={4}
                             value={values.extraInfo}

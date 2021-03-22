@@ -12,9 +12,9 @@ export const formatContractor = (contractor) => {
         } else if (key === "companyCode" || key === "officeCode" || key === "groupCode" || key === "locationId" ) {
             res[key] = res[key][value.length-1]
         // format number fields
-        } else if (key === "supervisorEmployeeNumber") {
+        } else if (key === "supervisorEmployeeNumber" || key === "yearsPriorExperience") {
             res[key] = parseInt(value)
-         }
+        }
     }
     return res;
 }

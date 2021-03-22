@@ -15,6 +15,7 @@ const DropDown = (props) => {
                 name={name}
                 value={value}
                 onChange={onChange}>
+                <option aria-label="None" value="" />
                 {
                     options.map(
                         item => (<MenuItem key={item.value_id} value={item.value_id}>{item.value_name}</MenuItem>)
