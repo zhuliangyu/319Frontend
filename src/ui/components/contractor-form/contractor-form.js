@@ -2,26 +2,50 @@ import React, {useEffect, useState} from "react";
 import {KeyboardDatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
 import DateFnsUtils from "@date-io/date-fns";
 import filters from "../../../services/filters";
-
-import {Button, Grid, Paper, TextField} from '@material-ui/core';
+import {Button, Grid, Paper, TextField, Modal, makeStyles} from '@material-ui/core';
 import DropDown from "./dropdown";
 import {useForm} from "./useForm";
 import storage from "../../../services/storage";
+import {addContractor, formatContractor} from "../../../services/contractor";
 
+// modal styling
+const useStyles = makeStyles((theme) => ({
+    modal: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    paper: {
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+    },
+}));
+
+// Model texts
+const ADD_SUCCESS_TITLE = "Add Success";
+const ADD_SUCCESS_TEXT = "Contractor was added successfully."
+const ADD_FAIL_TITLE = "Add Failed";
+const ADD_FAIL_TEXT = "Failed to add the contractor. Please ensure all information is entered correctly."
+
+// TODO: refactor modal
 const ContractorForm = (props) => {
+    const classes = useStyles();
     const formTitle = props.data.hasData ? "Edit Contractor" : "Add a contractor";
-    const [selectionFilters, setSelectionFilters] = useState([]);
     const [companies, setCompanies] = useState([]);
     const [offices, setOffices] = useState([{value_id: -1, value_name: "Please select a Company"}]);
     const [groups, setGroups] = useState([{value_id: -1, value_name: "Please select an Office"}]);
     const [locations, setLocations] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [modalText, setModalText] = useState("");
+    const [modalTitle, setModalTitle] = useState("");
 
     // set the initial companies and locations selections
     useEffect(async() => {
         console.log(await storage.db.searchDocument('metadata', {meta_id: 'Office,01,02'}));
         setCompanies(await storage.db.searchDocument('metadata', {call_name: 'Company'}));
         setLocations(await storage.db.searchDocument('metadata', {call_name: 'Location'}));
-        setSelectionFilters(await filters.getFilterList("Selection"));
     }, [])
 
     // initial form values
@@ -61,6 +85,8 @@ const ContractorForm = (props) => {
             temp.officeCode = fieldValues.officeCode && fieldValues.officeCode !== -1 ? "" : "This field is required."
         if ('groupCode' in fieldValues)
             temp.groupCode = fieldValues.groupCode && fieldValues.groupCode !== -1 ? "" : "This field is required."
+        if ('locationId' in fieldValues)
+            temp.locationId = fieldValues.locationId && fieldValues.locationId !== -1 ? "" : "This field is required."
         if ('supervisorEmployeeNumber' in fieldValues)
             temp.supervisorEmployeeNumber = fieldValues.supervisorEmployeeNumber ? "" : "This field is required."
         if ('email' in fieldValues)
@@ -117,9 +143,25 @@ const ContractorForm = (props) => {
     // TODO
     const handleSubmit = e => {
         e.preventDefault()
-        if (validate()){
-            console.log("form submission")
-            resetForm()
+        if (validate()) {
+            const requestBody = formatContractor(values);
+            console.log(requestBody);
+            // case add - no initial data
+            if (!props.data.hasData) {
+                addContractor(requestBody).then(res => {
+                    if (res.status === 200) {
+                        setModalTitle(ADD_SUCCESS_TITLE);
+                        setModalText(ADD_SUCCESS_TEXT);
+                        handleOpen();
+                        resetForm();
+                    } else {
+                        setModalTitle(ADD_FAIL_TITLE);
+                        setModalText(ADD_FAIL_TEXT);
+                        // setModalText(res.response.data.title)
+                        handleOpen();
+                    }
+                });
+            }
         }
     }
 
@@ -130,9 +172,30 @@ const ContractorForm = (props) => {
         }
     })
 
+    // modal controls
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     return (
         <form onSubmit={handleSubmit}>
             <h2>{formTitle}</h2>
+            <Modal
+                open={open}
+                onClose={handleClose}
+                className={classes.modal}
+                aria-labelledby="simple-modal-title"
+                aria-describedby="simple-modal-description"
+            >
+                <div className={classes.paper}>
+                    <h2 id="transition-modal-title">{modalTitle}</h2>
+                    <p id="transition-modal-description">{modalText}</p>
+                </div>
+            </Modal>
             <Paper style={{ padding: 16 }}>
                 <Grid container spacing={5} >
                     <Grid item xs={12} sm={6}>
@@ -197,11 +260,14 @@ const ContractorForm = (props) => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <DropDown
-                            name="location"
-                            label="Physical Location"
+                            required
+                            name="locationId"
+                            label="Physical LocationId"
                             value={values.locationId.value_name}
                             onChange={handleInputChange}
                             options={locations}
+                            error =  {errors.locationId}
+                            helperText={errors.locationId}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
