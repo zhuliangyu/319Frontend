@@ -58,6 +58,17 @@ td.google-visualization-orgchart-node.google-visualization-orgchart-node-small {
     min-width: 130px;
 }
 
+div.page-contents-wrapper {
+    background-color: #F2F2F2;
+}
+
+div.orgchart-wrapper {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 30px;
+}
+
 td.google-visualization-orgchart-linebottom {
     border-bottom: 2px solid #26415C;
     display: table-cell;

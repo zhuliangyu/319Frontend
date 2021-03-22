@@ -123,7 +123,7 @@ const ProfileCardLarge = (props) => {
                 <Grid container spacing={0}>
                     <Grid container item xs={2} justify={"center"} alignItems="center" paddingRight={0}>
                         <div className={classes.profileDiv}>
-                            <Avatar alt={props.data.firstName} src={profile} className={classes.profilePic} pr={0}/>
+                            <Avatar alt={props.data.firstName} src={`/api/photos/${props.data.employeeNumber}`} className={classes.profilePic} pr={0}/>
                         </div>
                     </Grid>
                     <Grid container item xs={5} justify={"flex-start"}>
@@ -145,7 +145,7 @@ const ProfileCardLarge = (props) => {
                                 </div>
                                 <div className={classes.content}>
                                     <EmailIcon className={classes.icon} align={"left"}/>
-                                    <IconTypography align={"left"}> <a class="link-wrapper" href={emailLink}> {email} </a> </IconTypography><br/>
+                                    <IconTypography align={"left"}> <a class="link" href={emailLink}> {email} </a> </IconTypography><br/>
                                 </div>
                                 <div className={classes.content}>
                                     <TodayIcon className={classes.icon} align={"left"}/>
