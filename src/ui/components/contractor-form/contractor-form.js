@@ -2,12 +2,12 @@ import React, {useEffect, useState} from "react";
 import {KeyboardDatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
 import DateFnsUtils from "@date-io/date-fns";
 import filters from "../../../services/filters";
-import {Button, Grid, Paper, TextField, Modal, makeStyles} from '@material-ui/core';
+import {Button, Grid, Paper, TextField, Modal, makeStyles, Box} from '@material-ui/core';
 import DropDown from "./dropdown";
 import {useForm} from "./useForm";
 import storage from "../../../services/storage";
 import {addContractor, formatContractor} from "../../../services/contractor";
-
+import ImageUpload from "../image-upload";
 // modal styling
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -40,6 +40,7 @@ const ContractorForm = (props) => {
     const [open, setOpen] = useState(false);
     const [modalText, setModalText] = useState("");
     const [modalTitle, setModalTitle] = useState("");
+    const [imageName, setImageName] = useState("")
 
     // set the initial companies and locations selections
     useEffect(async() => {
@@ -72,7 +73,6 @@ const ContractorForm = (props) => {
 
     // validation logic
     const validate = (fieldValues = values) => {
-        let fieldName = Object.keys(fieldValues)[0];
         let temp = { ...errors }
 
         if ('lastName' in fieldValues)
@@ -143,7 +143,7 @@ const ContractorForm = (props) => {
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()) {
-            const requestBody = formatContractor(values);
+            const requestBody = formatContractor(values, imageName);
             console.log(requestBody);
             // case add - no initial data
             if (!props.data.hasData) {
@@ -368,6 +368,10 @@ const ContractorForm = (props) => {
                         </MuiPickersUtilsProvider>
                     </Grid>
                     <Grid item xs={12}>
+                        <h4>Upload Image: </h4>
+                        <ImageUpload passImageName={setImageName}/>
+                    </Grid>
+                    <Grid item xs={12}>
                         <TextField
                             fullWidth={true}
                             name="bio"
@@ -391,7 +395,7 @@ const ContractorForm = (props) => {
                             variant="outlined"
                         />
                     </Grid>
-                    <Grid item xs={2}>
+                    <Box p={2}>
                         <Button
                             variant={"contained"}
                             size={"large"}
@@ -400,8 +404,8 @@ const ContractorForm = (props) => {
                             text={"Submit"}>
                             Submit
                         </Button>
-                    </Grid>
-                    <Grid item xs={2}>
+                    </Box>
+                    <Box p={2}>
                         <Button
                             variant={"contained"}
                             size={"large"}
@@ -410,7 +414,7 @@ const ContractorForm = (props) => {
                             text={"Reset"}>
                             Cancel
                         </Button>
-                    </Grid>
+                    </Box>
                 </Grid>
             </Paper>
         </form>

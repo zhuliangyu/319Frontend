@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // formats the contractor object for http request
-export const formatContractor = (contractor) => {
+export const formatContractor = (contractor, imageFileName) => {
     // make a deep copy
     let res = JSON.parse(JSON.stringify(contractor));
     for (let [key, value] of Object.entries(res)) {
@@ -15,6 +15,11 @@ export const formatContractor = (contractor) => {
         } else if (key === "supervisorEmployeeNumber" || key === "yearsPriorExperience") {
             res[key] = parseInt(value)
         }
+    }
+
+    // update image url
+    if (imageFileName !== "") {
+        res["photoUrl"] = imageFileName;
     }
     return res;
 }
