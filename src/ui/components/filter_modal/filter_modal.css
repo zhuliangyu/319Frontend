@@ -14,6 +14,12 @@
     outline: none;
 }
 
+#filter_modal .tabpanel_wrapper {
+    height: 300px;
+    display: flex;
+    flex-grow: 1;
+}
+
 #filter_modal .vertical-tabpanel {
 
     overflow-y: scroll;
@@ -29,6 +35,12 @@
 
 #filter_modal .MuiTabs-indicator {
     background-color: rgb(38, 65, 92) !important;
+}
+
+
+#filter_modal .tabpanel_padding {
+    padding: 24px;
+    padding-top: 0px;
 }
 
 #filter_modal #submit_filters {

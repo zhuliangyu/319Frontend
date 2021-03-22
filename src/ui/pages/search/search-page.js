@@ -4,12 +4,11 @@ import PageTitleSearch from '../../components/page-title-search';
 import SearchResults from '../../components/search-results';
 import { useLocation } from 'react-router-dom';
 import * as qs from 'query-string';
-import  { postSearchResults } from '../../../services/search';
+import search from '../../../services/search';
 import Filter_modal from '../../components/filter_modal/filter_modal';
 import '../../components/filter_modal/filter_modal.css';
 import filters from '../../../services/filters';
 import storage from '../../../services/storage';
-import search from '../../../services/search';
 
 const SearchPage = () => {
   const heading_text = 'Search Results';
@@ -23,7 +22,7 @@ const SearchPage = () => {
     search.postSearchResults(qs.parse(location.search))
       .then(res => {
         // console.log(res);
-        setSearchResults(res.results);
+        setSearchResults(res);
       })
   }, [location]);
 

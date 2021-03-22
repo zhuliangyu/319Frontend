@@ -34,3 +34,55 @@
   align-items: center;
   margin: auto;
 }
+
+.profile-list-card {
+  width: 100%;
+  min-height: 115px;
+  display: inline-block;
+  flex-grow: 1;
+  margin-right: 16px;
+  margin-bottom: 10px;
+  background: #FFFFFF;
+  border: 1px solid #ABABAB !important;
+  box-sizing: border-box;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+
+.profilePic {
+  width: 75px !important;
+  height: 75px !important;
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: row;
+}
+
+.profile-list-heading {
+  color: #26415C;
+  font-size: 18px;
+  font-family: Poppins;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.profile-list-subheading {
+  color: #868D98;
+  font-size: 14px;
+  font-family: Poppins;
+  font-weight: 600;
+  display: block;
+}
+
+.profile-list-groupName {
+  color: #868D98;
+  font-size: 14px;
+  font-family: Poppins;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.profile-details {
+  text-align: left;
+}

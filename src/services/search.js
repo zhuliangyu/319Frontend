@@ -4,11 +4,8 @@ import storage from "./storage";
 const search = {};
 const util = {};
 
-// send POST request to /search endpoint
-// TODO: deal with pagination
-
-search.postSearchResults = (queries) => {
-  // console.log("search service queries? ", queries);
+search.postSearchResults = async(queries) => {
+  console.log("search service queries? ", queries);
 
   const value = queries;
   const filterName = Object.keys(value)[0];
@@ -24,41 +21,71 @@ search.postSearchResults = (queries) => {
         ? util.createBodyForNameSearch(inputValue)
         : util.createBodyNameForNumberOrEmail(filterName, inputValue);
 
+    // console.log('performing search action...');
+
     let searchItem = {};
 
-    return axios.post("/api/search", body)
-    .then(
-      (response) => {
+    let res = await util.searchOnline(body, value);
+
+    return res;
+  }
+};
+
+util.searchOnline = (body, value) => {
+  let searchItem = {};
+  return new Promise(async(resolve) => {
+    return axios.post("/api/search", body).then(
+      async(response) => {
+        let results = response.data.results;
+        await util.saveResult(results);
         searchItem = {
           keyword: value,
           filterObject: body,
         }
         storage.ss.setPair('current_search', JSON.stringify(searchItem));
-        return response.data;
+        resolve(results);
       },
       (error) => {
         console.log(error);
+        resolve();
       }
-    )
-    .then((res) => {
-      window.dispatchEvent(new Event('update_search'));
+    );
+  })
+  .then((res) => {
+    window.dispatchEvent(new Event('update_search'));
 
-      // TODO: handle null searches
-      // Update search history if unique search
-      let search_history = JSON.parse(storage.ls.getPair('searchHistory'));
-      search_history.push(searchItem);
-      let search_history_serialized = search_history.map(e => JSON.stringify(e));
-      let search_history_serialized_set = new Set(search_history_serialized);
-      let unique_search_history = [...search_history_serialized_set];
-      const unique_arr = unique_search_history.map(e => JSON.parse(e));
-      // console.log(unique_arr);
+    // TODO: handle null searches
+    // Update search history if unique search
+    let search_history = JSON.parse(storage.ls.getPair('searchHistory'));
+    search_history.push(searchItem);
+    let search_history_serialized = search_history.map(e => JSON.stringify(e));
+    let search_history_serialized_set = new Set(search_history_serialized);
+    let unique_search_history = [...search_history_serialized_set];
+    const unique_arr = unique_search_history.map(e => JSON.parse(e));
+    // console.log(unique_arr);
 
-      storage.ls.setPair('searchHistory', JSON.stringify(unique_arr));
+    storage.ls.setPair('searchHistory', JSON.stringify(unique_arr));
 
-      return res;
-    });
-  }
-};
+    return res;
+  });
+}
+
+util.saveResult = async(results) => {
+  return new Promise(async(resolve) => {
+    await storage.db.clearTable('searchResults');
+    if (results) {
+      for (let result of results) {
+        let group = await storage.db.searchDocument('metadata', {meta_id: `Group,${result.companyCode},${result.officeCode},${result.groupCode}`});
+        result.groupName = group[0].value_name;
+        result.skills = result.skills.toString();
+        await storage.db.addDocument('searchResults', result);
+      }
+    }
+
+    resolve(results);
+  })
+}
+    
 
 util.createBodyForNameSearch = (inputValue) => {
   let body = filters.get();
@@ -73,19 +100,22 @@ util.createBodyForNameSearch = (inputValue) => {
       type: "AND",
       values: [lastName],
     }
+
   } else {
-   
+    
     body.Name = {
       type: "AND",
       values: [inputValue]
     }
   }
+
   filters.clear();
   return body;
 };
 
 util.createBodyNameForNumberOrEmail = (filter_name, inputValue) => {
   let filterName = util.determineFilterString(filter_name);
+
   let body = filters.get();
 
   body[filterName] = {
@@ -98,6 +128,7 @@ util.createBodyNameForNumberOrEmail = (filter_name, inputValue) => {
   } else if (filterName === "Email") {
     body[filterName].values.push(inputValue);
   }
+
   filters.clear();
   return body;
 };

@@ -3,22 +3,18 @@
  */
 
 import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Box from '@material-ui/core/Box';
 import filters from "../../../services/filters";
 import Button from '@material-ui/core/Button';
 
 
 function TabPanel(props) {
-    const { children, value, index, ...other } = props;
+    const {children, value, index} = props;
   
     return (
       <div
@@ -27,70 +23,52 @@ function TabPanel(props) {
         id={`vertical-tabpanel-${index}`}
         className="vertical-tabpanel"
         aria-labelledby={`vertical-tab-${index}`}
-        {...other}
       >
         {value === index && (
-          <Box p={3}>
-            <Typography>{children}</Typography>
-          </Box>
+          <section className="tabpanel_padding">
+            {children}
+          </section>
         )}
       </div>
     );
   }
   
-  TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
-  };
-  
   function a11yProps(index) {
     return {
       id: `vertical-tab-${index}`,
       'aria-controls': `vertical-tabpanel-${index}`,
+      key: index
     };
   }
-
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      flexGrow: 1,
-      backgroundColor: theme.palette.background.paper,
-      display: 'flex',
-      height: 300,
-    },
-    tabs: {
-      borderRight: `1px solid ${theme.palette.divider}`,
-    },
-  }));
 
  let selection = [];
  const Filter_modal = () => {
     const [open, setOpen] = React.useState(false);
-    let idx = 0;
+    const [value, setTabValue] = React.useState(0);
     const [filterDocs, setFilterDocs] = React.useState(null);
+    let idx = 0;
+    
     useEffect(() => {
         document.getElementById("filter_open_button").onclick = async() => {
             setOpen(true);
             filters.clear();
             selection = [];
             let filterManifest = await filters.getFilterList("Selection");
-            console.table(filterManifest);
             setFilterDocs(filterManifest);
         }
 
       }, []);
+
     const handleClose = () => {
         setOpen(false);
     };
-    const classes = useStyles();
-    const [value, setValue] = React.useState(0);
     
-    const popSelect = (event) => {
+    const handleFilterSelection = (event) => {
         
         if (event.target.checked) {
             selection.push(event.target.value);
         } else if (selection.indexOf(event.target.value) > -1) {
-            delete selection[selection.indexOf(event.target.value)];
+            selection.splice(selection.indexOf(event.target.value),1);
         }
     }
 
@@ -100,9 +78,10 @@ function TabPanel(props) {
         document.getElementById("search_button_target").click();
     }
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+    const handleChangeTabs = (event, newValue) => {
+      setTabValue(newValue);
+    };
+
     return (
         <div>
           <Modal
@@ -114,33 +93,32 @@ function TabPanel(props) {
           >
             <section className="modal_body">
             <h3>Advanced Search</h3>
-            <div className={classes.root}>
+            <div className="tabpanel_wrapper">
             <Tabs
               orientation="vertical"
               variant="scrollable"
               value={value}
-              onChange={handleChange}
-              aria-label=""
-              className={classes.tabs}
+              onChange={handleChangeTabs}
             >
-                {filterDocs !== null ? (filterDocs.map((filterDoc) => (
-                    <Tab label={filterDoc.display_name} {...a11yProps(filterDocs._uuid)} />
-                ))) : (null)}
-        
+              {filterDocs !== null ? (filterDocs.map((filterDoc) => (
+                <Tab label={filterDoc.display_name} {...a11yProps(filterDoc._uuid)} />
+              ))) : (null)}
             </Tabs>
 
             {filterDocs !== null ? (filterDocs.map((filterDoc) => (
-                <TabPanel value={value} index={idx++}>
+              <TabPanel key={'panel-'+idx} value={value} index={idx++}>
                     {filterDoc.input.map((e) => (
-                        <FormGroup row>
+                        <FormGroup row key={`panelrow-${idx}-${e.value_id.toString()}`}>
                             <FormControlLabel
-                                control={<Checkbox value={filterDoc.call_name +","+ e.value_id.toString()} name="filter_checkbox" onChange={popSelect} color="primary"/>}
+                                control={<Checkbox value={filterDoc.call_name +","+ e.value_id.toString()} name="filter_checkbox" onChange={handleFilterSelection} color="primary"/>}
                                 label={e.value_name}
                             />
                         </FormGroup> 
                     ))}
                 </TabPanel>
+                
             ))) : (null)}
+            
             
         
           </div>
