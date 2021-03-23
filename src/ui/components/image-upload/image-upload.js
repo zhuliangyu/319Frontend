@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {Button, Box} from "@material-ui/core";
 import {uploadImage} from "../../../services/image-upload";
+import axios from "axios";
 
 const ImageUpload = (props) => {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -19,14 +20,18 @@ const ImageUpload = (props) => {
         fileInput.current.click();
     }
 
+    // TODO: ux improvement during file upload
     const uploadHandler = (event) => {
+        // create unique fileName with time stamp. fileName is used as key for s3 db
         const keys = selectedFile.name.split('.');
         const fileName = new Date().getTime().toString() + "." + keys[keys.length-1];
 
         const fd = new FormData();
-        fd.append("image", selectedFile, fileName)
+        fd.append("photoFile", selectedFile, fileName)
+
         uploadImage(fd).then(res => {
             if (res.status === 200) {
+                // update imageName in parent component
                 props.passImageName(res.data)
             } else {
                 alert("File upload unsuccessful. Please try again.")
