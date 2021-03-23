@@ -30,10 +30,12 @@ const OrgChartPage = () => {
             <PageHeader />
             <PageTitle data={{ title: heading_text }} />
             <div className="page-contents-wrapper">
-                <div className="page-contents-container">
-                    <OrgChart
-                        data={orgChartResults}
-                    />
+                <div className="orgchart-wrapper">
+                    <div className="page-contents-cont  ainer">
+                        <OrgChart
+                            data={orgChartResults}
+                        />
+                    </div>
                 </div>
             </div>
             <Footer />

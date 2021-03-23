@@ -16,6 +16,7 @@ const OrgChart = (props) => {
         let employeeNumber = employee.employeeNumber
         let employeeLevel = employee.level
         let employeeName = employee.firstName + " " + employee.lastName
+        let title = employee.title
         if (employeeLevel === 0) {
             managerEmployeeId = employeeNumber
             employee.superiorID = ''
@@ -30,9 +31,9 @@ const OrgChart = (props) => {
         let profilePageLink = linkBase + "/profile/" + employeeNumber.toString()
         let nodeHtml =
                     '<div class="container">' +
-                        '<img class="avatar" src="https://www.pngkey.com/png/detail/202-2024691_my-profile-comments-my-profile-icon-png.png" alt="Avatar" height="50" width="50" /> <br />'  +
+                        '<img class="avatar" src="/api/photos/'+ employeeNumber + '" alt="Avatar" height="50" width="50" /> <br />'  +
                         '<p class="employeeName">' + employeeName + '</p>' +
-                        '<p class="employeeTitle"> Employee Title </p>' +
+                        '<p class="employeeTitle"> '+ title +' </p>' +
                         '<a class="link-wrapper" href='+profilePageLink+'> ' +
                             'View Profile →' +
                         '</a>' +
@@ -45,9 +46,9 @@ const OrgChart = (props) => {
             selectedEmployeeCount = employeeCounter
             nodeHtml =
                 '<div class="selectedEmployeeContainer">' +
-                    '<img class="avatar" src="https://www.pngkey.com/png/detail/202-2024691_my-profile-comments-my-profile-icon-png.png" alt="Avatar" height="50" width="50" /> <br />'  +
+                    '<img class="avatar" src="/api/photos/'+ employeeNumber + '" alt='+employeeName+' height="50" width="50" pr=0/> <br />'  +
                     '<p class="employeeName">' + employeeName + '</p>' +
-                    '<p class="employeeTitle"> Employee Title </p>' +
+                    '<p class="employeeTitle"> '+ title +' </p>' +
                     '<a class="link-wrapper" href=' + profilePageLink +'>' +
                         'View Profile →' +
                     '</a>' +
