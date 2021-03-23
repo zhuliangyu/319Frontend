@@ -20,11 +20,11 @@ const ImageUpload = (props) => {
     }
 
     const uploadHandler = (event) => {
-        const fd = new FormData();
-        // create file name from timestamp
         const keys = selectedFile.name.split('.');
         const fileName = new Date().getTime().toString() + "." + keys[keys.length-1];
-        fd.append('image', selectedFile, fileName)
+
+        const fd = new FormData();
+        fd.append("image", selectedFile, fileName)
         uploadImage(fd).then(res => {
             if (res.status === 200) {
                 props.passImageName(res.data)
