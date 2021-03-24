@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+const contractor = {};
+const util = {};
+
 // formats the contractor object for http request
 export const formatContractor = (contractor, imageFileName) => {
     // make a deep copy
@@ -38,3 +41,26 @@ export const addContractor = (contractor) => {
             }
         );
 };
+
+
+contractor.getAllContractors = async () => {
+    let item = {};
+    const res = await new Promise(async (resolve) => {
+        return axios.get("/api/contractors").then(
+            async (response) => {
+                let results = response.data;
+                //console.log(response.data)
+                resolve(results);
+            },
+            (error) => {
+                console.log(error);
+                resolve();
+            }
+        );
+    });
+
+    return res;
+}
+
+
+export default contractor;

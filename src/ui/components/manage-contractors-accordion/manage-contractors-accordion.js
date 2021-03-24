@@ -49,7 +49,7 @@ const ParagraphTypography = withStyles({
     }
 })(Typography);
 
-const ManageContractorsAccordion = ({title, description}) => {
+const ManageContractorsAccordion = ({title, details}) => {
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
 
@@ -71,9 +71,7 @@ const ManageContractorsAccordion = ({title, description}) => {
                         </HeaderTypography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <ParagraphTypography>
-                            {description}
-                        </ParagraphTypography>
+                            {details}
                     </AccordionDetails>
                 </Accordion>
             </div>
