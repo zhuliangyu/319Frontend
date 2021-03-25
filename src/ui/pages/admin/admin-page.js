@@ -20,7 +20,7 @@ const AdminPage = () => {
         // console.log(res);
         setContractors(res);
       })
-  } );
+  }, []);
 
   return (
     <div>
