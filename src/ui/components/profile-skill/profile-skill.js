@@ -18,7 +18,7 @@ const ProfileSkill = (props) => {
 
     return (
         <div>
-            <a class={"search-link"} href={searchLink} onClick={handleSkillOnClick}>{props.data}</a>
+            <a class={"search-link"} href={searchLink} onClick={handleSkillOnClick} >{props.data}</a>
         </div>
     );
 };

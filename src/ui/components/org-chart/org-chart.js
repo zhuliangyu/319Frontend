@@ -17,6 +17,18 @@ const OrgChart = (props) => {
         let employeeLevel = employee.level
         let employeeName = employee.firstName + " " + employee.lastName
         let title = employee.title
+
+        let imageUrl = "/api/photos/"+ employeeNumber
+        // let http = new XMLHttpRequest()
+        // http.open('HEAD', imageUrl, false);
+        // http.send();
+        // console.log("employee name: " + employeeName +", status:")
+        // console.log(http)
+        // console.log("-------------------------------------------------")
+        // if (http.status === 404) {
+        let backupImageUrl = "https://discountdoorhardware.ca/wp-content/uploads/2018/06/profile-placeholder-3.jpg";
+        // }
+
         if (employeeLevel === 0) {
             managerEmployeeId = employeeNumber
             employee.superiorID = ''
@@ -31,7 +43,7 @@ const OrgChart = (props) => {
         let profilePageLink = linkBase + "/profile/" + employeeNumber.toString()
         let nodeHtml =
                     '<div class="container">' +
-                        '<img class="avatar" src="/api/photos/'+ employeeNumber + '" alt="Avatar" height="50" width="50" /> <br />'  +
+                        '<img class="avatar" src="'+imageUrl+'" alt="Avatar" width="54" height="54"/>' +
                         '<p class="employeeName">' + employeeName + '</p>' +
                         '<p class="employeeTitle"> '+ title +' </p>' +
                         '<a class="link-wrapper" href='+profilePageLink+'> ' +
@@ -42,13 +54,14 @@ const OrgChart = (props) => {
                         '</a>' +
                     '</div>'
 
+        console.log(nodeHtml)
         if (Number(employeeNumber) === Number(id)) {
             selectedEmployeeCount = employeeCounter
             nodeHtml =
                 '<div class="selectedEmployeeContainer">' +
-                    '<img class="avatar" src="/api/photos/'+ employeeNumber + '" alt='+employeeName+' height="50" width="50" pr=0/> <br />'  +
+                    '<img class="avatar" src="'+imageUrl+'" alt='+employeeName+' height="80" width="80" pr=0 onerror="this.onerror=null;this.src='+ backupImageUrl+';"/> <br />'  +
                     '<p class="employeeName">' + employeeName + '</p>' +
-                    '<p class="employeeTitle"> '+ title +' </p>' +
+                    '<p class="selectedEmployeeTitle"> '+ title +' </p>' +
                     '<a class="link-wrapper" href=' + profilePageLink +'>' +
                         'View Profile →' +
                     '</a>' +
