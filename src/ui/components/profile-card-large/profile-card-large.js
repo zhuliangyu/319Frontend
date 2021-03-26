@@ -17,6 +17,7 @@ import storage from '../../../services/storage';
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
+        minHeight: 234
     },
     details: {
         display: 'flex',
@@ -31,9 +32,6 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
     },
     orgChartLink: {
-        // alignItems: 'center',
-        // flexWrap: 'wrap',
-        // display: 'flex',
         float: 'right'
     },
     cardContent: {
@@ -115,8 +113,7 @@ const ProfileCardLarge = (props) => {
     let history = useHistory();
     let email = props.data.email
     let emailLink= "mailto:" + email
-    let hiredDate = new Date(props.data.hireDate);
-    let month = ["January","February","March","April","May","June","July","August","September","October","November","December"]
+
     return (
         <Box mt={3} mb={3}>
             <Card className={classes.root}>
@@ -131,7 +128,7 @@ const ProfileCardLarge = (props) => {
                             <CardContent>
                                 <HeaderTypography align={"left"}>{props.data.firstName} {props.data.lastName}</HeaderTypography>
                                 <SubheaderTypography align={"left"}>{props.data.title}</SubheaderTypography>
-                                <SubheaderTypography align={"left"}>{props.data.groupName} ({props.data.officeName})</SubheaderTypography>
+                                <SubheaderTypography align={"left"}> {props.data.groupAndOffice} </SubheaderTypography>
                                 <ParagraphTypography align={"left"}>{props.data.bio}</ParagraphTypography>
                             </CardContent>
                         </div>
@@ -149,7 +146,7 @@ const ProfileCardLarge = (props) => {
                                 </div>
                                 <div className={classes.content}>
                                     <TodayIcon className={classes.icon} align={"left"}/>
-                                    <IconTypography align={"left"}> Hired on {month[hiredDate.getMonth()]} {hiredDate.getDate()}, {hiredDate.getFullYear()} </IconTypography><br/>
+                                    <IconTypography align={"left"}> {props.data.hiredOn} </IconTypography><br/>
                                 </div>
                                 <div className={classes.content}>
                                     <WorkIcon className={classes.icon} align={"left"}/>

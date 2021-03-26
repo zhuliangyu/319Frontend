@@ -36,6 +36,10 @@ const ProfilePage = (props) => {
   useEffect(async () => {
       console.log("RUNNING useEFFECT IN ProfilePage");
       getProfileResults(id).then(res => {
+          let hiredDate = new Date(res.hireDate);
+          let month = ["January","February","March","April","May","June","July","August","September","October","November","December"]
+          res.hiredOn = "Hired on " + month[hiredDate.getMonth()] + " " + hiredDate.getDate() +", " + hiredDate.getFullYear()
+          res.groupAndOffice = res.groupName + "(" + res.officeName + ")"
           setProfileResults(res)
           setSkills(res.skills)
           res.supervisor.employeeNumber = res.supervisorEmployeeNumber

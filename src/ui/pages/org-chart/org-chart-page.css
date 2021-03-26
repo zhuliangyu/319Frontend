@@ -132,10 +132,11 @@ div.title {
 div.react-transform-component {
     background-color: #F2F2F2;
     display: inline-block;
-    overflow-x: auto;
     white-space: nowrap;
     padding: 30px;
     cursor: grab;
     overflow: auto;
     opacity: 1;
+    height: 600px;
+    overflow-y: hidden;
 }
