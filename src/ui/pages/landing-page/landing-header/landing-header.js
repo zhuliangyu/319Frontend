@@ -5,8 +5,22 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import PersonIcon from "@material-ui/icons/Person";
 import { IconButton } from "@material-ui/core";
 import "./landing-header.css";
+import {useHistory} from "react-router-dom";
+import jwtManager from "../../../../services/jwt-manager";
 
 const Header = () => {
+
+    const history = useHistory()
+
+    const handleAdminClick = (e) => {
+        if (!jwtManager.hasToken()) {
+            history.push(`/login`);
+            window.location.reload();
+        } else {
+            history.push(`/admin`);
+            window.location.reload();
+        }
+    }
   return (
     <div className="landing-header">
 
@@ -32,6 +46,7 @@ const Header = () => {
         <IconButton
           type="button"
           className="iconButton"
+          onClick={handleAdminClick}
         >
           <PersonIcon color="primary" />
         </IconButton>

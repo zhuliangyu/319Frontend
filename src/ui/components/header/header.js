@@ -9,10 +9,23 @@ import Subheader from "./sub-header";
 import { Link } from "react-router-dom";
 import filters from "../../../services/filters";
 import storage from "../../../services/storage";
+import jwtManager from "../../../services/jwt-manager"
+import { useHistory } from "react-router-dom";
 
 const Header = (props) => {
   const location = window.location.pathname;
+  const history = useHistory()
   // console.log(location === "/admin");
+
+  const handleAdminClick = (e) => {
+    if (!jwtManager.hasToken()) {
+      history.push(`/login`);
+      window.location.reload();
+    } else {
+      history.push(`/admin`);
+      window.location.reload();
+    }
+  }
 
   return (
     <div className="header-wrapper">
@@ -31,7 +44,7 @@ const Header = (props) => {
           <IconButton type="button" className="iconButton">
             <SettingsIcon color="primary" />
           </IconButton>
-          <IconButton type="button" className="iconButton">
+          <IconButton type="button" className="iconButton" onClick={handleAdminClick}>
             <PersonIcon color="primary" />
           </IconButton>
         </div>

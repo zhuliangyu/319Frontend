@@ -4,6 +4,7 @@ import PageTitle from "../../components/page-title-banner";
 import ManageContractorsAccordion from "../../components/manage-contractors-accordion";
 import ManageAdminUsersAccordion from "../../components/manage-admin-users-accordion";
 import Contractors from '../../components/contractors';
+import {useHistory} from "react-router-dom";
 
 import contractor from '../../../services/contractor';
 
@@ -11,6 +12,7 @@ import "../page.css";
 
 const AdminPage = () => {
   const heading_text = "Administrative Section";
+  const history = useHistory()
 
   const [contractors, setContractors] = useState([]);
   useEffect(async () => {
@@ -19,6 +21,12 @@ const AdminPage = () => {
       .then(res => {
         // console.log(res);
         setContractors(res);
+      }).catch(error => {
+        if (error.response.status === 401) {
+          alert("Please log in first.");
+          history.push(`/login`);
+          window.location.reload();
+        }
       })
   }, []);
 
