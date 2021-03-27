@@ -34,8 +34,8 @@ const OrgChartPage = () => {
             <PageHeader />
             <TransformWrapper
                 defaultScale={1}
-                defaultPositionX={200}
-                defaultPositionY={100}
+                defaultPositionX={10}
+                defaultPositionY={0}
                 zoomOut={{
                     step: 20,
                 }}
