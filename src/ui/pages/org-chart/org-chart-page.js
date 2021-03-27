@@ -37,10 +37,10 @@ const OrgChartPage = () => {
                 defaultPositionX={10}
                 defaultPositionY={0}
                 zoomOut={{
-                    step: 20,
+                    step: 10,
                 }}
                 zoomIn={{
-                    step: 20
+                    step: 10
                 }}
                 options={{
                     limitToBounds: false,
