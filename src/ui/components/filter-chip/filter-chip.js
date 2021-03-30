@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { Chip } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
 
 const FilterChip = (props) => {
   const classes = useStyles();
-  // console.log(props.filter_data);
+  // console.log(props);
   const filter_label = props.data.call_name + ' - ' + props.data.value_name;
 
   return (
