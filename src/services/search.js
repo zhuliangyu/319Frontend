@@ -5,7 +5,7 @@ const search = {};
 const util = {};
 
 search.postSearchResults = async(queries) => {
-  console.log("search service queries? ", queries);
+  // console.log("search service queries? ", queries);
 
   const value = queries;
   const filterName = Object.keys(value)[0];
@@ -150,8 +150,9 @@ util.determineFilterString = (filter_name) => {
 
 search.parseFilter = async (searchObj) => {
   let search_params = JSON.parse(searchObj);
-  console.log('search parse filter search params', search_params);
+  // console.log('search parse filter search params', search_params);
   let filter_chips = [];
+  console.log('filterchips', filter_chips);
   if (search_params !== null) {
     const filter_object = search_params['filterObject'];
     for (let call_name of Object.keys(filter_object)) {

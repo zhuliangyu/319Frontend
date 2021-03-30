@@ -63,7 +63,7 @@ const LandingPage = () => {
     <div>
       <Header />
       <PinnedProfiles data={pinnedProfiles}/>
-      <ResumeSearch />
+      {/* <ResumeSearch /> */}
       <ExploreAELocations data={{city: city, results: collegues}}/>
       <Filter_modal/>
     </div>

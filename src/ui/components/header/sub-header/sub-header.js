@@ -38,6 +38,7 @@ const Subheader = (props) => {
   const classes = useStyles();
   const location = window.location.pathname;
   const [selectedFilters, setSelectedFilters] = useState([]);
+  const [selectedFilterDocs, setSelectedFilterDocs] = useState([]);
 
   const [searchState, syncStorageSearch] = useState(storage.ss.getPair('current_search'));
 
@@ -53,17 +54,25 @@ const Subheader = (props) => {
   }, []);
 
   useEffect(async () => {
-    console.log('triggered chips_data update');
+    // console.log('triggered chips_data update');
     if (searchState !== null) {
       const chips_data = await search.parseFilter(searchState);
+      const chips_meta_ids = Array.from(chips_data, d => d.meta_id);
       setSelectedFilters(chips_data);
+      setSelectedFilterDocs(chips_meta_ids);
     }
-    // console.log('chips data ', chips_data);
   }, [searchState]);
 
   // TODO: needs to update filters on selected filters indexeddb
-  const handleChipDelete = (uuid_to_delete) => {
-    setSelectedFilters(selectedFilters.filter(chip => chip._uuid !== uuid_to_delete ));
+  const handleChipDelete = async (uuid_to_delete) => {
+    let newFilters = selectedFilters.filter(chip => chip._uuid !== uuid_to_delete);
+    setSelectedFilters(newFilters);
+    let docs = Array.from(newFilters, d => d.meta_id);
+    setSelectedFilterDocs(docs);
+    // console.log('docs', docs);
+    // console.log('new filters', docs);
+    await filters.set(docs);
+    document.getElementById("search_button_target").click();
   }
 
   return (

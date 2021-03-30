@@ -74,6 +74,7 @@ function TabPanel(props) {
 
     const handleSubmit = async() => {
         setOpen(false);
+        console.log('filter modal selection', selection);
         await filters.set(selection);
         document.getElementById("search_button_target").click();
     }
