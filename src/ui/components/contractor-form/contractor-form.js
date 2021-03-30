@@ -6,8 +6,9 @@ import {Button, Grid, Paper, TextField, Modal, makeStyles, Box} from '@material-
 import DropDown from "./dropdown";
 import {useForm} from "./useForm";
 import storage from "../../../services/storage";
-import {addContractor, formatContractor} from "../../../services/contractor";
+import {addContractor, formatContractor, formatEditContractor, editContractor} from "../../../services/contractor";
 import ImageUpload from "../image-upload";
+import { useHistory } from "react-router-dom";
 // modal styling
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -29,10 +30,17 @@ const ADD_SUCCESS_TEXT = "Contractor was added successfully."
 const ADD_FAIL_TITLE = "Add Failed";
 const ADD_FAIL_TEXT = "Failed to add the contractor. Please ensure all information is entered correctly."
 
+const EDIT_SUCCESS_TITLE = "Edit Success";
+const EDIT_SUCCESS_TEXT = "Contractor was edited successfully."
+const EDIT_FAIL_TITLE = "Edit Failed";
+const EDIT_FAIL_TEXT = "Failed to edit the contractor. Please ensure all information is entered correctly."
+
 // TODO: refactor modal
 const ContractorForm = (props) => {
+    let history = useHistory();
     const classes = useStyles();
-    const formTitle = props.data.hasData ? "Edit Contractor" : "Add a contractor";
+    //const formTitle = props.data.hasData ? "Edit Contractor" : "Add a contractor";
+    const formTitle = props.data.hasData === undefined ? "Edit contractor" : "Add a contractor";
     const [companies, setCompanies] = useState([]);
     const [offices, setOffices] = useState([{value_id: -1, value_name: "Please select a Company"}]);
     const [groups, setGroups] = useState([{value_id: -1, value_name: "Please select an Office"}]);
@@ -51,24 +59,25 @@ const ContractorForm = (props) => {
 
     // initial form values
     // TODO: pass down from prop for edit
+    console.log(props.data);
     let initialFValues = {
-        lastName: '',
-        firstName: '',
-        companyCode: '',
-        officeCode: '',
-        groupCode: '',
-        locationId: '',
-        supervisorEmployeeNumber: '',
-        employmentType: '',
-        title: '',
-        yearsPriorExperience: '',
-        email: '',
-        workPhone: '',
-        workCell: '',
-        hireDate: null,
-        terminationDate: null,
-        bio: '',
-        extraInfo: '',
+        lastName: props.data.lastName || '',
+        firstName: props.data.firstName || '',
+        companyCode: props.data.companyCode || '',
+        officeCode: props.data.officeCode || '',
+        groupCode: props.data.groupCode || '',
+        locationId: props.data.locationId || '',
+        supervisorEmployeeNumber: props.data.supervisorEmployeeNumber || '',
+        employmentType: props.data.employmentType || '',
+        title: props.data.title || '',
+        yearsPriorExperience: props.data.yearsPriorExperience || '',
+        email: props.data.email || '',
+        workPhone: props.data.workPhone || '',
+        workCell: props.data.workCell || '',
+        hireDate: props.data.hireDate || null,
+        terminationDate: props.data.terminationDate || null,
+        bio: props.data.bio || '',
+        extraInfo: props.data.extraInfo || '',
     }
 
     // validation logic
@@ -144,9 +153,10 @@ const ContractorForm = (props) => {
         e.preventDefault()
         if (validate()) {
             const requestBody = formatContractor(values, imageName);
+            const editRequestBody = formatEditContractor(values, imageName);
             console.log(requestBody);
             // case add - no initial data
-            if (!props.data.hasData) {
+            if (props.data.hasData != undefined) {
                 addContractor(requestBody).then(res => {
                     if (res.status === 200) {
                         setModalTitle(ADD_SUCCESS_TITLE);
@@ -156,6 +166,19 @@ const ContractorForm = (props) => {
                     } else {
                         setModalTitle(ADD_FAIL_TITLE);
                         setModalText(ADD_FAIL_TEXT);
+                        // setModalText(res.response.data.title)
+                        handleOpen();
+                    }
+                });
+            } else if (props.data.hasData == undefined) {
+                editContractor(props.data.employeeNumber, editRequestBody).then(res => {
+                    if (res.status === 200) {
+                        setModalTitle(EDIT_SUCCESS_TITLE);
+                        setModalText(EDIT_SUCCESS_TEXT);
+                        handleOpen();
+                    } else {
+                        setModalTitle(EDIT_FAIL_TITLE);
+                        setModalText(EDIT_FAIL_TEXT);
                         // setModalText(res.response.data.title)
                         handleOpen();
                     }
@@ -178,6 +201,12 @@ const ContractorForm = (props) => {
 
     const handleClose = () => {
         setOpen(false);
+    };
+
+    const handleBack = () => {
+        // pushes the contractor data onto edit page url
+        history.push(`/admin`);
+        window.location.reload();
     };
 
     return (
@@ -413,6 +442,16 @@ const ContractorForm = (props) => {
                             onClick={resetForm}
                             text={"Reset"}>
                             Cancel
+                        </Button>
+                    </Box>
+                    <Box p={2}>
+                        <Button
+                            variant={"contained"}
+                            size={"large"}
+                            color={"primary"}
+                            onClick={handleBack}
+                            text={"Back to Admin Page"}>
+                            Back
                         </Button>
                     </Box>
                 </Grid>
