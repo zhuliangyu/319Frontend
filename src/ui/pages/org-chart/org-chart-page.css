@@ -30,6 +30,7 @@ div.selectedEmployeeContainer {
     border-radius: 5px;
     flex-flow: column;
     align-items: center;
+    display: flex;
     border: 1px solid #26415C;
 }
 
@@ -75,6 +76,11 @@ td.google-visualization-orgchart-node.google-visualization-orgchart-node-small {
 
 div.page-wrapper {
     box-sizing: border-box;
+}
+
+div.orgchart-wrapper {
+    overflow-x: visible;
+    overflow-y: visible;
 }
 
 div.orgchart-wrapper:active{
@@ -134,7 +140,7 @@ button.icon-button {
     color: #ffffff;
     padding-bottom: 16px;
     position: absolute;
-    bottom: 0px;
+    bottom: 0;
 }
 
 div.title {
@@ -146,7 +152,7 @@ div.page {
 }
 
 div.transformer-wrapper {
-    overflow-x: scroll;
+    overflow-x: visible;
     width: 100%;
     text-align: center;
     background-color: #F2F2F2;
@@ -161,6 +167,8 @@ div.react-transform-component {
     cursor: grab;
     opacity: 1;
     height: 800px;
+    overflow-x: visible;
+    overflow-y: visible;
 }
 
 div.contractor-badge {
@@ -186,6 +194,7 @@ span.contractor-badge-span {
 
 span.avatar-image-wrapper {
     position: relative;
+    margin: 0;
 }
 
 .employee-text {
@@ -195,5 +204,36 @@ span.avatar-image-wrapper {
     font-weight: 400;
     line-height: 1.5;
     text-overflow: ellipsis;
+}
+
+.email-text {
+    color: #868D98;
+    font-size: 14px;
+    font-family: Poppins, Poppins, 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+    text-overflow: ellipsis;
+    text-decoration: none;
+}
+
+.email-text:hover {
+    text-decoration: underline;
+}
+
+.backup-image {
+    color: #fafafa;
+    background-color: #bdbdbd;
+    border-radius: 50%;
+    height: 54px;
+    width: 54px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-shrink: 0;
+    font-family: Poppins,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    line-height: 1;
+    position: relative;
+    font-size: 1.25rem;
+    margin: 0;
 }
 

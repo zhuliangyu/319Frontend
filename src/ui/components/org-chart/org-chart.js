@@ -3,6 +3,7 @@ import { Chart } from "react-google-charts";
 import profile from '../../../assets/profile.jpg';
 import {useParams} from "react-router-dom";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import * as fs from "fs";
 
 
 const OrgChart = (props) => {
@@ -18,16 +19,8 @@ const OrgChart = (props) => {
         let employeeName = employee.firstName + " " + employee.lastName
         let title = employee.title
 
-        let imageUrl = "/api/photos/"+ employeeNumber
-        // let http = new XMLHttpRequest()
-        // http.open('HEAD', imageUrl, false);
-        // http.send();
-        // console.log("employee name: " + employeeName +", status:")
-        // console.log(http)
-        // console.log("-------------------------------------------------")
-        // if (http.status === 404) {
+        let imageUrl = "https://ae-demo.dhruv.tech/api/photos/"+ employeeNumber
         let backupImageUrl = "https://discountdoorhardware.ca/wp-content/uploads/2018/06/profile-placeholder-3.jpg";
-        // }
 
         if (employeeLevel === 0) {
             managerEmployeeId = employeeNumber
@@ -46,26 +39,35 @@ const OrgChart = (props) => {
                 '</span>'
         }
 
-
-
         let orgChartLink = linkBase + "/orgchart/" + employeeNumber.toString()
         let orgChartHtml =  '<a class="link-wrapper" href='+orgChartLink+'> ' +
                                 '<span class="material-icons">group_work</span>' +
                             '</a>'
         let containerClassName = 'container'
+        let addIfSelected = ''
         if (Number(employeeNumber) === Number(id)) {
-            orgChartHtml = '<br /><br /><br /><br /><br />'
+            orgChartHtml = '<br /><br /><br />'
             containerClassName = 'selectedEmployeeContainer'
+            addIfSelected = '<br/><br/><br/>'
+        }
 
+        let firstLetter = employeeName[0]
+        let imageHtml = '<img class="avatar" src="'+imageUrl+'" width="54" height="54" /> '
+
+        let hasImage = false
+        if (hasImage) {
+            imageHtml = '<div class="backup-image">'+firstLetter+'</div>'
         }
 
         let profilePageLink = linkBase + "/profile/" + employeeNumber.toString()
+
         let nodeHtml =
                     '<div class="' + containerClassName + '">' +
                     '<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">' +
+                    ''+ addIfSelected +
                         '<span class="avatar-image-wrapper">' +
                             '<span class="image-wrapper-div">' +
-                                '<img class="avatar" src="'+imageUrl+'" alt="Avatar" width="54" height="54"/> ' +
+                                imageHtml +
                             '</span>' +
                              contractorBadgeHtml +
                         '</span>' +
@@ -73,7 +75,7 @@ const OrgChart = (props) => {
                         '<p class="employeeName">' + employeeName + '</p>' +
                         '<p class="employeeTitle"> '+ title +' </p>' +
                         '<p class="employee-text">  Administration(Corporate)  </p>' +
-                        '<p class="employee-text">  Office & Location  </p>' +
+                        '<a class="email-text" href="mailto:person@email.com">  person@email.com  </a>' +
                         '<div class="link-div-wrapper">' +
                             '<a class="link-wrapper" href='+profilePageLink+'>' +
                                 '<span class="material-icons">account_circle</span>' +
@@ -82,22 +84,7 @@ const OrgChart = (props) => {
                         '</div>' +
                     '</div>'
 
-        console.log(nodeHtml)
-        // if (Number(employeeNumber) === Number(id)) {
-        //     selectedEmployeeCount = employeeCounter
-        //     nodeHtml =
-        //         '<div class="selectedEmployeeContainer">' +
-        //             '<img class="avatar" src="'+imageUrl+'" alt='+employeeName+' height="80" width="80" pr=0 onerror="this.onerror=null;this.src='+ backupImageUrl+';"/> <br />'  +
-        //             '<p class="employeeName">' + employeeName + '</p>' +
-        //             '<p class="selectedEmployeeTitle"> '+ title +' </p>' +
-        //             '<a class="link-wrapper" href=' + profilePageLink +'>' +
-        //                 'Profile →' +
-        //             '</a>' +
-        //             '<a class="link-wrapper" href=' + profilePageLink +'>' +
-        //             '' +
-        //             '</a>' +
-        //         '</div>'
-        // }
+
         let employeeElement = [{
             v: employeeNumber.toString(),
             f:  nodeHtml

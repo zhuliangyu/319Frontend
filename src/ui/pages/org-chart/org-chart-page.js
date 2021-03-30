@@ -44,7 +44,7 @@ const OrgChartPage = () => {
                 }}
                 options={{
                     limitToBounds: false,
-                    minScale: 0.5
+                    minScale: 0.2
                 }}
                 wheel={{
                     disabled: true
@@ -61,8 +61,8 @@ const OrgChartPage = () => {
                                 <div className="page-title">
                                     <div className={"title"}> {heading_text} </div>
                                     <div className={"zoom-icons"} >
-                                        <Button className={"icon-button"} onClick={zoomIn} ><ZoomInIcon/></Button>
                                         <Button className={"icon-button"} onClick={zoomOut} ><ZoomOutIcon/></Button>
+                                        <Button className={"icon-button"} onClick={zoomIn} ><ZoomInIcon/></Button>
                                     </div>
                                 </div>
                             </div>
