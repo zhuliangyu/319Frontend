@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './contractors.css';
-import ProfileCard from '../profile-card';
-import ProfileCardList from '../profile-card-list';
+import ContractorProfileCard from '../contractor-profile-card';
 import storage from '../../../services/storage';
 
 const Contractors = (props) => {
@@ -27,7 +26,7 @@ const Contractors = (props) => {
          ((contractors.length > 0) ? (
           contractors.map(result => 
             (
-              <ProfileCard key={contractors.indexOf(result)} data={result} />
+              <ContractorProfileCard key={contractors.indexOf(result)} data={result} />
             )
             )
          ):(
