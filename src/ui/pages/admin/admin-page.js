@@ -16,10 +16,7 @@ const AdminPage = () => {
 
   const [contractors, setContractors] = useState([]);
   useEffect(async () => {
-    // console.log('running query string...');
-    contractor.getAllContractors()
-      .then(res => {
-        // console.log(res);
+    contractor.getAllContractors().then(res => {
         setContractors(res);
       }).catch(error => {
         if (error.response.status === 401) {
@@ -41,7 +38,7 @@ const AdminPage = () => {
                 details={<Contractors data={contractors} />}/>
             <ManageAdminUsersAccordion
                 title={"Manage Admin Users"}
-                description={"Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar diam eros in elit. Pellentesque convallis laoreet laoreet."}/>
+                description={"Manage admin users here."}/>
         </div>
       </div>
     </div>

@@ -5,7 +5,10 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {Box, withStyles} from "@material-ui/core";
+import {Button, Box, withStyles} from "@material-ui/core";
+import {useHistory} from "react-router-dom";
+
+import './manage-contractors-accordion.css';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -57,6 +60,12 @@ const ManageContractorsAccordion = ({title, details}) => {
         setExpanded(isExpanded ? panel : false);
     };
 
+    const history = useHistory()
+    const handleClick = async () => {
+        history.push(`/contractor`);
+        window.location.reload();
+      };
+
     return (
         <Box marginTop={2} marginBottom={2}>
             <div className={classes.root}>
@@ -69,6 +78,18 @@ const ManageContractorsAccordion = ({title, details}) => {
                         <HeaderTypography>
                             {title}
                         </HeaderTypography>
+                        &emsp;&emsp;&emsp;&emsp;
+                        &emsp;&emsp;&emsp;&emsp;
+                        <Button
+                            className="add-contractor-button"
+                            variant={"contained"}
+                            size={"medium"}
+                            color={"primary"}
+                            onClick={handleClick}
+                            text={"Add A Contractor"}>
+                            Add A Contractor
+                        </Button>
+
                     </AccordionSummary>
                     <AccordionDetails>
                             {details}

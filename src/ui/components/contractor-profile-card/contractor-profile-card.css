@@ -1,0 +1,85 @@
+.profile-card-wrapper {
+  width: 281px;
+  height: 110px;
+  background: #FFFFFF;
+  border: 1px solid #9D9D9D;
+  box-sizing: border-box;
+  border-radius: 10px;  
+}
+
+.contractor-badge {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #005CAB;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-grid-card {
+  width: 23.5%;
+  min-height: 115px;
+  display: inline-block;
+  margin-right: 0.75%;
+  margin-left: 0.75%;
+  margin-bottom: 10px;
+  background: #FFFFFF;
+  border: 1px solid #ABABAB;
+  box-sizing: border-box;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+
+.profile-grid-heading {
+  color: #26415C;
+  font-size: 18px;
+  font-family: Poppins;
+  font-weight: 600;
+  line-height: 1.5;
+  display: inline-block;
+  width: 9.45vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-grid-subheading {
+  color: #868D98;
+  font-size: 14px;
+  font-family: Poppins;
+  font-weight: 600;
+  display: inline-block;
+  width: 9.45vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-grid-groupName {
+  color: #868D98;
+  font-size: 14px;
+  font-family: Poppins;
+  font-weight: 400;
+  line-height: 1.5;
+  display: inline-block;
+  width: 9.45vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profilePic {
+  width: 75px !important;
+  height: 75px !important;
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: row;
+}
+
+.profile-details {
+  text-align: left;
+}
