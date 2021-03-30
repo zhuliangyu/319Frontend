@@ -1,6 +1,5 @@
 .search-results-wrapper {
   width: 100%;
-  display: flex;
   justify-content: center;
   /* align-items: center; */
   background-color: #F2F2F2;
@@ -11,4 +10,9 @@
   width: 80%;
   max-width: 1400px;
   min-width: 800px;
+}
+
+.search-results-expand-more {
+  background-color: #F2F2F2;
+  padding-bottom: 40px;
 }

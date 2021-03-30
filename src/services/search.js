@@ -5,7 +5,7 @@ const search = {};
 const util = {};
 
 search.postSearchResults = async(queries) => {
-  console.log("search service queries? ", queries);
+  // console.log("search service queries? ", queries);
 
   const value = queries;
   const filterName = Object.keys(value)[0];
@@ -38,8 +38,9 @@ util.searchOnline = (body, value) => {
     return axios.post("/api/search", body).then(
       async(response) => {
         let results = response.data.results;
+        let total = response.data.total;
         await util.saveResult(results);
-        console.log("value", value);
+        // console.log("value", value);
         if (Object.keys(value).length !== 0) {
           searchItem = {
             keyword: value,
@@ -51,7 +52,7 @@ util.searchOnline = (body, value) => {
           }
         }
         storage.ss.setPair('current_search', JSON.stringify(searchItem));
-        resolve(results);
+        resolve({results: results, total: total});
       },
       (error) => {
         console.log(error);
@@ -157,11 +158,11 @@ util.determineFilterString = (filter_name) => {
 // Create filter chips
 
 search.parseFilter = async (searchObj) => {
-  console.log(searchObj);
+  // console.log(searchObj);
   let search_params = JSON.parse(searchObj);
-  console.log('search parse filter search params', search_params);
+  // console.log('search parse filter search params', search_params);
   let filter_chips = [];
-  console.log('filterchips', filter_chips);
+  // console.log('filterchips', filter_chips);
   if (search_params !== null) {
     const filter_object = search_params['filterObject'];
     for (let call_name of Object.keys(filter_object)) {
