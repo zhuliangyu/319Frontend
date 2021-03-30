@@ -30,7 +30,7 @@ const OrgChartPage = () => {
     }, [])
 
     return (
-        <div>
+        <div className={"page-wrapper"}>
             <PageHeader />
             <TransformWrapper
                 defaultScale={1}
@@ -49,30 +49,34 @@ const OrgChartPage = () => {
                 wheel={{
                     disabled: true
                 }}
+                pan={{
+                    disabled: true
+                }}
 
             >
                 {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
                     <React.Fragment>
-            <div className="page-title-wrapper">
-                <div className="page-title-box">
-                    <div className="page-title">
-                        <div className={"title"}> {heading_text} </div>
-                        <div className={"zoom-icons"} >
-                            <Button className={"icon-button"} onClick={zoomIn} ><ZoomInIcon/></Button>
-                            <Button className={"icon-button"} onClick={zoomOut} ><ZoomOutIcon/></Button>
-                            <Button className={"icon-button"} onClick={resetTransform}><ClearIcon/></Button>
+                        <div className="page-title-wrapper">
+                            <div className="page-title-box">
+                                <div className="page-title">
+                                    <div className={"title"}> {heading_text} </div>
+                                    <div className={"zoom-icons"} >
+                                        <Button className={"icon-button"} onClick={zoomIn} ><ZoomInIcon/></Button>
+                                        <Button className={"icon-button"} onClick={zoomOut} ><ZoomOutIcon/></Button>
+                                    </div>
+                                </div>
                             </div>
-                    </div>
-                </div>
-            </div>
-                    <TransformComponent >
-                        <div className={"orgchart-wrapper"}>
-                            <OrgChart data={orgChartResults}/>
                         </div>
-                    </TransformComponent>
-                </React.Fragment>
-            )}
-        </TransformWrapper>
+                        <ScrollContainer className={"transformer-wrapper"}>
+                            <TransformComponent >
+                                <div className={"orgchart-wrapper"}>
+                                    <OrgChart data={orgChartResults}/>
+                                </div>
+                            </TransformComponent>
+                        </ScrollContainer>
+                    </React.Fragment>
+                )}
+            </TransformWrapper>
 
             <Footer />
         </div>

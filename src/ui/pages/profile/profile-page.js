@@ -52,7 +52,7 @@ const ProfilePage = (props) => {
   }, [])
 
   return (
-    <div>
+    <div className={"page"}>
       <PageHeader />
       <Filter_modal/>
       <PageTitle data={{ title: heading_text }} />
