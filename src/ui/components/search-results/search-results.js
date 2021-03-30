@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 import './search-results.css';
 import ProfileCard from '../profile-card';
 import ProfileCardList from '../profile-card-list';
 import storage from '../../../services/storage';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { IconButton, Grid, withStyles, Tooltip } from '@material-ui/core';
+import search from '../../../services/search';
 
 const ExpandButton = withStyles((theme) => ({
   root: {
@@ -21,48 +22,53 @@ const SearchResults = (props) => {
   // console.log(props.data.results);
   const [isLoading, setIsLoading] = useState(false);
   const [offset, setOffset] = useState(0);
-  const [perPage, setPerPage] = useState(10);
+  const [perPage, setPerPage] = useState(12);
   const [view, syncLocalStorageview] = useState(storage.ls.getPair('searchResultsView'));
   const [searchResults, setSearchResults] = useState([]);
   const [searchResultsDisplayed, setSearchResultsDisplayed] = useState([]);
   const [nextPageAvailable, setNextPageAvailable] = useState(false);
 
+  const forceUpdate = React.useReducer(bool => !bool)[1];
+
+
   useEffect(() => {
     console.log('trying to init data');
+    console.log(props);
     console.log(props.data.total > perPage);
     console.log(props.data.results);
     setSearchResults(props.data.results);
     setNextPageAvailable(props.data.total > perPage);
-  }, [props]);
+    setOffset(0);
 
-  useEffect(() => {
     const checkNextPage = async () => {
       if (nextPageAvailable) {
-        let newData = searchResults.slice(offset, offset + perPage);
-        setSearchResultsDisplayed([...newData]);
+        let newData = props.data.results.slice(offset, offset + perPage);
+        setSearchResultsDisplayed(newData);
         console.log('search next page available');
       } else {
-        console.log('search next page not available');
-        setSearchResultsDisplayed(searchResults);
+        console.log('search next page not available', searchResultsDisplayed);
+        console.log('searchResults', searchResults);
+        console.log('props results', props.data.results);
+        setSearchResultsDisplayed(props.data.results);
+        setOffset(0);
+        forceUpdate();
       }
   
     }
     checkNextPage();
-    // if (nextPageAvailable) {
-    //   let newData = searchResults.slice(offset, offset + perPage);
-    //   setSearchResultsDisplayed(searchResultsDisplayed => [...newData]);
-    //   console.log('search next page available');
-    // } else {
-    //   console.log('search next page not available');
-    //   setSearchResultsDisplayed(searchResults);
-    // }
-  }, [searchResults]);
+    forceUpdate();
+
+  }, [props]);
 
   const checkNextPageAvailable = () => {
-    if (searchResults.length === searchResultsDisplayed.length) {
+    if (searchResults.length <= searchResultsDisplayed.length) {
       setNextPageAvailable(false);
     }
   };
+
+  // useEffect(() => {
+  //   checkNextPageAvailable();
+  // }, [searchResults]);
 
   const changeViewFn = e => {
     syncLocalStorageview(storage.ls.getPair('searchResultsView'));
@@ -70,13 +76,18 @@ const SearchResults = (props) => {
 
   const handleExpandMore = () => {
     console.log('clicked expand more');
-    let newOffset = offset + perPage;
-    let newData = searchResults.slice(newOffset, newOffset + perPage);
-
-    setOffset(newOffset);
-    // console.log([ ...searchResultsDisplayed, ...newData]);
-    setSearchResultsDisplayed(searchResultsDisplayed => [ ...searchResultsDisplayed, ...newData]);
-    checkNextPageAvailable();
+    if (props.data.length > searchResultsDisplayed.length) {
+      let newOffset = offset + perPage;
+      let newData = searchResults.slice(newOffset, newOffset + perPage);
+  
+      setOffset(newOffset);
+      console.log('new data...', [ ...searchResultsDisplayed, ...newData]);
+      setSearchResultsDisplayed(searchResultsDisplayed => [ ...searchResultsDisplayed, ...newData]);
+      checkNextPageAvailable();
+    } else {
+      checkNextPageAvailable();
+    }
+    
     // console.log('offset', newOffset);
     // console.log('new data', newData);
   }
@@ -98,8 +109,8 @@ const SearchResults = (props) => {
             searchResultsDisplayed.map(result => 
               (
                 view === 'card' ? 
-                <ProfileCard key={searchResults.indexOf(result)} data={result} /> :
-                <ProfileCardList key={searchResults.indexOf(result)} data={result} />
+                <ProfileCard key={searchResultsDisplayed.indexOf(result)} data={result} /> :
+                <ProfileCardList key={searchResultsDisplayed.indexOf(result)} data={result} />
               )
               )
           ):(
@@ -114,7 +125,10 @@ const SearchResults = (props) => {
           }
         </div>
       </div>
-      <Grid className='search-results-expand-more' container justify='center'> 
+      <Grid className='search-results-expand-more' container justify='center'
+        style={{ display: nextPageAvailable ? 'flex' : 'none' }}
+      
+      > 
         <Grid item>
           <Tooltip title={nextPageAvailable ? 'Show more results' : 'All results already shown'} placement='right-end'>
             <ExpandButton onClick={handleExpandMore}>
