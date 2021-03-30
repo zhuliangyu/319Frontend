@@ -55,12 +55,12 @@ const Subheader = (props) => {
 
   useEffect(async () => {
     // console.log('triggered chips_data update');
-    if (searchState !== null) {
+    // if (searchState !== null) {
       const chips_data = await search.parseFilter(searchState);
       const chips_meta_ids = Array.from(chips_data, d => d.meta_id);
       setSelectedFilters(chips_data);
       setSelectedFilterDocs(chips_meta_ids);
-    }
+    // }
   }, [searchState]);
 
   // TODO: needs to update filters on selected filters indexeddb

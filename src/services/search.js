@@ -5,7 +5,7 @@ const search = {};
 const util = {};
 
 search.postSearchResults = async(queries) => {
-  // console.log("search service queries? ", queries);
+  console.log("search service queries? ", queries);
 
   const value = queries;
   const filterName = Object.keys(value)[0];
@@ -13,8 +13,11 @@ search.postSearchResults = async(queries) => {
 
   // TODO: separate the query string from filters to go back to the state easily?
 
-  if (value == null) {
-    console.log("error: value is null");
+  if (Object.keys(value).length === 0) {
+    let body = filters.get();
+    let res = await util.searchOnline(body, value);
+
+    return res;
   } else {
     let body =
       filterName === "name"
@@ -22,8 +25,6 @@ search.postSearchResults = async(queries) => {
         : util.createBodyNameForNumberOrEmail(filterName, inputValue);
 
     // console.log('performing search action...');
-
-    let searchItem = {};
 
     let res = await util.searchOnline(body, value);
 
@@ -38,9 +39,16 @@ util.searchOnline = (body, value) => {
       async(response) => {
         let results = response.data.results;
         await util.saveResult(results);
-        searchItem = {
-          keyword: value,
-          filterObject: body,
+        console.log("value", value);
+        if (Object.keys(value).length !== 0) {
+          searchItem = {
+            keyword: value,
+            filterObject: body,
+          }
+        } else {
+          searchItem = {
+            filterObject: body,
+          }
         }
         storage.ss.setPair('current_search', JSON.stringify(searchItem));
         resolve(results);
@@ -149,8 +157,9 @@ util.determineFilterString = (filter_name) => {
 // Create filter chips
 
 search.parseFilter = async (searchObj) => {
+  console.log(searchObj);
   let search_params = JSON.parse(searchObj);
-  // console.log('search parse filter search params', search_params);
+  console.log('search parse filter search params', search_params);
   let filter_chips = [];
   console.log('filterchips', filter_chips);
   if (search_params !== null) {
