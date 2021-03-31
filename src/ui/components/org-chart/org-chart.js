@@ -1,26 +1,64 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { Chart } from "react-google-charts";
 import profile from '../../../assets/profile.jpg';
 import {useParams} from "react-router-dom";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import * as fs from "fs";
+import storage from "../../../services/storage";
 
 
 const OrgChart = (props) => {
+    const [groups, setGroups] = useState([])
+    const [offices, setOffices] = useState([])
     let linkBase = window.location.origin
     let managerEmployeeId;
     let { id } = useParams(); // dynamic part of url, in this case, employeeNumber
     let data = [['Name', 'Manager', 'ToolTip']]
     let employeeCounter = 0;
     let selectedEmployeeCount;
+    useEffect(async () => {
+        storage.db.searchDocument('metadata', {call_name: "Group"}).then((res) => {
+            console.log(res)
+            setGroups(res)
+        })
+    }, [])
+
+    useEffect(async () => {
+        storage.db.searchDocument('metadata', {call_name: "Office"}).then((res) => {
+            console.log(res)
+            setOffices(res)
+        })
+    }, [])
+
     props.data.forEach((employee) => {
         let employeeNumber = employee.employeeNumber
         let employeeLevel = employee.level
         let employeeName = employee.firstName + " " + employee.lastName
         let title = employee.title
-
+        let email = employee.email
         let imageUrl = "https://ae-demo.dhruv.tech/api/photos/"+ employeeNumber
         let backupImageUrl = "https://discountdoorhardware.ca/wp-content/uploads/2018/06/profile-placeholder-3.jpg";
+        let group = ""
+        let office = ""
+        console.log(employee)
+        groups.forEach((indexedDBGroup) => {
+            if (employee.companyCode === indexedDBGroup.value_id[0] && employee.officeCode === indexedDBGroup.value_id[1] && employee.groupCode === indexedDBGroup.value_id[2]) {
+                group = indexedDBGroup.value_name
+            }
+        })
+        console.log("TEST --------------------------------------------------------")
+        console.log(offices)
+        offices.forEach((off) => {
+
+            console.log("inside!!!")
+
+            if (employee.companyCode === off.value_id[0] && employee.officeCode === off.value_id[1]) {
+                office = off.value_name
+            }
+        })
+        let groupAndOffice = group + "(" + office + ")"
+
+
 
         if (employeeLevel === 0) {
             managerEmployeeId = employeeNumber
@@ -73,8 +111,8 @@ const OrgChart = (props) => {
 
                         '<p class="employeeName">' + employeeName + '</p>' +
                         '<p class="employeeTitle"> '+ title +' </p>' +
-                        '<p class="employee-text">  Administration(Corporate)  </p>' +
-                        '<a class="email-text" href="mailto:person@email.com">  person@email.com  </a>' +
+                        '<p class="employee-text">' + groupAndOffice + '</p>' +
+                        '<a class="email-text" href="mailto:'+email+'">'+ email +'</a>' +
                         '<div class="link-div-wrapper">' +
                             '<a class="link-wrapper" href='+profilePageLink+'>' +
                                 '<span class="material-icons">account_circle</span>' +

@@ -24,7 +24,7 @@ p.employeeTitle {
 }
 
 div.selectedEmployeeContainer {
-    width: 97%;
+    width: 98.2%;
     background-color: #E5E4E2;
     padding: 2px;
     border-radius: 5px;
@@ -158,11 +158,16 @@ div.page-wrapper {
 div.orgchart-wrapper {
     background-color: #F2F2F2;
     width: 5000px;
+    height: 2000px;
+    display: flex;
+    align-items: center;
 }
 
 div.container {
     width: 100%;
     text-align: center;
+    height: 1000px;
+
     /*background-color: #F2F2F2;*/
 }
 

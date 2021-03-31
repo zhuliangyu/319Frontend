@@ -16,15 +16,16 @@ import ClearIcon from "@material-ui/icons/Clear";
 import {Button} from "@material-ui/core";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import ReactDOM from "react-dom";
+import storage from "../../../services/storage";
 
 const OrgChartPage = () => {
     const heading_text = "Organizational Chart";
     const [orgChartResults, setOrgChartResults] = useState([]);
     let { id } = useParams();
-
     useEffect(async () => {
         getOrgChartResults(id).then(res => {
             console.log(res);
+
             setOrgChartResults(res)
         })
 
@@ -33,7 +34,7 @@ const OrgChartPage = () => {
     const container = useRef(null);
 
     useEffect(() => {
-        container.current.getElement().scrollTo(1500, Math.random() * 5000);
+        container.current.getElement().scrollTo(1750, 550);
     }, []);
 
     return (
@@ -52,7 +53,7 @@ const OrgChartPage = () => {
                 options={{
                     limitToBounds: false,
                     minScale: 0.3,
-                    maxScale: 1.3
+                    maxScale: 2
                 }}
                 wheel={{
                     disabled: true
@@ -78,7 +79,7 @@ const OrgChartPage = () => {
                         <ScrollContainer className={"container"} ref={container}>
                         <TransformComponent >
 
-                                <div className={"orgchart-wrapper"}>
+                                <div className={"orgchart-wrapper"} id={"orgchart-wrapper"}>
                                     <OrgChart data={orgChartResults}/>
                                 </div>
                         </TransformComponent>
