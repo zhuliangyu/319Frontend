@@ -30,10 +30,10 @@ const OrgChart = (props) => {
         } else if (employeeLevel === 2) {
             employee.superiorID = id
         }
-        let isContractor = true
+
         let contractorBadgeHtml = ''
 
-        if (isContractor) {
+        if (employee.isContractor) {
             contractorBadgeHtml =   '<span class="contractor-badge-span">' +
                 '<div class="contractor-badge">C</div>' +
                 '</span>'
@@ -43,7 +43,7 @@ const OrgChart = (props) => {
         let orgChartHtml =  '<a class="link-wrapper" href='+orgChartLink+'> ' +
                                 '<span class="material-icons">group_work</span>' +
                             '</a>'
-        let containerClassName = 'container'
+        let containerClassName = 'node-container'
         let addIfSelected = ''
         if (Number(employeeNumber) === Number(id)) {
             orgChartHtml = '<br /><br /><br />'
@@ -54,8 +54,7 @@ const OrgChart = (props) => {
         let firstLetter = employeeName[0]
         let imageHtml = '<img class="avatar" src="'+imageUrl+'" width="54" height="54" /> '
 
-        let hasImage = false
-        if (hasImage) {
+        if (employee.photoUrl === null) {
             imageHtml = '<div class="backup-image">'+firstLetter+'</div>'
         }
 

@@ -31,7 +31,6 @@ div.selectedEmployeeContainer {
     flex-flow: column;
     align-items: center;
     display: flex;
-    border: 1px solid #26415C;
 }
 
 p.selectedEmployeeTitle {
@@ -42,7 +41,7 @@ p.selectedEmployeeTitle {
     line-height: 1.5;
 }
 
-div.container {
+div.node-container {
     width: 97%;
     padding: 2px;
     border-radius: 5px;
@@ -74,18 +73,8 @@ td.google-visualization-orgchart-node.google-visualization-orgchart-node-small {
     min-width: 130px;
 }
 
-div.page-wrapper {
-    box-sizing: border-box;
-}
-
-div.orgchart-wrapper {
-    overflow-x: visible;
-    overflow-y: visible;
-}
-
 div.orgchart-wrapper:active{
     cursor: grabbing;
-    box-sizing: border-box;
 }
 
 td.google-visualization-orgchart-linebottom {
@@ -151,25 +140,53 @@ div.page {
     width: 100%;
 }
 
-div.transformer-wrapper {
-    overflow-x: visible;
+
+
+
+
+
+
+
+
+/*--------------------------------------------------------------------------------------------------------------*/
+
+
+div.page-wrapper {
+
+}
+
+div.orgchart-wrapper {
+    background-color: #F2F2F2;
+    width: 5000px;
+}
+
+div.container {
     width: 100%;
     text-align: center;
-    background-color: #F2F2F2;
+    /*background-color: #F2F2F2;*/
 }
 
 div.react-transform-component {
-    display: inline-block;
-    vertical-align: top;
     background-color: #F2F2F2;
-    white-space: nowrap;
     padding: 30px;
     cursor: grab;
-    opacity: 1;
-    height: 800px;
-    overflow-x: visible;
-    overflow-y: visible;
 }
+
+
+/*--------------------------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 div.contractor-badge {
     width: 20px;
