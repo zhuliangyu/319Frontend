@@ -8,6 +8,7 @@ import filters from '../services/filters';
 import OrgChartPage from "./pages/org-chart";
 import ContractorPage from "./pages/contractor";
 import LoginPage from "./pages/login";
+import ContractorEditPage from "./pages/contractor-edit";
 
 function App() {
   useEffect(async()=> {
@@ -39,6 +40,10 @@ function App() {
 
         <Route path='/contractor'>
           <ContractorPage />
+        </Route>
+
+        <Route path='/editcontractor/:id'>
+          <ContractorEditPage />
         </Route>
 
         <Route path='/orgchart/:id' children={<OrgChartPage />}>

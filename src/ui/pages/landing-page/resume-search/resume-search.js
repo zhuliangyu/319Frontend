@@ -19,13 +19,18 @@ const ResumeSearch = (props) => {
     syncSearchHistoryLS(JSON.parse(storage.ls.getPair("searchHistory")));
   }, []);
 
+  const handleDelete = () => {
+    console.log("delete search history card clicked");
+  };
+
+
   return (
     <div className="searches">
       <div className="searches-title">Resume Search</div>
       <div className="searches-history-cards">
-        {searchHistoryLS.map((historyItem) => (
-          <SearchCard key={searchHistoryLS.indexOf(historyItem)} data={historyItem} />
-        ))}
+        {searchHistoryLS !== null ? searchHistoryLS.map((historyItem) => (
+          <SearchCard key={searchHistoryLS.indexOf(historyItem)} data={historyItem} deleteFn={() => {handleDelete()}} />
+        )) : null }
       </div>
     </div>
   );
