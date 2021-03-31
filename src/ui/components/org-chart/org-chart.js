@@ -30,6 +30,45 @@ const OrgChart = (props) => {
         })
     }, [])
 
+    function setParentNodes(employeeLevel, employeeNumber, employee) {
+        if (employeeLevel === 0) {
+            managerEmployeeId = employeeNumber
+            employee.superiorID = ''
+        } else if (employeeLevel === 1) {
+            employee.superiorID = managerEmployeeId
+        } else if (employeeLevel === 2) {
+            employee.superiorID = id
+        }
+    }
+
+    function createContractorBadge(employee) {
+        let contractorBadgeHtml = ''
+
+        if (employee.isContractor) {
+            contractorBadgeHtml = '<span class="contractor-badge-span">' +
+                '<div class="contractor-badge">C</div>' +
+                '</span>'
+        }
+        return contractorBadgeHtml;
+    }
+
+    function createImageHtml(imageUrl, employee, employeeName) {
+        let imageHtml = '<img class="avatar" src="' + imageUrl + '" width="54" height="54" /> '
+
+        if (employee.photoUrl === null) {
+            imageHtml = '<div class="backup-image">' + employeeName[0] + '</div>'
+        }
+        return imageHtml;
+    }
+
+    function createOrgChartLinkHtml(employeeNumber) {
+        let orgChartLink = linkBase + "/orgchart/" + employeeNumber.toString()
+        let orgChartLinkHtml = '<a class="link-wrapper" href=' + orgChartLink + '> ' +
+            '<span class="material-icons">group_work</span>' +
+            '</a>'
+        return orgChartLinkHtml;
+    }
+
     props.data.forEach((employee) => {
         let employeeNumber = employee.employeeNumber
         let employeeLevel = employee.level
@@ -40,68 +79,35 @@ const OrgChart = (props) => {
         let backupImageUrl = "https://discountdoorhardware.ca/wp-content/uploads/2018/06/profile-placeholder-3.jpg";
         let group = ""
         let office = ""
-        console.log(employee)
         groups.forEach((indexedDBGroup) => {
             if (employee.companyCode === indexedDBGroup.value_id[0] && employee.officeCode === indexedDBGroup.value_id[1] && employee.groupCode === indexedDBGroup.value_id[2]) {
                 group = indexedDBGroup.value_name
             }
         })
-        console.log("TEST --------------------------------------------------------")
-        console.log(offices)
-        offices.forEach((off) => {
-
-            console.log("inside!!!")
-
-            if (employee.companyCode === off.value_id[0] && employee.officeCode === off.value_id[1]) {
-                office = off.value_name
+        offices.forEach((indexedDBOffice) => {
+            if (employee.companyCode === indexedDBOffice.value_id[0] && employee.officeCode === indexedDBOffice.value_id[1]) {
+                office = indexedDBOffice.value_name
             }
         })
         let groupAndOffice = group + "(" + office + ")"
-
-
-
-        if (employeeLevel === 0) {
-            managerEmployeeId = employeeNumber
-            employee.superiorID = ''
-        } else if (employeeLevel === 1) {
-            employee.superiorID = managerEmployeeId
-        } else if (employeeLevel === 2) {
-            employee.superiorID = id
-        }
-
-        let contractorBadgeHtml = ''
-
-        if (employee.isContractor) {
-            contractorBadgeHtml =   '<span class="contractor-badge-span">' +
-                '<div class="contractor-badge">C</div>' +
-                '</span>'
-        }
-
-        let orgChartLink = linkBase + "/orgchart/" + employeeNumber.toString()
-        let orgChartHtml =  '<a class="link-wrapper" href='+orgChartLink+'> ' +
-                                '<span class="material-icons">group_work</span>' +
-                            '</a>'
+        setParentNodes(employeeLevel, employeeNumber, employee);
+        let contractorBadgeHtml = createContractorBadge(employee);
+        let orgChartLinkHtml = createOrgChartLinkHtml(employeeNumber);
         let containerClassName = 'node-container'
-        let addIfSelected = ''
+        let addIfSelectedEmployee = ''
         if (Number(employeeNumber) === Number(id)) {
-            orgChartHtml = '<br /><br /><br />'
+            orgChartLinkHtml = '<br /><br /><br />'
             containerClassName = 'selectedEmployeeContainer'
-            addIfSelected = '<br/><br/><br/>'
+            addIfSelectedEmployee = '<br/><br/>'
         }
-
-        let firstLetter = employeeName[0]
-        let imageHtml = '<img class="avatar" src="'+imageUrl+'" width="54" height="54" /> '
-
-        if (employee.photoUrl === null) {
-            imageHtml = '<div class="backup-image">'+firstLetter+'</div>'
-        }
+        let imageHtml = createImageHtml(imageUrl, employee, employeeName);
 
         let profilePageLink = linkBase + "/profile/" + employeeNumber.toString()
 
         let nodeHtml =
                     '<div class="' + containerClassName + '">' +
                     '<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">' +
-                    ''+ addIfSelected +
+                    ''+ addIfSelectedEmployee +
                         '<span class="avatar-image-wrapper">' +
                             '<span class="image-wrapper-div">' +
                                 imageHtml +
@@ -117,7 +123,7 @@ const OrgChart = (props) => {
                             '<a class="link-wrapper" href='+profilePageLink+'>' +
                                 '<span class="material-icons">account_circle</span>' +
                             '</a>' +
-                            orgChartHtml +
+                            orgChartLinkHtml +
                         '</div>' +
                     '</div>'
 
@@ -136,7 +142,7 @@ const OrgChart = (props) => {
     return (
         <Chart
             width={'100%'}
-            height={1000} // <- not sure what height does...
+            height={1000}
             chartType="OrgChart"
             loader={<div class="loader"> </div>}
             data={
