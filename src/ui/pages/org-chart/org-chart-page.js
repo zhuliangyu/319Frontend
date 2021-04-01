@@ -34,14 +34,14 @@ const OrgChartPage = () => {
     const container = useRef(null);
 
     useEffect(() => {
-        container.current.getElement().scrollTo(1750, 550);
+        container.current.getElement().scrollTo(3100, 1100);
     }, []);
 
     return (
         <div className={"page-wrapper"}>
             <PageHeader />
             <TransformWrapper
-                defaultScale={1}
+                defaultScale={0.8}
                 defaultPositionX={0}
                 defaultPositionY={100}
                 zoomOut={{

@@ -74,22 +74,34 @@ const OrgChart = (props) => {
         let employeeLevel = employee.level
         let employeeName = employee.firstName + " " + employee.lastName
         let title = employee.title
+        if (title === null) {
+            title = ""
+        }
         let email = employee.email
+        if (email === null) {
+            email = ""
+        }
         let imageUrl = "https://ae-demo.dhruv.tech/api/photos/"+ employeeNumber
         let backupImageUrl = "https://discountdoorhardware.ca/wp-content/uploads/2018/06/profile-placeholder-3.jpg";
         let group = ""
         let office = ""
-        groups.forEach((indexedDBGroup) => {
-            if (employee.companyCode === indexedDBGroup.value_id[0] && employee.officeCode === indexedDBGroup.value_id[1] && employee.groupCode === indexedDBGroup.value_id[2]) {
-                group = indexedDBGroup.value_name
-            }
-        })
-        offices.forEach((indexedDBOffice) => {
-            if (employee.companyCode === indexedDBOffice.value_id[0] && employee.officeCode === indexedDBOffice.value_id[1]) {
-                office = indexedDBOffice.value_name
-            }
-        })
-        let groupAndOffice = group + "(" + office + ")"
+        if (employee.companyCode !== null) {
+            groups.forEach((indexedDBGroup) => {
+                if (employee.companyCode === indexedDBGroup.value_id[0] && employee.officeCode === indexedDBGroup.value_id[1] && employee.groupCode === indexedDBGroup.value_id[2]) {
+                    group = indexedDBGroup.value_name
+                }
+            })
+        }
+
+        if (employee.officeCode !== null) {
+            offices.forEach((indexedDBOffice) => {
+                if (employee.companyCode === indexedDBOffice.value_id[0] && employee.officeCode === indexedDBOffice.value_id[1]) {
+                    office = "("+indexedDBOffice.value_name+")"
+                }
+            })
+        }
+
+        let groupAndOffice = group + " " + office
         setParentNodes(employeeLevel, employeeNumber, employee);
         let contractorBadgeHtml = createContractorBadge(employee);
         let orgChartLinkHtml = createOrgChartLinkHtml(employeeNumber);
@@ -97,8 +109,8 @@ const OrgChart = (props) => {
         let addIfSelectedEmployee = ''
         if (Number(employeeNumber) === Number(id)) {
             orgChartLinkHtml = '<br /><br /><br />'
-            containerClassName = 'selectedEmployeeContainer'
-            addIfSelectedEmployee = '<br/><br/>'
+            containerClassName = 'selectedEmployeeContainer" id="selectedEmployeeContainer'
+            addIfSelectedEmployee = '<br/><br/><br/>'
         }
         let imageHtml = createImageHtml(imageUrl, employee, employeeName);
 
