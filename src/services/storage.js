@@ -13,9 +13,9 @@ storage.ls = {};
 // IndexedDB
 
 const idb = new Dexie('AE_Directory');
-idb.version(7).stores({
+idb.version(8).stores({
     filters: `++_uuid, display_name, call_name, type, input, parent, attach_parent, is_category, selection_id, attachment`,
-    metadata: `++_uuid, call_name, selection, meta_id_format, meta_id`,
+    metadata: `++_uuid, call_name, value_name, meta_id_format, meta_id`,
     searchResults: `++_uuid, employeeNumber, companyCode, officeCode, groupCode, locationId, supervisorEmployeeNumber, lastName, firstName, employmentType, title, hireDate, terminationDate, yearsPriorExperience, email, workPhone, workCell, isContractor, skills, supervisor`,
     pinnedProfiles: `employeeNumber, title, groupName, lastName, firstName, status`
 });
@@ -40,6 +40,20 @@ storage.db.updateDocuments = async(table, docs) => {
 
 storage.db.clearTable = async(table) => {
     await idb[table].clear();
+}
+
+storage.db.toArray = async(table) => {
+    return new Promise(async(resolve) => {
+        let data = await idb[table].toArray();
+        resolve(data);
+    });
+}
+
+storage.db.delete = async(table, key) => {
+    return new Promise(async(resolve) => {
+        let data = await idb[table].delete(key);
+        resolve(data);
+    });
 }
 
 // Session Storage

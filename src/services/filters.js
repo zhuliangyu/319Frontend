@@ -155,6 +155,7 @@ util.generateMetadata = async() => {
                 let record = {};
 
                 record.call_name = filter.call_name;
+                record.display_name = filter.display_name;
                 record.value_name = value.value_name;
                 record.value_id = value.value_id;
 

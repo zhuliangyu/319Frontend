@@ -28,11 +28,11 @@ const Header = (props) => {
   }
 
   return (
-    <div className="header-wrapper">
+    <section className="header-wrapper">
       <div className="header-box">
         <div className="logo">
           <Link to="/">
-            <img src={logo} alt="Associated Engineering" />
+            <img src={logo} alt="Associated Engineering"/>
           </Link>
         </div>
 
@@ -57,7 +57,7 @@ const Header = (props) => {
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 };
 

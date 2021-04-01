@@ -3,7 +3,6 @@ import Header from './landing-header';
 import PinnedProfiles from './pinned-profiles';
 import ResumeSearch from './resume-search';
 import ExploreAELocations from './explore-ae-locations';
-import Filter_modal from '../../components/filter_modal/filter_modal';
 import '../../components/filter_modal/filter_modal.css'
 import filters from '../../../services/filters';
 import storage from '../../../services/storage';
@@ -39,7 +38,7 @@ const LandingPage = () => {
         loc_id = filteredResult[0].value_id[0];
 
       } else {
-        alert(`Unknown Location "${result}", defaulting to "${locales[0].value_name}"`);
+ 
         setCity(locales[0].value_name);
         loc_id = locales[0].value_id[0];
       }
@@ -63,8 +62,8 @@ const LandingPage = () => {
     <div>
       <Header />
       <PinnedProfiles data={pinnedProfiles}/>
+      <ResumeSearch/>
       <ExploreAELocations data={{city: city, results: collegues}}/>
-      <Filter_modal/>
     </div>
   );
 

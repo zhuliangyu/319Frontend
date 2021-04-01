@@ -52,3 +52,8 @@
   padding-left: 14px;
   padding-bottom: 14px;
 }
+
+.logo img {
+  height: 77px;
+  width: auto;
+}

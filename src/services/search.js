@@ -70,6 +70,21 @@ util.searchOnline = (body, value) => {
   });
 }
 
+search.detectType = (input) => {
+
+  let regexp = /\S+@\S+\.\S+/;
+  if (regexp.test(String(input).toLowerCase())) {
+    return "Email";
+  }
+
+  regexp = /^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/;
+  if (regexp.test(String(input).toLowerCase())) {
+    return "WorkCell";
+  }
+
+  return 'Name';
+}
+
 util.saveResult = async(results) => {
   return new Promise(async(resolve) => {
     await storage.db.clearTable('searchResults');

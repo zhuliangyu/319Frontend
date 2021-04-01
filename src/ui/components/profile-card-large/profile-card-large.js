@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -113,6 +113,23 @@ const ProfileCardLarge = (props) => {
     let history = useHistory();
     let email = props.data.email
     let emailLink= "mailto:" + email
+    const [isPinned, setIsPinned] = React.useState("Pin");
+
+    useEffect(async() => {
+        let allPins = await storage.db.toArray('pinnedProfiles');
+        let results = allPins.filter((item) => {
+            
+            if (item.employeeNumber == props.data.employeeNumber) {
+                setIsPinned("Unpin");
+                return true;
+            } else {
+                return false;
+            }
+        });
+        if (results.length > 0) {
+            setIsPinned("Unpin");
+        }
+    }, []);
 
     return (
         <Box mt={3} mb={3}>
@@ -177,11 +194,19 @@ const ProfileCardLarge = (props) => {
                                                 firstName: props.data.firstName,
                                                 status: "pinned"
                                             }
-                                            await storage.db.addDocument('pinnedProfiles', profileData);
-                                            alert('Profile Pinned!');
+                                            if (isPinned == "Pin") {
+                                                await storage.db.addDocument('pinnedProfiles', profileData);
+                                                alert('Profile Pinned!');
+                                                setIsPinned("Unpin");
+                                            } else {
+                                                await storage.db.delete('pinnedProfiles', props.data.employeeNumber);
+                                                alert('Profile unpinned!');
+                                                setIsPinned("Pin");
+                                            }
+                                            
                                         }}
                                     >
-                                          📌Pin this profile &ensp;
+                                          📌{isPinned} this profile &ensp;
                                     </Link>
                                 </div>
                             </div>

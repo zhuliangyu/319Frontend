@@ -1,0 +1,100 @@
+
+#searchBox {
+    height: 50px;
+    position: relative;
+    width: 39vw;
+    z-index: 3 !important;
+    
+}
+
+#searchBox input {
+    background: #F2F2F2;
+    box-shadow: 0px 0px 5px 1px rgba(122, 122, 122, 0.19);
+    border-radius: 10px;
+    border: none !important;
+    height: 100%;
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 45px;
+    font-size: 12pt;
+    font-weight: 600;
+    font-family: Poppins;
+    color: #595959;
+}
+
+#searchBox input:focus {
+    outline: none !important;
+    background: #E2E2E2;
+}
+
+#search_button_target {
+    position: absolute;
+    top: 2.5px;
+    right: -51px;
+}
+
+#search_button_target svg {
+    transform: scaleX(-1);
+}
+
+#searchAuto {
+    position: absolute;
+    min-height: 50px;
+    background-color: rgba(255, 255, 255, 1);
+    z-index: 2;
+    width: calc(100% + 60px);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    display: none;
+    box-shadow: 0px 0px 5px 1px rgba(122, 122, 122, 0.19);
+    padding-top: 5px;
+    padding-bottom: 15px;
+}
+
+.searchAuto-item {
+    margin-top: 5px;
+    padding-left: 15px;
+    font-family: Poppins;
+    font-size: 11pt;
+    cursor: pointer;
+}
+
+.searchAuto-item {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.searchAuto-item p {
+    margin: 0;
+}
+
+.searchAuto-item span {
+    color: #595959;
+    font-size: 9pt;
+}
+
+.searchAuto-selected {
+    background: #005BAA;
+    color: white;
+    font-weight: 600;
+}
+
+.searchAuto-selected span {
+    color: white !important;
+}
+
+#searchDeselect {
+    position: absolute;
+    left: -35vw;
+    width: 99.3vw;
+    height: 100vw;
+    z-index: 1;
+}
+
+.searchAuto-item:hover {
+    background: #BDE0FF;
+}
+
+.searchAuto-selected:hover {
+    background: #00488A !important;
+}

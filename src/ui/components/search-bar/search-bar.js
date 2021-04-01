@@ -9,91 +9,112 @@ import {
   InputAdornment,
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
-import Autocomplete, {
-  createFilterOptions,
-} from "@material-ui/lab/Autocomplete";
-import FilterIcon from "../../../assets/filter-icon.svg";
 import { connect } from "react-redux";
 import { performSearch } from "../../redux/actions/search-actions";
 import { useHistory, useLocation } from "react-router-dom";
 import * as qs from "query-string";
 import storage from "../../../services/storage";
-
-const createUniqueOptions = createFilterOptions();
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: "2px 4px",
-    display: "flex",
-    alignItems: "center",
-  },
-  autocomplete: {
-    width: 500,
-    display: "flex",
-  },
-  text_field: {
-    width: "100%",
-    backgroundColor: "#EEF3F8",
-  },
-  divider: {
-    height: 28,
-    margin: 4,
-  },
-  card: {
-    display: "flex",
-    width: "100%",
-  },
-}));
+import "./search-bar.css";
+import search from "../../../services/search";
+import filters from "../../../services/filters";
 
 const SearchBar = (props) => {
   const location = useLocation();
   let history = useHistory();
-  const classes = useStyles();
   const [options, setOptions] = useState([]);
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [selectedFilters, setSelectedFilters] = useState([]);
+  const [filterDocs, setFilterDocs] = useState(null);
+
+  useEffect(async()=> {
+    document.getElementById('searchDeselect').style.setProperty("display", "none");
+    let input = document.getElementById("searchInput");
+    input.addEventListener("keyup", function(event) {
+      if (event.key == 'Enter') {
+        event.preventDefault();
+        document.getElementsByClassName('searchAuto-selected')[0].click();
+        //  document.getElementById("search_button_target").click();
+      }
+      if (event.key == 'ArrowDown') {
+        event.preventDefault();
+        let exitId = document.querySelector('.searchAuto-selected').id;
+        document.querySelector(`#${exitId}`).classList.remove("searchAuto-selected");
+        let idx = exitId.split('-');
+        idx = idx[2];
+        idx++;
+        document.querySelector(`#searchAuto-item-${idx}`).classList.add("searchAuto-selected");
+      }
+
+      if (event.key == 'ArrowUp') {
+        event.preventDefault();
+        let exitId = document.querySelector('.searchAuto-selected').id;
+        document.querySelector(`#${exitId}`).classList.remove("searchAuto-selected");
+        let idx = exitId.split('-');
+        idx = idx[2];
+        if (idx >= 2) {
+          idx--;
+        }
+        document.querySelector(`#searchAuto-item-${idx}`).classList.add("searchAuto-selected");
+      }
+
+    });
+  }, [] );
 
   // useEffect(() => {
   //   const currentPath = location.pathname;
   //   const searchParams = new URLSearchParams(location.search);
   // }, [location]);
 
-  const handleOnChange = (event, newValue) => {
-    setValue(newValue);
+  const handleInputBlur = () => {
+    document.getElementById('searchAuto').style.setProperty("display", "none");
+    document.getElementById('searchDeselect').style.setProperty("display", "none");
+  }
+
+  const handleInputFocus = () => {
+    document.getElementById('searchInput').removeAttribute('readonly');
+    if (document.getElementById('searchInput').value != "") {
+      document.getElementById('searchAuto').style.setProperty("display", "block");
+      document.getElementById('searchDeselect').style.setProperty("display", "block");
+    }
+  }
+
+  const handleOnChange = async(event, element) => {
+    let exitId = document.querySelector('.searchAuto-selected').id;
+    document.querySelector(`#${exitId}`).classList.remove("searchAuto-selected");
+    document.querySelector(`#searchAuto-item-1`).classList.add("searchAuto-selected");
+    let detectedFilter = search.detectType(element.value)
+    setValue({inputValue: element.value, filter_name: detectedFilter, queryId: detectedFilter.toLowerCase()});
+    if (element.value != "") {
+      document.getElementById('searchAuto').style.setProperty("display", "block");
+    } else {
+      document.getElementById('searchAuto').style.setProperty("display", "none");
+    }
+
+    if (element.value.length >= 3) {
+      let allFilters = await storage.db.toArray('metadata');
+      let results = allFilters.filter((item) => {
+        return item.value_name.toLowerCase().includes(element.value.toLowerCase());
+      });
+      setFilterDocs(results);
+    }
 
     // TODO: not accurate. needs to set the value filter, not the whole array
-    setSelectedFilters([newValue]);
+    setSelectedFilters([{inputValue: element.value, filter_name: detectedFilter, queryId: detectedFilter.toLowerCase()}]);
 
     // console.log("handleOnChange newValue", newValue);
   };
 
-  const handleInputChange = (event, newInputValue) => {
-    // console.log('newInputValue: ', newInputValue);
-    setInputValue(newInputValue);
-  };
-
-  const handleGetOptionLabel = (option) => {
-    // Value selected with enter, right from the input
-    if (typeof option === "string") {
-      // console.log('getOptionLabel option is string');
-      return option;
-    }
-    // Add 'xxx' option created dynamically
-    if (option.inputValue) {
-      // console.log('getOptionLabel is inputValue');
-      return option.inputValue;
-    }
-    // Regular option
-    // console.log('getOptionLabel regular');
-    return option;
-  };
-
-  const handleInitiateSearch = async () => {
-    console.log("search button was clicked");
+  const handleInitiateSearch = async(e, metadata = null) => {
     // console.log(value);
+    handleInputBlur();
     let queries = await makeQueries();
-
+    console.log(metadata)
+    if (metadata != null) {
+      await filters.set([metadata]);
+      queries.name = "";
+    }
+    //{inputValue: "Name", filter_name: "Name", queryId: "name"}
     const stringified = qs.stringify(queries);
 
     history.push(`/search?${stringified}`);
@@ -124,126 +145,31 @@ const SearchBar = (props) => {
     return queries;
   }
 
-  const handleOpenFilterModal = () => {
-    console.log("filter button was clicked");
-  };
-
-  const handleCreateNewOptions = (options, params) => {
-    const filtered = createUniqueOptions(options, params);
-
-    if (params.inputValue !== "") {
-      if (params.inputValue.includes("@")) {
-        filtered.push({
-          inputValue: params.inputValue,
-          filter_name: "Email",
-          queryId: "email",
-        });
-      } else if (/^[0-9-()\-]+$/i.test(params.inputValue)) {
-        filtered.push(
-          {
-            inputValue: params.inputValue,
-            filter_name: "Work Cell",
-            queryId: "workCell",
-          },
-          {
-            inputValue: params.inputValue,
-            filter_name: "Work Phone",
-            queryId: "workPhone",
-          }
-        );
-      } else {
-        filtered.push({
-          inputValue: params.inputValue,
-          filter_name: "Name",
-          queryId: "name",
-        });
-        filtered.push({
-          inputValue: params.inputValue,
-          filter_name: "Email",
-          queryId: "email",
-        });
-      }
-    }
-
-    // console.log(filtered);
-
-    return filtered;
-  };
-
   return (
-    <>
-      <Autocomplete
-        value={value}
-        inputValue={inputValue}
-        disableClearable
-        freeSolo
-        selectOnFocus
-        clearOnBlur
-        handleHomeEndKeys
-        filterSelectedOptions
-        className={classes.autocomplete}
-        id="async-search"
-        renderOption={(option) => (
-          <>
-            <Card className={classes.card}>
-              <CardContent>
-                <Typography variant="body1">{option.inputValue}</Typography>
-                <Typography variant="caption">{option.filter_name}</Typography>
-              </CardContent>
-            </Card>
-          </>
-        )}
-        options={[]}
-        onInputChange={(event, newValue) => {
-          handleInputChange(event, newValue);
-        }}
-        onChange={(event, newValue) => {
-          handleOnChange(event, newValue);
-        }}
-        filterOptions={(options, params) => {
-          return handleCreateNewOptions(options, params);
-        }}
-        getOptionLabel={(option) => {
-          return handleGetOptionLabel(option);
-        }}
-        renderInput={(params) => (
-          <>
-            <TextField
-              {...params}
-              variant="outlined"
-              className={classes.text_field}
-              InputProps={{
-                ...params.InputProps,
-                endAdornment: (
-                  <>
-                    <InputAdornment position="end">
-                      {location.pathname.includes("search") ? null : (
-                        <IconButton
-                          type="button"
-                          id = "filter_open_button"
-                          className={classes.iconButton}
-                          onClick={handleOpenFilterModal}
-                        >
-                          <img width="24" height="24" src={FilterIcon}></img>
-                        </IconButton>
-                      )}
-                      <IconButton
-                        type="button"
-                        className={classes.iconButton}
-                        id="search_button_target"
-                        onClick={handleInitiateSearch}
-                      >
-                        <SearchIcon color="primary" />
-                      </IconButton>
-                    </InputAdornment>
-                  </>
-                ),
-              }}
-            />
-          </>
-        )}
-      />
-    </>
+    <section id="searchWrapper">
+      <section id="searchBox">
+        <input type="text" id="searchInput" autoComplete="off" readOnly onFocus={handleInputFocus} onChange={(event) => {handleOnChange(event, document.getElementById('searchInput'))}}/>
+        <IconButton type="button" id="search_button_target" onClick={handleInitiateSearch}>
+          <SearchIcon color="primary" />
+        </IconButton>
+      </section>
+      <section id="searchAuto">
+        <section className="searchAuto-item searchAuto-selected" id="searchAuto-item-1" onClick={handleInitiateSearch}>
+          <p><i>Search for "{value.inputValue}" as {value.filter_name}</i></p>
+        </section>
+
+        {filterDocs !== null ? (filterDocs.map((filterDoc) => (
+          <section className="searchAuto-item" key={`filter-${filterDocs.indexOf(filterDoc)}`} id={`searchAuto-item-${2 + filterDocs.indexOf(filterDoc)}`} onClick={(event) => {handleInitiateSearch(event, filterDoc.meta_id)}}>
+            <p>{filterDoc.value_name}</p>
+            <span>{filterDoc.display_name}</span>
+          </section>
+        ))) : (null)}
+
+      </section>
+      <section id="searchDeselect" onClick={handleInputBlur}>
+          
+      </section>
+    </section>
   );
 };
 
