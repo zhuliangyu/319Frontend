@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import PageHeader from "../../components/header";
 import ProfileCardLarge from "../../components/profile-card-large";
 import ProfileAccordion from "../../components/profile-accordion";
@@ -15,27 +15,35 @@ import ZoomOutMapIcon from "@material-ui/icons/ZoomOutMap";
 import ClearIcon from "@material-ui/icons/Clear";
 import {Button} from "@material-ui/core";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import ReactDOM from "react-dom";
+import storage from "../../../services/storage";
 
 const OrgChartPage = () => {
     const heading_text = "Organizational Chart";
     const [orgChartResults, setOrgChartResults] = useState([]);
     let { id } = useParams();
-
     useEffect(async () => {
         getOrgChartResults(id).then(res => {
             console.log(res);
+
             setOrgChartResults(res)
         })
 
     }, [])
 
+    const container = useRef(null);
+
+    useEffect(() => {
+        container.current.getElement().scrollTo(3100, 1100);
+    }, []);
+
     return (
         <div className={"page-wrapper"}>
             <PageHeader />
             <TransformWrapper
-                defaultScale={1}
-                defaultPositionX={10}
-                defaultPositionY={0}
+                defaultScale={0.8}
+                defaultPositionX={0}
+                defaultPositionY={100}
                 zoomOut={{
                     step: 10,
                 }}
@@ -44,7 +52,8 @@ const OrgChartPage = () => {
                 }}
                 options={{
                     limitToBounds: false,
-                    minScale: 0.2
+                    minScale: 0.3,
+                    maxScale: 2
                 }}
                 wheel={{
                     disabled: true
@@ -67,13 +76,17 @@ const OrgChartPage = () => {
                                 </div>
                             </div>
                         </div>
-                        <ScrollContainer className={"transformer-wrapper"}>
-                            <TransformComponent >
-                                <div className={"orgchart-wrapper"}>
+                        <ScrollContainer className={"container"} ref={container}>
+                        <TransformComponent >
+
+                                <div className={"orgchart-wrapper"} id={"orgchart-wrapper"}>
                                     <OrgChart data={orgChartResults}/>
                                 </div>
-                            </TransformComponent>
-                        </ScrollContainer>
+                        </TransformComponent>
+                            </ScrollContainer>
+
+
+
                     </React.Fragment>
                 )}
             </TransformWrapper>

@@ -78,8 +78,6 @@ const SkillsAccordion = (props) => {
         let skillName;
         console.log(skill)
         skills.forEach((skillListing) => {
-            console.log(skillListing.value_id[0])
-            console.log("checking if " + skill.skillCategoryId + "===" +skillListing.value_id[0]+ " and "+skill.skillId +"==="+ skillListing.value_id[1])
             if (skill.skillCategoryId === skillListing.value_id[0] && skill.skillId === skillListing.value_id[1]) {
                 skillName = skillListing.value_name
             }

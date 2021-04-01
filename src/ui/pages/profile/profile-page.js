@@ -29,7 +29,7 @@ const ProfilePage = (props) => {
   let { id } = useParams(); // dynamic part of url, in this case, employeeNumber
   console.log(id);
 
-  const [profileResults, setProfileResults] = useState([]);
+  const [profileResults, setProfileResults] = useState({extraInfo: "...", hiredOn: "...", groupAndOffice: "...", bio: "...", firstName: "...", title: "...", workCell: "...", employmentType:"...", email:"..."});
   const [skills, setSkills] = useState([]);
   const [supervisorResults, setSupervisorResults] = useState([]);
 
@@ -78,11 +78,8 @@ const ProfilePage = (props) => {
             }
             <SkillsAccordion data={skills}/>
             <ProfileAccordion
-                title={"Profile Section 2"}
-                description={"Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar diam eros in elit. Pellentesque convallis laoreet laoreet."}/>
-            <ProfileAccordion
-                title={"Profile Section 3"}
-                description={"Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar diam eros in elit. Pellentesque convallis laoreet laoreet."}/>
+                title={"Extra Information"}
+                description={profileResults.extraInfo}/>
         </div>
       </div>
         <Footer />
