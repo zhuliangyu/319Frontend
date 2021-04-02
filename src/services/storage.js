@@ -13,11 +13,12 @@ storage.ls = {};
 // IndexedDB
 
 const idb = new Dexie('AE_Directory');
-idb.version(8).stores({
+idb.version(9).stores({
     filters: `++_uuid, display_name, call_name, type, input, parent, attach_parent, is_category, selection_id, attachment`,
     metadata: `++_uuid, call_name, value_name, meta_id_format, meta_id`,
     searchResults: `++_uuid, employeeNumber, companyCode, officeCode, groupCode, locationId, supervisorEmployeeNumber, lastName, firstName, employmentType, title, hireDate, terminationDate, yearsPriorExperience, email, workPhone, workCell, isContractor, skills, supervisor`,
-    pinnedProfiles: `employeeNumber, title, groupName, lastName, firstName, status`
+    pinnedProfiles: `employeeNumber, title, groupName, lastName, firstName, status`,
+    viewHistory: `employeeNumber, title, groupName, lastName, firstName, status, email, workCell`,
 });
 
 storage.db.addDocument = async(table, doc) => {
