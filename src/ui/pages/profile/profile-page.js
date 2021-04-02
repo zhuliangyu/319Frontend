@@ -13,6 +13,7 @@ import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
 import SkillsAccordion from "../../components/skills-accordion";
 import Filter_modal from '../../components/filter_modal/filter_modal';
+import storage from "../../../services/storage";
 
 const HeaderTypography = withStyles({
     root: {
@@ -35,7 +36,7 @@ const ProfilePage = (props) => {
 
   useEffect(async () => {
       console.log("RUNNING useEFFECT IN ProfilePage");
-      getProfileResults(id).then(res => {
+      getProfileResults(id).then(async(res) => {
           let hiredDate = new Date(res.hireDate);
           let month = ["January","February","March","April","May","June","July","August","September","October","November","December"]
           res.hiredOn = "Hired on " + month[hiredDate.getMonth()] + " " + hiredDate.getDate() +", " + hiredDate.getFullYear()
@@ -47,6 +48,15 @@ const ProfilePage = (props) => {
           res.supervisor.officeCode = res.supervisor.office_id
           setSupervisorResults(res.supervisor)
           console.log(res);
+          await storage.db.updateDocuments('viewHistory', [{
+            employeeNumber: res.employeeNumber,
+            title: res.title,
+            groupName: res.groupName,
+            lastName: res.lastName,
+            firstName: res.firstName,
+            email: res.email,
+            workCell: res.workCell
+        }]);
       })
 
   }, [])

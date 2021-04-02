@@ -117,16 +117,7 @@ const ProfileCardLarge = (props) => {
 
     useEffect(async() => {
         let allPins = await storage.db.toArray('pinnedProfiles');
-        await storage.db.updateDocuments('viewHistory', [{
-            employeeNumber: props.data.employeeNumber,
-            title: props.data.title,
-            groupName: props.data.groupName,
-            lastName: props.data.lastName,
-            firstName: props.data.firstName,
-            email: props.data.email,
-            workCell: props.data.workCell
 
-        }]);
         let results = allPins.filter((item) => {
             
             if (item.employeeNumber == props.data.employeeNumber) {
