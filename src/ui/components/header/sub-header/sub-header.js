@@ -62,7 +62,6 @@ const Subheader = (props) => {
         setSelectedFilterDocs(chips_meta_ids);
     }, [searchState]);
 
-    // TODO: needs to update filters on selected filters indexeddb
     const handleChipDelete = async (uuid_to_delete) => {
         let newFilters = selectedFilters.filter(
             (chip) => chip._uuid !== uuid_to_delete

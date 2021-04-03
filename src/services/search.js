@@ -56,7 +56,7 @@ util.searchOnline = (body, value) => {
       },
       (error) => {
         console.log(error);
-        resolve();
+        resolve({ error: error });
       }
     );
   })

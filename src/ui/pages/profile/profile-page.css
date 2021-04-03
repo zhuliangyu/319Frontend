@@ -1,5 +1,6 @@
 div.page-contents-wrapper {
     background-color: #F2F2F2;
+    min-height: 60vh;
 }
 
 div.reporting-manager-box {
