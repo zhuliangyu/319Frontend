@@ -40,12 +40,6 @@ const Header = () => {
         <IconButton
           type="button"
           className="iconButton"
-        >
-          <SettingsIcon color="primary" />
-        </IconButton>
-        <IconButton
-          type="button"
-          className="iconButton"
           onClick={handleAdminClick}
         >
           <PersonIcon color="primary" />

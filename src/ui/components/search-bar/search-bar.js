@@ -65,7 +65,21 @@ const SearchBar = (props) => {
   //   const currentPath = location.pathname;
   //   const searchParams = new URLSearchParams(location.search);
   // }, [location]);
-
+  const getPlaceholder = () => {
+    let choices = [
+      "try searching for 'Susan'...",
+      "try searching for 'acmes@acme.ca'...",
+      "try searching for 'Name'...",
+      "Search here...",
+      "try searching for 'Victoria'...",
+      "Get ready for a superfast search experience :)",
+      "Pro tip: use arrow keys to select autocomplete options!",
+      "Pro tip: Press enter to do a blank search"
+    ]
+    let x = Math.round(Math.random() * (choices.length-1));
+    const data = choices[x];
+    return data;
+  }
   const handleInputBlur = () => {
     document.getElementById('searchAuto').style.setProperty("display", "none");
     document.getElementById('searchDeselect').style.setProperty("display", "none");
@@ -148,7 +162,7 @@ const SearchBar = (props) => {
   return (
     <section id="searchWrapper">
       <section id="searchBox">
-        <input type="text" id="searchInput" autoComplete="off" readOnly onFocus={handleInputFocus} onChange={(event) => {handleOnChange(event, document.getElementById('searchInput'))}}/>
+        <input type="text" id="searchInput" autoComplete="off" placeholder={getPlaceholder()} readOnly onFocus={handleInputFocus} onChange={(event) => {handleOnChange(event, document.getElementById('searchInput'))}}/>
         <IconButton type="button" id="search_button_target" onClick={handleInitiateSearch}>
           <SearchIcon color="primary" />
         </IconButton>

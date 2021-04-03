@@ -17,9 +17,9 @@ const LandingPage = () => {
 
   useEffect(async()=> {
     EventEmitter.addListener('onInit', async() => {
-      console.log('onInit');
-      setPinnedProfiles(await storage.db.searchDocument("pinnedProfiles", {status: "pinned"}));
       filters.clear();
+      document.querySelector("#searchInput").focus();
+      setPinnedProfiles(await storage.db.searchDocument("pinnedProfiles", {status: "pinned"}));
       storage.ss.setPair('search_key', null);
       storage.ss.setPair('current_search', null);
       if (!storage.ls.getPair('searchHistory')) {

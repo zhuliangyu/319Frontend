@@ -98,3 +98,19 @@
 .searchAuto-selected:hover {
     background: #00488A !important;
 }
+::-webkit-input-placeholder {
+    font-style: italic;
+    font-weight: 450;
+ }
+ :-moz-placeholder {
+    font-style: italic;
+    font-weight: 450;
+ }
+ ::-moz-placeholder {
+    font-style: italic;
+    font-weight: 450;
+ }
+ :-ms-input-placeholder {  
+    font-style: italic;
+    font-weight: 450;
+ }
