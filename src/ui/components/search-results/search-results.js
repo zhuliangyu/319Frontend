@@ -108,7 +108,7 @@ const SearchResults = (props) => {
           ((searchResultsDisplayed.length > 0) ? (
             searchResultsDisplayed.map(result => 
               (
-                view === 'card' ? 
+                view === 'grid' ? 
                 <ProfileCard key={searchResultsDisplayed.indexOf(result)} data={result} /> :
                 <ProfileCardList key={searchResultsDisplayed.indexOf(result)} data={result} />
               )
