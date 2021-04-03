@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import PageHeader from "../../components/header";
-import PageTitle from "../../components/page-title-banner";
 import ManageContractorsAccordion from "../../components/manage-contractors-accordion";
 import ManageAdminUsersAccordion from "../../components/manage-admin-users-accordion";
 import Contractors from '../../components/contractors';
@@ -9,6 +8,7 @@ import {useHistory} from "react-router-dom";
 import contractor from '../../../services/contractor';
 
 import "../page.css";
+import AdminTitle from "../../components/admin-page-title-banner";
 
 const AdminPage = () => {
   const heading_text = "Administrative Section";
@@ -30,15 +30,16 @@ const AdminPage = () => {
   return (
     <div>
       <PageHeader />
-      <PageTitle data={{ title: heading_text }} />
+      <AdminTitle data={{ title: heading_text }} />
       <div className="page-contents-wrapper">
         <div className="page-contents-container">
             <ManageContractorsAccordion
                 title={"Manage Contractors"}
                 details={<Contractors data={contractors} />}/>
-            <ManageAdminUsersAccordion
-                title={"Manage Admin Users"}
-                description={"Manage admin users here."}/>
+            {/*Manage admin user not supported*/}
+            {/*<ManageAdminUsersAccordion*/}
+            {/*    title={"Manage Admin Users"}*/}
+            {/*    description={"Manage admin users here."}/>*/}
         </div>
       </div>
     </div>

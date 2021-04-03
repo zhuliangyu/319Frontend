@@ -40,30 +40,27 @@ const ContractorForm = (props) => {
     let history = useHistory();
     const classes = useStyles();
     //const formTitle = props.data.hasData ? "Edit Contractor" : "Add a contractor";
-    const formTitle = props.data.hasData === undefined ? "Edit contractor" : "Add a contractor";
+    const isEdit = Object.keys(props.data).length !== 0
+    const formTitle = isEdit ? "Edit contractor" : "Add a contractor";
     const [companies, setCompanies] = useState([]);
-    const [offices, setOffices] = useState([{value_id: -1, value_name: "Please select a Company"}]);
-    const [groups, setGroups] = useState([{value_id: -1, value_name: "Please select an Office"}]);
+    const [offices, setOffices] = useState([{value_id: -1, value_name: "Please select a Company first"}]);
+    const [groups, setGroups] = useState([{value_id: -1, value_name: "Please select an Office first"}]);
     const [locations, setLocations] = useState([]);
     const [open, setOpen] = useState(false);
     const [modalText, setModalText] = useState("");
     const [modalTitle, setModalTitle] = useState("");
     const [imageName, setImageName] = useState("")
-
-    // set the initial companies and locations selections
-    useEffect(async() => {
-        console.log(await storage.db.searchDocument('metadata', {meta_id: 'Office,01,02'}));
-        setCompanies(await storage.db.searchDocument('metadata', {call_name: 'Company'}));
-        setLocations(await storage.db.searchDocument('metadata', {call_name: 'Location'}));
-    }, [])
+    const [defaultCompany, setDefaultCompany] = useState("")
+    const [defaultOffice, setDefaultOffice] = useState("")
+    const [defaultGroup, setDefaultGroup] = useState("")
+    const [defaultPhysicalLocation, setDefaultPhysicalLocation] = useState()
 
     // initial form values
-    // TODO: pass down from prop for edit
     console.log(props.data);
     let initialFValues = {
         lastName: props.data.lastName || '',
         firstName: props.data.firstName || '',
-        companyCode: props.data.companyCode || '',
+        companyCode: {value_id: [props.data.companyCode]} || '',
         officeCode: props.data.officeCode || '',
         groupCode: props.data.groupCode || '',
         locationId: props.data.locationId || '',
@@ -79,6 +76,24 @@ const ContractorForm = (props) => {
         bio: props.data.bio || '',
         extraInfo: props.data.extraInfo || '',
     }
+
+    // set the initial companies and locations selections
+    useEffect(async() => {
+        console.log(await storage.db.searchDocument('metadata', {meta_id: 'Office,01,02'}));
+        setCompanies(await storage.db.searchDocument('metadata', {call_name: 'Company'}));
+
+        setLocations(await storage.db.searchDocument('metadata', {call_name: 'Location'}));
+        if (isEdit) {
+            let company = await storage.db.searchDocument('metadata', {meta_id: `Company,${props.data.companyCode}`})
+            setDefaultCompany(company[0].value_name)
+            let office = await storage.db.searchDocument('metadata', {meta_id: `Office,${props.data.companyCode},${props.data.officeCode}`})
+            setDefaultOffice(office[0].value_name)
+            let group = await storage.db.searchDocument('metadata', {meta_id: `Group,${props.data.companyCode},${props.data.officeCode},${props.data.groupCode}`})
+            setDefaultGroup(group[0].value_name)
+
+        }
+    }, [])
+
 
     // validation logic
     const validate = (fieldValues = values) => {
@@ -147,8 +162,13 @@ const ContractorForm = (props) => {
         })
     }
 
+    const handleNotLoggedIn = () => {
+        alert("Please login first")
+        history.push(`/login`);
+        window.location.reload();
+    }
+
     // submit function
-    // TODO
     const handleSubmit = e => {
         e.preventDefault()
         if (validate()) {
@@ -156,13 +176,15 @@ const ContractorForm = (props) => {
             const editRequestBody = formatEditContractor(values, imageName);
             console.log(requestBody);
             // case add - no initial data
-            if (props.data.hasData != undefined) {
+            if (!isEdit) {
                 addContractor(requestBody).then(res => {
                     if (res.status === 200) {
                         setModalTitle(ADD_SUCCESS_TITLE);
                         setModalText(ADD_SUCCESS_TEXT);
                         handleOpen();
                         resetForm();
+                    } else if (res.response.status === 401) {
+                        handleNotLoggedIn()
                     } else {
                         setModalTitle(ADD_FAIL_TITLE);
                         setModalText(ADD_FAIL_TEXT);
@@ -170,12 +192,14 @@ const ContractorForm = (props) => {
                         handleOpen();
                     }
                 });
-            } else if (props.data.hasData == undefined) {
+            } else {
                 editContractor(props.data.employeeNumber, editRequestBody).then(res => {
                     if (res.status === 200) {
                         setModalTitle(EDIT_SUCCESS_TITLE);
                         setModalText(EDIT_SUCCESS_TEXT);
                         handleOpen();
+                    } else if (res.response.status === 401) {
+                        handleNotLoggedIn()
                     } else {
                         setModalTitle(EDIT_FAIL_TITLE);
                         setModalText(EDIT_FAIL_TEXT);
@@ -255,11 +279,13 @@ const ContractorForm = (props) => {
                             required
                             name="companyCode"
                             label="Company"
-                            value={values.companyCode.value_name}
+                            placeHolder={defaultCompany}
+                            value={isEdit ? "" : values.companyCode.value_name}
                             onChange={handleHierarchyChange}
                             options={companies}
                             error =  {errors.companyCode}
                             helperText={errors.companyCode}
+                            disabled = {isEdit}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -267,11 +293,13 @@ const ContractorForm = (props) => {
                             required
                             name="officeCode"
                             label="Office"
-                            value={values.officeCode.value_name}
+                            placeHolder={defaultOffice}
+                            value={isEdit ? "" : values.officeCode.value_name}
                             onChange={handleHierarchyChange}
                             options={offices}
                             error =  {errors.officeCode}
                             helperText={errors.officeCode}
+                            disabled = {isEdit}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -279,11 +307,13 @@ const ContractorForm = (props) => {
                             required
                             name="groupCode"
                             label="Group"
-                            value={values.groupCode.value_name}
+                            placeHolder={defaultGroup}
+                            value={isEdit ? "" : values.groupCode.value_name}
                             onChange={handleInputChange}
                             options={groups}
                             error =  {errors.groupCode}
                             helperText={errors.groupCode}
+                            disabled = {isEdit}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -342,6 +372,7 @@ const ContractorForm = (props) => {
                             onChange={handleInputChange}
                             error =  {errors.supervisorEmployeeNumber}
                             helperText={errors.supervisorEmployeeNumber}
+                            disabled={isEdit}
                         />
                     </Grid>
                     <Grid item xs={12} sm={3}>
@@ -441,7 +472,7 @@ const ContractorForm = (props) => {
                             color={"primary"}
                             onClick={resetForm}
                             text={"Reset"}>
-                            Cancel
+                            Reset
                         </Button>
                     </Box>
                     <Box p={2}>

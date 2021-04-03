@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import "../page.css";
 import ContractorForm from "../../components/contractor-form";
 import { useLocation } from "react-router-dom";
+import AdminTitle from "../../components/admin-page-title-banner";
 
 // stub
 const ContractorEditPage = () => {
@@ -17,7 +18,7 @@ const ContractorEditPage = () => {
     return (
         <div>
             <PageHeader />
-            <PageTitle data={{ title: heading_text }} />
+            <AdminTitle data={{ title: heading_text }} />
             <div className="page-contents-wrapper">
                 <div className="page-contents-container" >
                     <ContractorForm data={location.state}/>
