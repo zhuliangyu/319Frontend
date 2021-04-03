@@ -63,7 +63,6 @@ const ProfilePage = (props) => {
 
   return (
     <div className={"page"}>
-      <PageHeader />
       <PageTitle data={{ title: heading_text }} />
       <div className="page-contents-wrapper">
         <div className="page-contents-container">

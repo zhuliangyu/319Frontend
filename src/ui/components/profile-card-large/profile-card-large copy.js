@@ -182,6 +182,34 @@ const ProfileCardLarge = (props) => {
                                          View on Organization Chart →
                                     </Link>
                                 </div>
+                                <div className={classes.orgChartLink}>
+                                    <Link
+                                        component="button"
+                                        variant="body2"
+                                        onClick={async() => {
+                                            let profileData = {
+                                                employeeNumber: props.data.employeeNumber,
+                                                title: props.data.title,
+                                                groupName: props.data.groupName,
+                                                lastName: props.data.lastName,
+                                                firstName: props.data.firstName,
+                                                status: "pinned"
+                                            }
+                                            if (isPinned == "Pin") {
+                                                await storage.db.addDocument('pinnedProfiles', profileData);
+                                                alert('Profile Pinned!');
+                                                setIsPinned("Unpin");
+                                            } else {
+                                                await storage.db.delete('pinnedProfiles', props.data.employeeNumber);
+                                                alert('Profile unpinned!');
+                                                setIsPinned("Pin");
+                                            }
+                                            
+                                        }}
+                                    >
+                                          📌{isPinned} this profile &ensp;
+                                    </Link>
+                                </div>
                             </div>
                         </div>
                     </Grid>

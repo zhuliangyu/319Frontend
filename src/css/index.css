@@ -11,3 +11,25 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.page-title {
+  width: 80% !important;
+  padding-left: 20px !important;
+  max-width: 1400px;
+  min-width: 800px;
+  font-size: 28px;
+  font-weight: 600;
+  color: #ffffff;
+  padding-bottom: 16px !important;
+  position: absolute;
+  bottom: 30px !important;
+}
+
+.page-title-wrapper {
+  background-color: #26415C;
+  height: 125px !important;
+  margin-top: 0px !important;
+  position: relative;
+  z-index: 0;
+  width: 100%;
+}

@@ -31,7 +31,6 @@ const SearchPage = () => {
       <PageHeader />
       <PageTitleSearch data={{ title: heading_text }} />
       <SearchResults data={searchResults} />
-      <Filter_modal/>
     </div>
   );
 };

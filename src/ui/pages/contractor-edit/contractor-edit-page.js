@@ -16,7 +16,6 @@ const ContractorEditPage = () => {
 
     return (
         <div>
-            <PageHeader />
             <PageTitle data={{ title: heading_text }} />
             <div className="page-contents-wrapper">
                 <div className="page-contents-container" >

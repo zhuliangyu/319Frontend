@@ -9,18 +9,19 @@ import OrgChartPage from "./pages/org-chart";
 import ContractorPage from "./pages/contractor";
 import LoginPage from "./pages/login";
 import ContractorEditPage from "./pages/contractor-edit";
+import Header from './pages/landing-page/landing-header';
+
+import EventEmitter from './hooks/event-manager';
 
 function App() {
   useEffect(async()=> {
-    filters.init();
-
-
-    /*const list = await filters.getFilterList();
-    console.table(list);*/
+    await filters.init();
+    EventEmitter.emit('onInit');
   }, [] );
 
   return (
     <div className='App'>
+    <Header />
       <Switch>
         <Route exact path='/'>
           <LandingPage />

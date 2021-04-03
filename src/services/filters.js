@@ -8,27 +8,33 @@ const util = {};
 
 filters.init = async() => {
 
-    if (!storage.ss.getFlag('filters')) {
-        try {
-
-            let response = await fetch("/api/filters/", {"method": "GET"});
-            if (!response.ok) {
-
-                throw new Error(`Network Error (ID: FILTER_${response.status})`);
-
-            } else {
+    return new Promise(async(resolve, reject) => {
+        if (!storage.ss.getFlag('filters')) {
+            try {
     
-                const data = await response.json();
-                util.parse(data);
+                let response = await fetch("/api/filters/", {"method": "GET"});
+                if (!response.ok) {
+    
+                    reject(`Network Error (ID: FILTER_${response.status})`);
+    
+                } else {
+        
+                    const data = await response.json();
+                    util.parse(data);
+    
+                }
 
+                resolve();
+        
+            } catch(e) {
+    
+                reject(`Network Error (ID: FILTER_000): No Connection.`);
+    
             }
-    
-        } catch(e) {
-
-            throw new Error(`Network Error (ID: FILTER_000): No Connection.`);
-
+        } else {
+            resolve();
         }
-    }
+    });
 }
 
 filters.get = () => {

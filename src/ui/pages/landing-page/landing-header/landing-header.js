@@ -25,7 +25,7 @@ const Header = () => {
     <div className="landing-header">
 
       <div className="logo">
-        <img src={logo} alt="Associated Engineering" />
+        <a href="/"><img src={logo} alt="Associated Engineering" /></a>
       </div>
 
       <div className="spacing"></div>

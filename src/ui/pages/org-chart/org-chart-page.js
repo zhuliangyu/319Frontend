@@ -39,7 +39,6 @@ const OrgChartPage = () => {
 
     return (
         <div className={"page-wrapper"}>
-            <PageHeader />
             <TransformWrapper
                 defaultScale={0.8}
                 defaultPositionX={0}
