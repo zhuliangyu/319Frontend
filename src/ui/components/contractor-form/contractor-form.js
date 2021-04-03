@@ -53,16 +53,15 @@ const ContractorForm = (props) => {
     const [defaultCompany, setDefaultCompany] = useState("")
     const [defaultOffice, setDefaultOffice] = useState("")
     const [defaultGroup, setDefaultGroup] = useState("")
-    const [defaultPhysicalLocation, setDefaultPhysicalLocation] = useState()
 
     // initial form values
     console.log(props.data);
     let initialFValues = {
         lastName: props.data.lastName || '',
         firstName: props.data.firstName || '',
-        companyCode: {value_id: [props.data.companyCode]} || '',
-        officeCode: props.data.officeCode || '',
-        groupCode: props.data.groupCode || '',
+        companyCode: '',
+        officeCode: '',
+        groupCode: '',
         locationId: props.data.locationId || '',
         supervisorEmployeeNumber: props.data.supervisorEmployeeNumber || '',
         employmentType: props.data.employmentType || '',
@@ -81,8 +80,8 @@ const ContractorForm = (props) => {
     useEffect(async() => {
         console.log(await storage.db.searchDocument('metadata', {meta_id: 'Office,01,02'}));
         setCompanies(await storage.db.searchDocument('metadata', {call_name: 'Company'}));
-
         setLocations(await storage.db.searchDocument('metadata', {call_name: 'Location'}));
+
         if (isEdit) {
             let company = await storage.db.searchDocument('metadata', {meta_id: `Company,${props.data.companyCode}`})
             setDefaultCompany(company[0].value_name)
@@ -90,7 +89,6 @@ const ContractorForm = (props) => {
             setDefaultOffice(office[0].value_name)
             let group = await storage.db.searchDocument('metadata', {meta_id: `Group,${props.data.companyCode},${props.data.officeCode},${props.data.groupCode}`})
             setDefaultGroup(group[0].value_name)
-
         }
     }, [])
 
@@ -141,8 +139,6 @@ const ContractorForm = (props) => {
     // set lower hierarchy members' selection when a hierarchy member is changed
     const handleHierarchyChange = async(e) => {
         const { name, value } = e.target
-        // console.log(name)
-        // console.log(value)
         switch (name) {
             case "companyCode":
                 setOffices(await filters.getChildFromAncestor("Office", value));
