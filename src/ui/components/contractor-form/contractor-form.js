@@ -101,11 +101,11 @@ const ContractorForm = (props) => {
             temp.lastName = fieldValues.lastName ? "" : "This field is required."
         if ('firstName' in fieldValues)
             temp.firstName = fieldValues.firstName ? "" : "This field is required."
-        if ('companyCode' in fieldValues)
+        if ('companyCode' in fieldValues && !isEdit)
             temp.companyCode = fieldValues.companyCode ? "" : "This field is required."
-        if ('officeCode' in fieldValues)
+        if ('officeCode' in fieldValues && !isEdit)
             temp.officeCode = fieldValues.officeCode && fieldValues.officeCode !== -1 ? "" : "This field is required."
-        if ('groupCode' in fieldValues)
+        if ('groupCode' in fieldValues && !isEdit)
             temp.groupCode = fieldValues.groupCode && fieldValues.groupCode !== -1 ? "" : "This field is required."
         if ('locationId' in fieldValues)
             temp.locationId = fieldValues.locationId && fieldValues.locationId !== -1 ? "" : "This field is required."
