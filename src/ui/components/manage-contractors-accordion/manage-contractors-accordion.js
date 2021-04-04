@@ -54,7 +54,7 @@ const ParagraphTypography = withStyles({
 
 const ManageContractorsAccordion = ({title, details}) => {
     const classes = useStyles();
-    const [expanded, setExpanded] = React.useState(false);
+    const [expanded, setExpanded] = React.useState('accordionPanel');
 
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
@@ -80,17 +80,21 @@ const ManageContractorsAccordion = ({title, details}) => {
                         </HeaderTypography>
                         &emsp;&emsp;&emsp;&emsp;
                         &emsp;&emsp;&emsp;&emsp;
-                        <Button
-                            className="add-contractor-button"
-                            variant={"contained"}
-                            size={"medium"}
-                            color={"primary"}
-                            onClick={handleClick}
-                            text={"Add A Contractor"}>
-                            Add A Contractor
-                        </Button>
-
+                        <br/>
                     </AccordionSummary>
+                    <AccordionDetails>
+                        <div>
+                            <Button
+                                className="add-contractor-button"
+                                variant={"contained"}
+                                size={"medium"}
+                                color={"primary"}
+                                onClick={handleClick}
+                                text={"Add A Contractor"}>
+                                Add A Contractor
+                            </Button>
+                        </div>
+                    </AccordionDetails>
                     <AccordionDetails>
                             {details}
                     </AccordionDetails>

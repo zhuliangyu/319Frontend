@@ -53,7 +53,7 @@ filters.getFilterList = async(filterType = "Keyword") => {
 }
 
 filters.set = async(selection) => {
-    console.log(selection);
+    console.log('filters.js selection', selection);
     return new Promise(async(resolve) => {
 
         for (const e of selection) {

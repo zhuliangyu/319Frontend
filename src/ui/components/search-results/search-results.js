@@ -5,7 +5,7 @@ import ProfileCardList from '../profile-card-list';
 import storage from '../../../services/storage';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { IconButton, Grid, withStyles, Tooltip } from '@material-ui/core';
-import search from '../../../services/search';
+import LoadingIndicator from '../loading-indicator';
 
 const ExpandButton = withStyles((theme) => ({
   root: {
@@ -20,22 +20,21 @@ const ExpandButton = withStyles((theme) => ({
 
 const SearchResults = (props) => {
   // console.log(props.data.results);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [offset, setOffset] = useState(0);
   const [perPage, setPerPage] = useState(12);
   const [view, syncLocalStorageview] = useState(storage.ls.getPair('searchResultsView'));
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState(null);
   const [searchResultsDisplayed, setSearchResultsDisplayed] = useState([]);
   const [nextPageAvailable, setNextPageAvailable] = useState(false);
 
   const forceUpdate = React.useReducer(bool => !bool)[1];
 
-
   useEffect(() => {
-    console.log('trying to init data');
-    console.log(props);
-    console.log(props.data.total > perPage);
-    console.log(props.data.results);
+    // console.log('trying to init data');
+    // console.log(props);
+    // console.log(props.data.total > perPage);
+    // console.log(props.data.results);
     setSearchResults(props.data.results);
     setNextPageAvailable(props.data.total > perPage);
     setOffset(0);
@@ -44,11 +43,11 @@ const SearchResults = (props) => {
       if (nextPageAvailable) {
         let newData = props.data.results.slice(offset, offset + perPage);
         setSearchResultsDisplayed(newData);
-        console.log('search next page available');
+        // console.log('search next page available');
       } else {
-        console.log('search next page not available', searchResultsDisplayed);
-        console.log('searchResults', searchResults);
-        console.log('props results', props.data.results);
+        // console.log('search next page not available', searchResultsDisplayed);
+        // console.log('searchResults', searchResults);
+        // console.log('props results', props.data.results);
         setSearchResultsDisplayed(props.data.results);
         setOffset(0);
         forceUpdate();
@@ -66,10 +65,14 @@ const SearchResults = (props) => {
     }
   };
 
-  // useEffect(() => {
-  //   checkNextPageAvailable();
-  // }, [searchResults]);
+  // Control loading indicator
+  useEffect(() => {
+    if (searchResults !== null && searchResults !== undefined) {
+      setIsLoading(false);
+    }
+  }, [searchResults]);
 
+  // Change viewing mode
   const changeViewFn = e => {
     syncLocalStorageview(storage.ls.getPair('searchResultsView'));
   };
@@ -81,7 +84,7 @@ const SearchResults = (props) => {
       let newData = searchResults.slice(newOffset, newOffset + perPage);
   
       setOffset(newOffset);
-      console.log('new data...', [ ...searchResultsDisplayed, ...newData]);
+      // console.log('new data...', [ ...searchResultsDisplayed, ...newData]);
       setSearchResultsDisplayed(searchResultsDisplayed => [ ...searchResultsDisplayed, ...newData]);
       checkNextPageAvailable();
     } else {
@@ -99,6 +102,12 @@ const SearchResults = (props) => {
     }
   }, []);
 
+  if (isLoading) return (
+    <div className='search-results-wrapper'>
+      <LoadingIndicator />
+    </div>
+  );
+
   return (
     <div>
       <div className='search-results-wrapper'>
@@ -108,7 +117,7 @@ const SearchResults = (props) => {
           ((searchResultsDisplayed.length > 0) ? (
             searchResultsDisplayed.map(result => 
               (
-                view === 'card' ? 
+                view === 'grid' ? 
                 <ProfileCard key={searchResultsDisplayed.indexOf(result)} data={result} /> :
                 <ProfileCardList key={searchResultsDisplayed.indexOf(result)} data={result} />
               )
@@ -127,7 +136,6 @@ const SearchResults = (props) => {
       </div>
       <Grid className='search-results-expand-more' container justify='center'
         style={{ display: nextPageAvailable ? 'flex' : 'none' }}
-      
       > 
         <Grid item>
           <Tooltip title={nextPageAvailable ? 'Show more results' : 'All results already shown'} placement='right-end'>

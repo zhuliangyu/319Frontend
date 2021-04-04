@@ -1,1 +1,1 @@
-export { default } from './contractor-page';
+export { default } from './contractor-add-page';

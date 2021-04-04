@@ -6,7 +6,7 @@ import ProfilePage from './pages/profile';
 import AdminPage from './pages/admin';
 import filters from '../services/filters';
 import OrgChartPage from "./pages/org-chart";
-import ContractorPage from "./pages/contractor";
+import ContractorAddPage from "./pages/contractor";
 import LoginPage from "./pages/login";
 import ContractorEditPage from "./pages/contractor-edit";
 import Header from './pages/landing-page/landing-header';
@@ -40,7 +40,7 @@ function App() {
         </Route>
 
         <Route path='/contractor'>
-          <ContractorPage />
+          <ContractorAddPage />
         </Route>
 
         <Route path='/editcontractor/:id'>
