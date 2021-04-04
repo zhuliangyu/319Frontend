@@ -57,6 +57,16 @@
     font-family: Poppins;
     font-size: 11pt;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.searchAuto-wrapper {
+    display: block;
+}
+
+.searchAuto-profilePic {
+    margin-right: 5px;
 }
 
 .searchAuto-item {

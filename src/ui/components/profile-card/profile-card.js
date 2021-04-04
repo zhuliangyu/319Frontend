@@ -17,7 +17,7 @@ const ProfileCard = (props) => {
   };
 
   return (
-    <Card className="profile-page-card">
+    <Card className="profile-grid-card">
       <CardActionArea  onClick={handleCardOnClick}>
         <Grid container spacing={0}>
           <Grid

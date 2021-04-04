@@ -9,6 +9,7 @@ import {Box, withStyles} from "@material-ui/core";
 import ProfileSkill from "../profile-skill/profile-skill";
 import {getOrgChartResults} from "../../../services/org-chart";
 import storage from "../../../services/storage";
+import EventEmitter from "../../hooks/event-manager";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -62,30 +63,28 @@ const SkillsAccordion = (props) => {
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
-
+    let [skillArray, setSkillArray] = useState([]);
     useEffect(async () => {
        storage.db.searchDocument('metadata', {call_name: "Skill"}).then((res) => {
-           console.log(res)
-           setSkills(res)
+
+           let skillIdArray = props.data;
+            let tempArray = [];
+            skillIdArray.forEach((skill) => {
+                let skillName;
+                let meta;
+                res.forEach((skillListing) => {
+                    if (skill.skillCategoryId === skillListing.value_id[0] && skill.skillId === skillListing.value_id[1]) {
+                        skillName = skillListing.value_name;
+                        meta = skillListing;
+                    }
+                });
+                tempArray.push({name: skillName, info: meta});
+            });
+
+            setSkillArray(tempArray);
        })
-    }, [])
 
-    let skillIdArray = props.data;
-    let skillArray = []
-    console.log(skillIdArray)
-
-    skillIdArray.forEach((skill) => {
-        let skillName;
-        console.log(skill)
-        skills.forEach((skillListing) => {
-            if (skill.skillCategoryId === skillListing.value_id[0] && skill.skillId === skillListing.value_id[1]) {
-                skillName = skillListing.value_name
-            }
-        })
-        skillArray.push(skillName)
-    })
-
-    console.log(skillArray)
+    }, []);
 
     return (
         <Box marginTop={2} marginBottom={2}>

@@ -165,7 +165,7 @@ const ProfileCardLarge = (props) => {
             status: "pinned"
         }
         await storage.db.delete('pinnedProfiles', props.data.employeeNumber);
-        EventEmitter.emit('alert', "Profile unpinned from dashboard!");
+        EventEmitter.emit('alert', "Profile unpinned from dashboard");
         document.querySelector("#profile-removepin").style.display = 'none';
         document.querySelector("#profile-addpin").style.display = 'block';
     }

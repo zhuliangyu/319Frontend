@@ -2,11 +2,7 @@ import { React, useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   IconButton,
-  TextField,
-  Card,
-  CardContent,
-  Typography,
-  InputAdornment,
+  Avatar
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import { connect } from "react-redux";
@@ -18,6 +14,9 @@ import "./search-bar.css";
 import search from "../../../services/search";
 import filters from "../../../services/filters";
 
+let resultMin = 1;
+let resultMax = 1;
+
 const SearchBar = (props) => {
   const location = useLocation();
   let history = useHistory();
@@ -26,6 +25,9 @@ const SearchBar = (props) => {
   const [inputValue, setInputValue] = useState("");
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [filterDocs, setFilterDocs] = useState(null);
+  const [profileDocs, setProfileDocs] = useState(null);
+  const [filterOffset, setFilterOffset] = useState(2);
+  const [profileOffset, setProfileOffset] = useState(null);
 
   useEffect(async()=> {
     document.getElementById('searchDeselect').style.setProperty("display", "none");
@@ -43,6 +45,9 @@ const SearchBar = (props) => {
         let idx = exitId.split('-');
         idx = idx[2];
         idx++;
+        if (idx > resultMax) {
+          idx = resultMin;
+        }
         document.querySelector(`#searchAuto-item-${idx}`).classList.add("searchAuto-selected");
       }
 
@@ -52,7 +57,7 @@ const SearchBar = (props) => {
         document.querySelector(`#${exitId}`).classList.remove("searchAuto-selected");
         let idx = exitId.split('-');
         idx = idx[2];
-        if (idx >= 2) {
+        if (idx >= resultMin+1) {
           idx--;
         }
         document.querySelector(`#searchAuto-item-${idx}`).classList.add("searchAuto-selected");
@@ -107,10 +112,32 @@ const SearchBar = (props) => {
 
     if (element.value.length >= 3) {
       let allFilters = await storage.db.toArray('metadata');
-      let results = allFilters.filter((item) => {
+      let allProfiles = await storage.db.toArray('viewHistory');
+
+      let filterResults = allFilters.filter((item) => {
         return item.value_name.toLowerCase().includes(element.value.toLowerCase());
       });
-      setFilterDocs(results);
+      resultMax = filterOffset + filterResults.length -1;
+      setProfileOffset(filterOffset + filterResults.length);
+      setFilterDocs(filterResults);
+
+      let profResults = allProfiles.filter((item) => {
+        if (detectedFilter == "Email") {
+          try {
+            return item.email.toLowerCase().includes(element.value.toLowerCase());
+          } catch (e) {
+            return false;
+          }
+        } else {
+          return `${item.firstName} ${item.lastName}`.toLowerCase().includes(element.value.toLowerCase());
+        }
+      });
+      if (profResults.length >= 6) {
+        profResults = profResults.slice(0, 5);
+      }
+      resultMax += profResults.length;
+      setProfileDocs(profResults);
+
     }
 
     // TODO: not accurate. needs to set the value filter, not the whole array
@@ -173,9 +200,21 @@ const SearchBar = (props) => {
         </section>
 
         {filterDocs !== null ? (filterDocs.map((filterDoc) => (
-          <section className="searchAuto-item" key={`filter-${filterDocs.indexOf(filterDoc)}`} id={`searchAuto-item-${2 + filterDocs.indexOf(filterDoc)}`} onClick={(event) => {handleInitiateSearch(event, filterDoc.meta_id)}}>
+          <section className="searchAuto-item" key={`filter-${filterDocs.indexOf(filterDoc)}`} id={`searchAuto-item-${filterOffset + filterDocs.indexOf(filterDoc)}`} onClick={(event) => {handleInitiateSearch(event, filterDoc.meta_id)}}>
+          <section className="searchAuto-wrapper">  
             <p>{filterDoc.value_name}</p>
             <span>{filterDoc.display_name}</span>
+            </section>
+          </section>
+        ))) : (null)}
+        
+        {profileDocs !== null ? (profileDocs.map((profileDoc) => (
+          <section className="searchAuto-item" key={`profile-${profileDocs.indexOf(profileDoc)}`} id={`searchAuto-item-${profileOffset + profileDocs.indexOf(profileDoc)}`} onClick={(event) => {window.location.assign(`/profile/${profileDoc.employeeNumber}`)}}>
+            <Avatar alt={profileDoc.firstName} src={`/api/photos/${profileDoc.employeeNumber}`} className="searchAuto-profilePic" pr={0}/>
+            <section className="searchAuto-wrapper">
+              <p>{`${profileDoc.firstName} ${profileDoc.lastName}`}</p>
+              <span>{profileDoc.title}</span>
+            </section>
           </section>
         ))) : (null)}
 

@@ -3,6 +3,7 @@ import './profile-skill.css';
 import {Grid, withStyles} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { useHistory } from "react-router-dom";
+import filters from '../../../services/filters';
 
 const ProfileSkill = (props) => {
 
@@ -10,15 +11,17 @@ const ProfileSkill = (props) => {
     let linkBase = window.location.origin
     let searchLink = linkBase + "/search/"
 
-    const handleSkillOnClick = async () => {
+    const handleSkillOnClick = async (e, meta_id) => {
         //todo: search by skill when the skill is clicked
-        history.push(`/search/}`);
-        window.location.reload();
+        console.log(props.data);
+        await filters.clear();
+        await filters.set([meta_id]);
+        history.push(`/search/?name=`);
     };
 
     return (
         <div>
-            <a class={"search-link"} href={searchLink} onClick={handleSkillOnClick} >{props.data}</a>
+            <a class={"search-link"} onClick={(event) => {handleSkillOnClick(event, props.data.info.meta_id)}}>{props.data.name}</a>
         </div>
     );
 };

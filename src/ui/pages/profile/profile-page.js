@@ -48,7 +48,7 @@ const ProfilePage = (props) => {
 
     useEffect(async () => {
         EventEmitter.emit('Loading');
-        getProfileResults(id).then((res) => {
+        getProfileResults(id).then(async(res) => {
             let hiredDate = new Date(res.hireDate);
             let month = [
                 "January",
@@ -78,7 +78,16 @@ const ProfilePage = (props) => {
             res.supervisor.groupCode = res.supervisor.group_id;
             res.supervisor.officeCode = res.supervisor.office_id;
             setSupervisorResults(res.supervisor);
-            console.log(res);
+
+            await storage.db.updateDocuments('viewHistory',[{
+                employeeNumber: res.employeeNumber,
+                title: res.title,
+                groupName: res.groupName,
+                lastName: res.lastName,
+                firstName: res.firstName,
+                email: res.email,
+                workCell: res.workCell
+            }]);
         });
     }, []);
 
@@ -111,7 +120,7 @@ const ProfilePage = (props) => {
                                         Reporting Managers
                                     </HeaderTypography>
                                 </div>
-                                <div className={"content"}>
+                                <div className={"content profile-page-cards"}>
                                     <ProfileCard data={supervisorResults} />
                                 </div>
                             </div>
