@@ -4,9 +4,8 @@ import ProfileCard from '../profile-card';
 import ProfileCardList from '../profile-card-list';
 import storage from '../../../services/storage';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { IconButton, Grid, withStyles, Tooltip, CircularProgress } from '@material-ui/core';
-import search from '../../../services/search';
-import loader from '../../../assets/3-dot-loader.svg';
+import { IconButton, Grid, withStyles, Tooltip } from '@material-ui/core';
+import LoadingIndicator from '../loading-indicator';
 
 const ExpandButton = withStyles((theme) => ({
   root: {
@@ -105,9 +104,7 @@ const SearchResults = (props) => {
 
   if (isLoading) return (
     <div className='search-results-wrapper'>
-        <div className='loader'>
-          <img src={loader} width='100' height='100'></img>
-        </div>
+      <LoadingIndicator />
     </div>
   );
 

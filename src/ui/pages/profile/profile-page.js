@@ -13,8 +13,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import SkillsAccordion from "../../components/skills-accordion";
 import Filter_modal from "../../components/filter_modal/filter_modal";
-import { CircularProgress } from "@material-ui/core";
-import loader from '../../../assets/3-dot-loader.svg';
+import LoadingIndicator  from '../../components/loading-indicator';
 
 const HeaderTypography = withStyles({
     root: {
@@ -101,9 +100,7 @@ const ProfilePage = (props) => {
             <PageTitle data={{ title: heading_text }} />
             <div className="page-contents-wrapper">
                 {isLoading ? (
-                    <div className='loader'>
-                        <img src={loader} width='100' height='100'></img>
-                    </div>
+                    <LoadingIndicator />
                 ) : (
                     <div className="page-contents-container">
                         <ProfileCardLarge data={profileResults} />
