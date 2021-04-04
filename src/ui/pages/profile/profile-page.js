@@ -13,8 +13,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import SkillsAccordion from "../../components/skills-accordion";
 import storage from "../../../services/storage";
-import Filter_modal from "../../components/filter_modal/filter_modal";
-import LoadingIndicator  from '../../components/loading-indicator';
+import EventEmitter from "../../hooks/event-manager";
 
 const HeaderTypography = withStyles({
     root: {
@@ -48,7 +47,7 @@ const ProfilePage = (props) => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(async () => {
-        console.log("RUNNING useEFFECT IN ProfilePage");
+        EventEmitter.emit('Loading');
         getProfileResults(id).then((res) => {
             let hiredDate = new Date(res.hireDate);
             let month = [
@@ -66,7 +65,7 @@ const ProfilePage = (props) => {
                 "December",
             ];
             res.hiredOn =
-                "Hired on " +
+                "Associated since " +
                 month[hiredDate.getMonth()] +
                 " " +
                 hiredDate.getDate() +
@@ -91,6 +90,7 @@ const ProfilePage = (props) => {
             profileResults.firstName !== "..."
         ) {
             setIsLoading(false);
+            EventEmitter.emit('Loaded');
         }
     }, [profileResults]);
 
@@ -99,7 +99,7 @@ const ProfilePage = (props) => {
             <PageTitle data={{ title: heading_text }} />
             <div className="page-contents-wrapper">
                 {isLoading ? (
-                    <LoadingIndicator />
+                    null
                 ) : (
                     <div className="page-contents-container">
                         <ProfileCardLarge data={profileResults} />

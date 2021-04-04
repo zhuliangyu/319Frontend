@@ -1,9 +1,25 @@
-.loader {
-    padding: 50px;
-    display: flex;
-}
+.loader-wrapper {
+    position: absolute;
+    height: calc(100vh  -15px);
 
-.loader-svg-container {
+    width: calc(100vw -17.5px);
     display: flex;
     justify-content: center;
+    align-items: center;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    top:0px;
+}
+
+.loader-container {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 45px;
+    padding: 15px 17.5px;
+    border-radius: 10px;
+    background-color: #ffff;
+    box-shadow: 0px 0px 15px rgb(0 0 0 / 25%) !important;
 }

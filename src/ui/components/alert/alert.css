@@ -1,0 +1,32 @@
+.alert-wrapper {
+    position: absolute;
+    height: 25vh;
+
+    width: calc(100vw -17.5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    top: 75vh;
+
+    z-index: 3;
+    display: none !important;
+    transition: display 0.5s
+}
+
+.alert-container {
+    padding: 15px 17.5px !important;
+    border-radius: 10px !important;
+    box-shadow: 0px 0px 15px rgb(0 0 0 / 25%) !important;
+    font-family: Poppins !important;
+    background: #ffff !important;
+    border-left: 15px solid #26415C;
+    font-weight: 450 !important;
+    color: #868D98;
+}
+
+.alert-container svg {
+    fill: #868D98;
+}

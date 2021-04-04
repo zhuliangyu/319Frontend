@@ -1,17 +1,14 @@
 import React from 'react';
-import loaderSvg from '../../../assets/3-dot-loader.svg';
-import aeSvg from '../../../assets/ae-svg.svg';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import './loading-indicator.css'
 
 const LoadingIndicator = () => {
     
     return (
-        <div className='loader'>
-            <div className='loader-svg-container'>
-                <img src={aeSvg} width='300' height='100'></img>
-            </div>
-            <div className='loader-svg-container'>
-                <img src={loaderSvg} width='300' height='80'></img>
-            </div>
+        <div className='loader-wrapper'>
+            <section className="loader-container">
+                <CircularProgress/>
+            </section>
         </div>
     )
 }

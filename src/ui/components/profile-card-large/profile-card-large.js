@@ -150,7 +150,7 @@ const ProfileCardLarge = (props) => {
             status: "pinned"
         }
         await storage.db.addDocument('pinnedProfiles', profileData);
-        alert('Profile Pinned!');
+        EventEmitter.emit('alert', "Profile pinned to dashboard");
         document.querySelector("#profile-addpin").style.display = 'none';
         document.querySelector("#profile-removepin").style.display = 'block';
     }
@@ -165,7 +165,7 @@ const ProfileCardLarge = (props) => {
             status: "pinned"
         }
         await storage.db.delete('pinnedProfiles', props.data.employeeNumber);
-        alert('Profile unpinned!');
+        EventEmitter.emit('alert', "Profile unpinned from dashboard!");
         document.querySelector("#profile-removepin").style.display = 'none';
         document.querySelector("#profile-addpin").style.display = 'block';
     }
