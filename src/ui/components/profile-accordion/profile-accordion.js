@@ -6,6 +6,7 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Box, withStyles} from "@material-ui/core";
+import './style.css';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -59,16 +60,16 @@ const ProfileAccordion = ({title, description}) => {
 
     return (
         <Box marginTop={2} marginBottom={2}>
-            <div className={classes.root}>
+            <div className="profile-accordion">
                 <Accordion defaultExpanded={true} expanded={expanded === 'accordionPanel'} onChange={handleChange('accordionPanel')}>
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls="accordion-panel-content"
                         id="accordion-panel-header"
                     >
-                        <HeaderTypography>
+                        <h1>
                             {title}
-                        </HeaderTypography>
+                        </h1>
                     </AccordionSummary>
                     <AccordionDetails>
                         <ParagraphTypography>

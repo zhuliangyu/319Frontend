@@ -96,9 +96,9 @@ const SkillsAccordion = (props) => {
                         aria-controls="accordion-panel-content"
                         id="accordion-panel-header"
                     >
-                        <HeaderTypography>
+                        <h1>
                             Skills
-                        </HeaderTypography>
+                        </h1>
                     </AccordionSummary>
                     <AccordionDetails>
                         <div >

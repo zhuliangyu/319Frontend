@@ -12,3 +12,199 @@ a.link {
 a.link:hover {
     text-decoration: underline;
 }
+
+.profile-card-large {
+    display: flex;
+    min-height: 234px;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.25) !important;
+    border-radius: 10px !important;
+}
+
+.profile-card-large .profile-details {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.profile-card-large .profile-outerBox {
+    flex: 1 1 auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-left: 1px solid #33587D;
+    padding-left: 30px;
+    min-height: 200px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.profile-card-large .profile-details h1 {
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 24px;
+    color: #26415C;
+}
+
+.profile-card-large .profile-details h2 {
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 24px;
+    color: #868D98;
+}
+.profile-card-large .profile-details h3 {
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 12px;
+    color: #868D98;
+}
+
+.profile-card-large .profile-details h4 {
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 12px;
+    color: #868D98;
+}
+
+.profile-card-large .profile-details p {
+    font-family: Poppins;
+    font-weight: 400;
+    font-size: 16px;
+
+    color: #868D98;
+}
+
+.profile-card-large .profile-content {
+    align-items: center;
+    flex-wrap: wrap;
+    display: flex;
+}
+
+.profile-card-large .profile-content p,a {
+    font-family: Poppins !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-size: 12pt !important;
+    color: #868D98 !important;
+}
+
+.profile-card-large .profile-orgChartLink {
+    float: right !important;
+    margin-right: -17px;
+}
+
+.profile-card-large .profile-orgChartLink button{
+    float: right !important;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 15px;
+    line-height: 22px;
+    text-align: right;
+    color: #FFFFFF !important;
+    background: #26415C;
+    padding: 12px;
+    padding-left: 15px;
+    border-bottom-left-radius: 21px;
+    border-top-left-radius: 21px;
+
+}
+
+.profile-card-large .profile-orgChartLink button:hover{
+    opacity: 0.9;
+}
+
+.profile-card-large .profile-cardContent {
+    padding: 16px;
+    width: 100%;
+}
+
+.profile-card-large .profile-profileDiv {
+    padding-left: 16px !important;
+}
+
+.profile-card-large .profile-profilePic {
+    width: 150px;
+    height: 150px;
+}
+
+.profile-card-large .profile-icon {
+    color: #26415C;
+    font-family: 'Poppins';
+    font-size: 30;
+    font-weight: 400;
+    display: inline-block;
+    line-height: 300;
+    text-align: left;
+}
+
+.profile-card-large .profile-iconSmall {
+    color: #26415C;
+    font-family: 'Poppins';
+    font-size: 12pt;
+    font-weight: 400;
+    display: inline-block;
+    line-height: 12;
+    text-align: left;
+}
+
+.profile-card-large .profile-outerBox svg {
+    padding-right: 10px;
+    fill: #33587D;
+}
+
+.MuiCardContent-root {
+    width: 100%;
+}
+
+.profile-details {
+    width: 100%;
+}
+
+.profile-profileDiv {
+    display: flexbox;
+    flex-flow: wrap;
+    justify-content: center;
+}
+
+.profile-pin {
+    position: relative;
+    top: 20px;
+    left: 25px;
+}
+
+.profile-pin button {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 25px;
+    padding-left: 20px;
+    color: #868D98;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 30px
+}
+
+#profile-removepin {
+    display: none;
+}
+
+#profile-removepin button {
+    color: #FFFFFF;
+    background: #26415C;
+    border-color: #26415C;
+}
+
+#profile-removepin button:hover {
+    opacity: 0.9;
+}
+
+#profile-addpin {
+    display: none;
+}
