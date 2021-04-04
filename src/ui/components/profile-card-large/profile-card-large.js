@@ -117,14 +117,9 @@ const ProfileCardLarge = (props) => {
     let history = useHistory();
     let email = props.data.email;
     let emailLink= "mailto:" + email;
-    let [isInit, setIsInit] = useState(false);
-    
-    EventEmitter.addListener('onInit', async() => {
-        setIsInit(true);
-    });
 
     useEffect(async() => {
-        if(isInit) {
+        if(true) {
             let allPins = await storage.db.toArray('pinnedProfiles');
 
             let res = await allPins.filter((item) => {
@@ -143,7 +138,7 @@ const ProfileCardLarge = (props) => {
                 document.querySelector("#profile-addpin").style.display = 'none';
             }
         }
-    }, [props.data, isInit]);
+    }, [props.data]);
 
     const addPin = async() => {
         let profileData = {

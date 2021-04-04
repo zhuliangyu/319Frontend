@@ -13,6 +13,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import SkillsAccordion from "../../components/skills-accordion";
 import storage from "../../../services/storage";
+import Filter_modal from "../../components/filter_modal/filter_modal";
 import LoadingIndicator  from '../../components/loading-indicator';
 
 const HeaderTypography = withStyles({
@@ -95,8 +96,6 @@ const ProfilePage = (props) => {
 
     return (
         <div className={"page"}>
-            <PageHeader />
-            <Filter_modal />
             <PageTitle data={{ title: heading_text }} />
             <div className="page-contents-wrapper">
                 {isLoading ? (

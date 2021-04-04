@@ -21,10 +21,9 @@ filters.init = async() => {
         
                     const data = await response.json();
                     util.parse(data);
+                    resolve();
     
                 }
-
-                resolve();
         
             } catch(e) {
     
