@@ -27,12 +27,16 @@ const ToggleButton = withStyles({
 
 const ToggleView = () => {
   const initView = () => {
-    const currView = storage.ls.getPair('searchResultsView');
-    return currView ? currView : 'card';
+    let currView = storage.ls.getPair('searchResultsView');
+    if (!currView) {
+      storage.ls.setPair('searchResultsView', 'grid');
+      currView = 'grid';
+    }
+    return currView;
   }
   const [view, setView] = React.useState(initView);
 
-  // TODO: use local storage or session storage for list/card view state?
+  // TODO: use local storage or session storage for list/grid view state?
   const handleViewChange = (event, newView) => {
     setView(newView);
     storage.ls.setPair("searchResultsView", newView);
@@ -42,7 +46,7 @@ const ToggleView = () => {
   return (
     <div>
       <ToggleButtonGroup value={view} exclusive onChange={handleViewChange}>
-        <ToggleButton value="card"><Typography>Grid</Typography></ToggleButton>
+        <ToggleButton value="grid"><Typography>Grid</Typography></ToggleButton>
         <ToggleButton value="list"><Typography>List</Typography></ToggleButton>
       </ToggleButtonGroup>
     </div>

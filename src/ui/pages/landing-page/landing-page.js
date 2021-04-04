@@ -24,6 +24,10 @@ const LandingPage = () => {
       storage.ls.setPair('searchHistory', JSON.stringify([]));
     }
 
+    if (!storage.ls.getPair('searchResultsView')) {
+      storage.ls.setPair('searchResultsView', 'grid');
+    }
+
     fetch("https://ipapi.co/city/", {"method": "GET"}).then(async(data) => {
       let result = await data.text();
       let locales = await storage.db.searchDocument("metadata", {call_name: "Location"});

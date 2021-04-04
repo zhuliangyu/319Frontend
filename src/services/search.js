@@ -56,7 +56,7 @@ util.searchOnline = (body, value) => {
       },
       (error) => {
         console.log(error);
-        resolve();
+        resolve({ error: error });
       }
     );
   })
@@ -158,22 +158,21 @@ util.determineFilterString = (filter_name) => {
 // Create filter chips
 
 search.parseFilter = async (searchObj) => {
-  // console.log(searchObj);
   let search_params = JSON.parse(searchObj);
-  // console.log('search parse filter search params', search_params);
   let filter_chips = [];
-  // console.log('filterchips', filter_chips);
-  if (search_params !== null) {
-    const filter_object = search_params['filterObject'];
+  if (search_params !== null && search_params !== undefined) {
+    const filter_object = search_params.filterObject;
     for (let call_name of Object.keys(filter_object)) {
       if (call_name !== 'Name' && call_name !== 'WorkCell' && call_name !== 'WorkPhone' && call_name !== 'Email') {
-        let value_strings = [];
-        let valueKeys = Object.keys(filter_object[call_name].values[0]);
-        for (let valueKey of valueKeys) {
-          value_strings.push(filter_object[call_name].values[0][valueKey]);
+        for (let i = 0; i < Object.keys(filter_object[call_name].values).length; i++) {
+          let value_strings = [];
+          let valueKeys = Object.keys(filter_object[call_name].values[i]);
+          for (let valueKey of valueKeys) {
+            value_strings.push(filter_object[call_name].values[i][valueKey]);
+          }
+          const meta_id_value = await util.parseFilterMetaId(`${call_name},${value_strings.join()}`);
+          filter_chips.push(meta_id_value);
         }
-        const meta_id_value = await util.parseFilterMetaId(`${call_name},${value_strings.join()}`);
-        filter_chips.push(meta_id_value);
       }
     }
   }

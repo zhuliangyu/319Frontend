@@ -1,0 +1,9 @@
+.loader {
+    padding: 50px;
+    display: flex;
+}
+
+.loader-svg-container {
+    display: flex;
+    justify-content: center;
+}
