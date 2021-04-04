@@ -22,3 +22,7 @@ title {
 div.content {
     display: flex;
 }
+
+.loader {
+    padding: 50px;
+  }

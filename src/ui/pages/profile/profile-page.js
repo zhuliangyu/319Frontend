@@ -14,6 +14,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import SkillsAccordion from "../../components/skills-accordion";
 import Filter_modal from "../../components/filter_modal/filter_modal";
 import { CircularProgress } from "@material-ui/core";
+import loader from '../../../assets/3-dot-loader.svg';
 
 const HeaderTypography = withStyles({
     root: {
@@ -82,6 +83,8 @@ const ProfilePage = (props) => {
         });
     }, []);
 
+    // Control loading indicator
+    // Based on availability of first name, could be buggy
     useEffect(() => {
         if (
             profileResults.firstName !== null &&
@@ -98,7 +101,9 @@ const ProfilePage = (props) => {
             <PageTitle data={{ title: heading_text }} />
             <div className="page-contents-wrapper">
                 {isLoading ? (
-                    <CircularProgress />
+                    <div className='loader'>
+                        <img src={loader} width='100' height='100'></img>
+                    </div>
                 ) : (
                     <div className="page-contents-container">
                         <ProfileCardLarge data={profileResults} />
