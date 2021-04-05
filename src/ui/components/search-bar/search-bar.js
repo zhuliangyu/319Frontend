@@ -5,8 +5,6 @@ import {
   Avatar
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
-import { connect } from "react-redux";
-import { performSearch } from "../../redux/actions/search-actions";
 import { useHistory, useLocation } from "react-router-dom";
 import * as qs from "query-string";
 import storage from "../../../services/storage";
@@ -226,10 +224,4 @@ const SearchBar = (props) => {
   );
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    performSearch: (value) => dispatch(performSearch(value)),
-  };
-};
-
-export default connect(mapDispatchToProps)(SearchBar);
+export default SearchBar;
