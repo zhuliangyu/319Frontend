@@ -21,7 +21,7 @@ const SearchCard = (props) => {
   const [keyword, setKeyword] = useState(props.data.keyword);
   const [filters, setFilters] = useState(props.data.filterObject);
 
-  // console.log(data_to_display);
+  console.log('search card: data_to_display:', data_to_display);
 
   // TODO: needs to apply filters as well
   const handleCardOnClick = async () => {
@@ -31,6 +31,10 @@ const SearchCard = (props) => {
     // document.getElementById("search_button_target").click();
     // window.location.reload();
   };
+
+  if (!keyword) {
+    return null;
+  }
 
   return (
     <Card className="profile-grid-card">

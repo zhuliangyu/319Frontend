@@ -3,10 +3,7 @@ import "./resume-search.css";
 import storage from "../../../../services/storage";
 import SearchCard from "../../../components/search-card";
 
-// TODO: overflow horizontal, max two cards height
 // TODO: handle delete search card
-// TODO: stylize search card
-// TODO: link search card to search page
 
 const ResumeSearch = (props) => {
   const [searchHistoryLS, syncSearchHistoryLS] = useState(

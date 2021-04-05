@@ -21,7 +21,7 @@ const SearchPage = () => {
     // console.log('running query string...');
     search.postSearchResults(qs.parse(location.search))
       .then(res => {
-        // console.log(res);
+        console.log('search_page res', res);
         setSearchResults(res);
       })
   }, [location]);

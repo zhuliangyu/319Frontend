@@ -5,13 +5,11 @@ const search = {};
 const util = {};
 
 search.postSearchResults = async(queries) => {
-  // console.log("search service queries? ", queries);
+  console.log("search service queries? ", queries);
 
   const value = queries;
   const filterName = Object.keys(value)[0];
   const inputValue = value[filterName];
-
-  // TODO: separate the query string from filters to go back to the state easily?
 
   if (Object.keys(value).length === 0) {
     let body = filters.get();
@@ -35,6 +33,10 @@ search.postSearchResults = async(queries) => {
 util.searchOnline = (body, value) => {
   let searchItem = {};
   return new Promise(async(resolve) => {
+    if (Object.keys(value).length === 0) {
+      console.log('empty_search detected');
+      return resolve({ results: [], total: 0, error: 'empty_search' });
+    }
     return axios.post("/api/search", body).then(
       async(response) => {
         let results = response.data.results;
@@ -52,11 +54,11 @@ util.searchOnline = (body, value) => {
           }
         }
         storage.ss.setPair('current_search', JSON.stringify(searchItem));
-        resolve({results: results, total: total});
+        resolve({results: results, total: total, error: 'no_error'});
       },
       (error) => {
         console.log(error);
-        resolve({ error: error });
+        resolve({ results: [], total: 0, error: 'server_error', message: error });
       }
     );
   })

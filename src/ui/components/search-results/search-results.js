@@ -22,11 +22,12 @@ const SearchResults = (props) => {
   // console.log(props.data.results);
   const [isLoading, setIsLoading] = useState(true);
   const [offset, setOffset] = useState(0);
-  const [perPage, setPerPage] = useState(12);
+  const [perPage, setPerPage] = useState(16);
   const [view, syncLocalStorageview] = useState(storage.ls.getPair('searchResultsView'));
   const [searchResults, setSearchResults] = useState(null);
   const [searchResultsDisplayed, setSearchResultsDisplayed] = useState([]);
   const [nextPageAvailable, setNextPageAvailable] = useState(false);
+  const [error, showError] = useState(false);
 
   const forceUpdate = React.useReducer(bool => !bool)[1];
 
@@ -36,37 +37,46 @@ const SearchResults = (props) => {
     // console.log(props.data.total > perPage);
     // console.log(props.data.results);
     setSearchResults(props.data.results);
-    setNextPageAvailable(props.data.total > perPage);
-    setOffset(0);
+    // setNextPageAvailable(props.data.total > perPage);
+    // setOffset(0);
 
-    const checkNextPage = async () => {
-      if (nextPageAvailable) {
-        let newData = props.data.results.slice(offset, offset + perPage);
-        setSearchResultsDisplayed(newData);
-        // console.log('search next page available');
-      } else {
-        // console.log('search next page not available', searchResultsDisplayed);
-        // console.log('searchResults', searchResults);
-        // console.log('props results', props.data.results);
-        setSearchResultsDisplayed(props.data.results);
-        setOffset(0);
-        forceUpdate();
-      }
+    // const checkNextPage = async () => {
+    //   if (nextPageAvailable) {
+    //     let newData = props.data.results.slice(offset, offset + perPage);
+    //     setSearchResultsDisplayed(newData);
+    //     // console.log('search next page available');
+    //   } else {
+    //     // console.log('search next page not available', searchResultsDisplayed);
+    //     // console.log('searchResults', searchResults);
+    //     // console.log('props results', props.data.results);
+    //     setSearchResultsDisplayed(props.data.results);
+    //     setOffset(0);
+    //     forceUpdate();
+    //   }
   
+    // }
+    // checkNextPage();
+    // forceUpdate();
+
+    if (props.data.error !== 'no_error') {
+      showError(true);
     }
-    checkNextPage();
-    forceUpdate();
+
+    console.log('error?', props.data.error);
+
+    setSearchResultsDisplayed(props.data.results);
 
   }, [props]);
 
-  const checkNextPageAvailable = () => {
-    if (searchResults.length <= searchResultsDisplayed.length) {
-      setNextPageAvailable(false);
-    }
-  };
+  // const checkNextPageAvailable = () => {
+  //   if (searchResults.length <= searchResultsDisplayed.length) {
+  //     setNextPageAvailable(false);
+  //   }
+  // };
 
   // Control loading indicator
   useEffect(() => {
+    setIsLoading(true);
     if (searchResults !== null && searchResults !== undefined) {
       setIsLoading(false);
     }
@@ -77,23 +87,23 @@ const SearchResults = (props) => {
     syncLocalStorageview(storage.ls.getPair('searchResultsView'));
   };
 
-  const handleExpandMore = () => {
-    console.log('clicked expand more');
-    if (props.data.length > searchResultsDisplayed.length) {
-      let newOffset = offset + perPage;
-      let newData = searchResults.slice(newOffset, newOffset + perPage);
+  // const handleExpandMore = () => {
+  //   console.log('clicked expand more');
+  //   if (props.data.length > searchResultsDisplayed.length) {
+  //     let newOffset = offset + perPage;
+  //     let newData = searchResults.slice(newOffset, newOffset + perPage);
   
-      setOffset(newOffset);
-      // console.log('new data...', [ ...searchResultsDisplayed, ...newData]);
-      setSearchResultsDisplayed(searchResultsDisplayed => [ ...searchResultsDisplayed, ...newData]);
-      checkNextPageAvailable();
-    } else {
-      checkNextPageAvailable();
-    }
+  //     setOffset(newOffset);
+  //     // console.log('new data...', [ ...searchResultsDisplayed, ...newData]);
+  //     setSearchResultsDisplayed(searchResultsDisplayed => [ ...searchResultsDisplayed, ...newData]);
+  //     checkNextPageAvailable();
+  //   } else {
+  //     checkNextPageAvailable();
+  //   }
     
-    // console.log('offset', newOffset);
-    // console.log('new data', newData);
-  }
+  //   // console.log('offset', newOffset);
+  //   // console.log('new data', newData);
+  // }
 
   useEffect(() => {
     window.addEventListener('storage', changeViewFn);
@@ -108,13 +118,31 @@ const SearchResults = (props) => {
     </div>
   );
 
+  if (error && props.data.error === 'empty_search') return (
+    <div>
+      <div className='search-results-wrapper'>
+        <div className='search-results-container'>
+          <center><b>{`💬 You performed an empty search. Try typing something in the search bar or filter to begin searching.`}</b></center>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (error && props.data.error === 'server_error') return (
+    <div>
+      <div className='search-results-wrapper'>
+        <div className='search-results-container'>
+          <center><b>{`💬  The Server and I aren't talking right now, try again later?`}</b></center>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div>
       <div className='search-results-wrapper'>
         <div className='search-results-container'>
-          {searchResultsDisplayed !== undefined ? 
-          (
-          ((searchResultsDisplayed.length > 0) ? (
+          {(searchResultsDisplayed.length > 0) ? (
             searchResultsDisplayed.map(result => 
               (
                 view === 'grid' ? 
@@ -123,18 +151,11 @@ const SearchResults = (props) => {
               )
               )
           ):(
-            //<center><b>{`👀 We looked meticulously, but could find anyone maching your criteria in the directory.`}</b></center>
-            null
-          ))
-          ) : 
-          (
-            <center><b>{`💬 The Server and I aren't talking right now, try again later?`}</b></center>
-            //null
-          )
-          }
+            <center><b>{`👀 We looked meticulously, but could find anyone maching your criteria in the directory.`}</b></center>
+          )}
         </div>
       </div>
-      <Grid className='search-results-expand-more' container justify='center'
+      {/* <Grid className='search-results-expand-more' container justify='center'
         style={{ display: nextPageAvailable ? 'flex' : 'none' }}
       > 
         <Grid item>
@@ -144,7 +165,7 @@ const SearchResults = (props) => {
             </ExpandButton>
           </Tooltip>
         </Grid>
-      </Grid>
+      </Grid> */}
     </div>
   );
 };
