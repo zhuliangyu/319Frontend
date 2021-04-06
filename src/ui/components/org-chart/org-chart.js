@@ -81,7 +81,7 @@ const OrgChart = (props) => {
         if (email === null) {
             email = ""
         }
-        let imageUrl = "https://ae-demo.dhruv.tech/api/photos/"+ employeeNumber
+        let imageUrl = "/api/photos/"+ employeeNumber
         let backupImageUrl = "https://discountdoorhardware.ca/wp-content/uploads/2018/06/profile-placeholder-3.jpg";
         let group = ""
         let office = ""
