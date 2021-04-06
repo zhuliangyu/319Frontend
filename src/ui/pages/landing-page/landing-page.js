@@ -28,7 +28,7 @@ const LandingPage = () => {
         storage.ls.setPair('searchHistory', JSON.stringify([]));
       }
 
-      fetch("https://ipapi.co/24.85.219.188/city", {"method": "GET"}).then(async(data) => {
+      fetch("https://ipapi.co/city", {"method": "GET"}).then(async(data) => {
         let result = await data.text();
 
         let filteredResult = locales.filter((locale) => {
