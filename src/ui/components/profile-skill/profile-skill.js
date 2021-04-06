@@ -4,6 +4,7 @@ import {Grid, withStyles} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { useHistory } from "react-router-dom";
 import filters from '../../../services/filters';
+import storage from '../../../services/storage';
 
 const ProfileSkill = (props) => {
 
@@ -14,8 +15,8 @@ const ProfileSkill = (props) => {
     const handleSkillOnClick = async (e, meta_id) => {
         //todo: search by skill when the skill is clicked
         console.log(props.data);
-        await filters.clear();
-        let qstr = await filters.getQS([meta_id]);
+        let qstr = await filters.getQS([meta_id], null, [meta_id]);
+        await storage.ss.setPair('basisURI', qstr);
         history.push(`/search/?q=${qstr}&name=`);
     };
 
