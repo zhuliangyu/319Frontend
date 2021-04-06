@@ -4,39 +4,46 @@ import storage from "./storage";
 const search = {};
 const util = {};
 
-search.postSearchResults = async(queries) => {
+search.postSearchResults = async(queries, uri = null) => {
   // console.log("search service queries? ", queries);
 
-  const value = queries;
-  const filterName = Object.keys(value)[0];
-  const inputValue = value[filterName];
+  if (uri == null) {
+    const value = queries;
+    const filterName = Object.keys(value)[0];
+    const inputValue = value[filterName];
 
-  // TODO: separate the query string from filters to go back to the state easily?
+    // TODO: separate the query string from filters to go back to the state easily?
 
-  if (Object.keys(value).length === 0) {
-    let body = filters.get();
-    let res = await util.searchOnline(body, value);
+    if (Object.keys(value).length === 0) {
+      let body = filters.get();
+      let res = await util.searchOnline(body, value);
 
-    return res;
+      return res;
+    } else {
+      let body =
+        filterName === "name"
+          ? util.createBodyForNameSearch(inputValue)
+          : util.createBodyNameForNumberOrEmail(filterName, inputValue);
+
+      // console.log('performing search action...');
+
+      let res = await util.searchOnline(body, value);
+
+      return res;
+    }
   } else {
-    let body =
-      filterName === "name"
-        ? util.createBodyForNameSearch(inputValue)
-        : util.createBodyNameForNumberOrEmail(filterName, inputValue);
-
-    // console.log('performing search action...');
-
-    let res = await util.searchOnline(body, value);
+    let res = await util.searchOnline(uri);
 
     return res;
   }
 };
 
-util.searchOnline = (body, value) => {
+util.searchOnline = (body, value = {}) => {
   let searchItem = {};
   return new Promise(async(resolve) => {
     return axios.post("/api/search", body).then(
       async(response) => {
+        console.table(body);
         let results = response.data.results;
         let total = response.data.total;
         await util.saveResult(results);
@@ -65,7 +72,7 @@ util.searchOnline = (body, value) => {
 
     // TODO: handle null searches
     // Update search history if unique search
-    let search_history = JSON.parse(storage.ls.getPair('searchHistory'));
+    /*let search_history = JSON.parse(storage.ls.getPair('searchHistory'));
     search_history.push(searchItem);
     let search_history_serialized = search_history.map(e => JSON.stringify(e));
     let search_history_serialized_set = new Set(search_history_serialized);
@@ -73,7 +80,7 @@ util.searchOnline = (body, value) => {
     const unique_arr = unique_search_history.map(e => JSON.parse(e));
     // console.log(unique_arr);
 
-    storage.ls.setPair('searchHistory', JSON.stringify(unique_arr));
+    storage.ls.setPair('searchHistory', JSON.stringify(unique_arr));*/
 
     return res;
   });

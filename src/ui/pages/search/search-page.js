@@ -7,24 +7,39 @@ import * as qs from 'query-string';
 import search from '../../../services/search';
 import Filter_modal from '../../components/filter_modal/filter_modal';
 import '../../components/filter_modal/filter_modal.css';
-import filters from '../../../services/filters';
+import EventEmitter from '../../hooks/event-manager';
 import storage from '../../../services/storage';
+import { useHistory } from "react-router-dom";
 
 const SearchPage = () => {
+  let history = useHistory()
   const heading_text = 'Search Results';
   const location = useLocation();
   // const [queries, setQueries] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   // const [loading, setLoading] = useState(true);
 
-  useEffect(async () => {
+  /*useEffect(async () => {
     // console.log('running query string...');
     search.postSearchResults(qs.parse(location.search))
       .then(res => {
         // console.log(res);
         setSearchResults(res);
       })
-  }, [location]);
+  }, [location]);*/
+  
+  useEffect(async () => {
+    let query = qs.parse(location.search);
+    if (query.q) {
+      setSearchResults([]);
+      let data = JSON.parse(decodeURIComponent(query.q));
+      search.postSearchResults(null, data)
+      .then(res => {
+        //console.log(res);
+        setSearchResults(res);
+      })
+    }
+  }, [history.location.key]);
 
   return (
     <div>

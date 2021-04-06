@@ -13,6 +13,7 @@ import storage from "../../../services/storage";
 import "./search-bar.css";
 import search from "../../../services/search";
 import filters from "../../../services/filters";
+import EventEmitter from "../../hooks/event-manager";
 
 let resultMin = 1;
 let resultMax = 1;
@@ -150,15 +151,17 @@ const SearchBar = (props) => {
     // console.log(value);
     handleInputBlur();
     let queries = await makeQueries();
-    console.log(metadata)
-    if (metadata != null) {
-      await filters.set([metadata]);
-      queries.name = "";
+    if (metadata == null) {
+      metadata = [];
+    } else {
+      metadata = [metadata];
+      queries = null;
     }
+    let qstr = await filters.getQS(metadata, queries);
+    console.table(qstr);
     //{inputValue: "Name", filter_name: "Name", queryId: "name"}
-    const stringified = qs.stringify(queries);
 
-    history.push(`/search?${stringified}`);
+    history.push(`/search?q=${qstr}`);
     // window.dispatchEvent(new Event('update_search'));
     // props.dispatch(performSearch(value));
   };
@@ -169,7 +172,7 @@ const SearchBar = (props) => {
     for (let i = 0; i < selectedFilters.length; i++) {
       queries = {
         ...queries,
-        [selectedFilters[i].queryId]: selectedFilters[i].inputValue,
+        [selectedFilters[i].filter_name]: {type:"OR",values:[selectedFilters[i].inputValue]},
       };
     }
 

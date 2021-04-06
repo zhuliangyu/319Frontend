@@ -56,6 +56,7 @@ const Subheader = (props) => {
     }, []);
 
     useEffect(async () => {
+        console.table(searchState);
         const chips_data = await search.parseFilter(searchState);
         const chips_meta_ids = Array.from(chips_data, (d) => d.meta_id);
         setSelectedFilters(chips_data);

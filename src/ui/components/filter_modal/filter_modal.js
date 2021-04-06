@@ -11,7 +11,8 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import filters from "../../../services/filters";
 import Button from '@material-ui/core/Button';
-
+import storage from '../../../services/storage';
+import { useHistory, useLocation } from "react-router-dom";
 
 function TabPanel(props) {
     const {children, value, index} = props;
@@ -43,6 +44,7 @@ function TabPanel(props) {
 
  let selection = [];
  const Filter_modal = () => {
+    let history = useHistory();
     const [open, setOpen] = React.useState(false);
     const [value, setTabValue] = React.useState(0);
     const [filterDocs, setFilterDocs] = React.useState(null);
@@ -54,6 +56,7 @@ function TabPanel(props) {
             filters.clear();
             selection = [];
             let filterManifest = await filters.getFilterList("Selection");
+            console.table(filterManifest);
             setFilterDocs(filterManifest);
         }
 
@@ -73,10 +76,13 @@ function TabPanel(props) {
     }
 
     const handleSubmit = async() => {
-        setOpen(false);
         // console.log('filter modal selection', selection);
-        await filters.set(selection);
-        document.getElementById("search_button_target").click();
+        let attach = await storage.ss.getPair('search_key');
+        attach = JSON.parse(attach);
+        let qstr = await filters.getQS(selection, attach);
+        setOpen(false);
+        history.push(`/search?q=${qstr}`);
+        //document.getElementById("search_button_target").click();
     }
 
     const handleChangeTabs = (event, newValue) => {
@@ -108,10 +114,10 @@ function TabPanel(props) {
 
             {filterDocs !== null ? (filterDocs.map((filterDoc) => (
               <TabPanel key={'panel-'+idx} value={value} index={idx++}>
-                    {filterDoc.input.map((e) => (
-                        <FormGroup row key={`panelrow-${idx}-${e.value_id.toString()}`}>
+                    {filterDoc.metadata.map((e) => (
+                        <FormGroup row key={`panelrow-${idx}-${e.meta_id}`}>
                             <FormControlLabel
-                                control={<Checkbox value={filterDoc.call_name +","+ e.value_id.toString()} name="filter_checkbox" onChange={handleFilterSelection} color="primary"/>}
+                                control={<Checkbox value={e.meta_id} name="filter_checkbox" onChange={handleFilterSelection} color="primary"/>}
                                 label={e.value_name}
                             />
                         </FormGroup> 

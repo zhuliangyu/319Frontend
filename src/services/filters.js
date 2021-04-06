@@ -3,6 +3,7 @@
 */
 
 import storage from './storage';
+import querystring from 'querystring';
 const filters = {};
 const util = {};
 
@@ -42,11 +43,61 @@ filters.get = () => {
     return queryObj;
 }
 
+filters.getQS = (selection, attach = null) => {
+    
+    return new Promise(async(resolve) => {
+        let localQuueryObj = {};
+        for (const e of selection) {
+            let data = e.split(",");
+            let filterName = data[0];
+            console.log(filterName);
+            let dbResult = await storage.db.searchDocument('filters', {call_name: filterName});
+            console.log(dbResult);
+            let filterMetadata = dbResult[0];
+    
+            if (!(filterName in localQuueryObj)) {
+                localQuueryObj[filterName] = {
+                    type: "OR",
+                    values: []
+                };
+            }
+    
+            let obj = {};
+            let idx = 1;
+            if (filterMetadata.attach_parent == "true") {
+                filterMetadata.attachment.forEach((parentId) => {
+                    obj[parentId] = data[idx];
+                    idx++;
+                })
+            }
+    
+            obj[filterMetadata.selection_id] = data[idx];
+    
+            localQuueryObj[filterName].values.push(obj);
+    
+        }
+
+        if (attach != null) {
+            localQuueryObj = Object.assign(localQuueryObj, attach);
+        }
+        let qstr = encodeURIComponent(JSON.stringify(localQuueryObj));
+        resolve(qstr);
+    })
+    
+}
+
 // Here, FilterType = "Keyword" (default) or "Selection".
 
 filters.getFilterList = async(filterType = "Keyword") => {
     return new Promise(async(resolve) => {
         const filterList = await storage.db.searchDocument('filters', {type: filterType});
+        let i = 0;
+        for (let x of filterList) {
+            let metadata = await storage.db.searchDocument('metadata', {call_name: x.call_name});
+            x.metadata = metadata;
+            filterList[i] = x;
+            i++;
+        }
         resolve(filterList);
     });
 }

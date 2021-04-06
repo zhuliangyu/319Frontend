@@ -39,9 +39,10 @@ const SearchResults = (props) => {
     setNextPageAvailable(props.data.total > perPage);
     setOffset(0);
 
-    const checkNextPage = async () => {
+   const checkNextPage = async () => {
       if (nextPageAvailable) {
-        let newData = props.data.results.slice(offset, offset + perPage);
+        console.table(props.data);
+        let newData = props.data.results;
         setSearchResultsDisplayed(newData);
         // console.log('search next page available');
       } else {
@@ -69,6 +70,8 @@ const SearchResults = (props) => {
   useEffect(() => {
     if (searchResults !== null && searchResults !== undefined) {
       setIsLoading(false);
+    } else {
+      setIsLoading(true);
     }
   }, [searchResults]);
 
