@@ -1,1 +1,1 @@
-/api/*  https://api-ae.dhruv.tech/:splat  200
+/api/*  https://api-ae.dhruv.tech/api/:splat  200
