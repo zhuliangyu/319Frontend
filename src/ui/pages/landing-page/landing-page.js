@@ -17,6 +17,7 @@ const LandingPage = () => {
 
   useEffect(async()=> {
     EventEmitter.addListener('onInit', async() => {
+      EventEmitter.emit('Loading');
       filters.clear();
       document.querySelector("#searchInput").focus();
       setPinnedProfiles(await storage.db.searchDocument("pinnedProfiles", {status: "pinned"}));
@@ -57,6 +58,7 @@ const LandingPage = () => {
         let colleg_data = await colleg.json();
         colleg_data = colleg_data.results;
         setCollegues(colleg_data);
+        EventEmitter.emit('Loaded');
       });
     });
     

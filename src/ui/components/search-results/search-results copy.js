@@ -17,8 +17,7 @@ const ExpandButton = withStyles((theme) => ({
     // },
   },
 }))(IconButton);
-let listed = 0;
-let toShow = [];
+
 const SearchResults = (props) => {
   // console.log(props.data.results);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,31 +28,33 @@ const SearchResults = (props) => {
   const [searchResultsDisplayed, setSearchResultsDisplayed] = useState([]);
   const [nextPageAvailable, setNextPageAvailable] = useState(false);
 
-  const [showMore, setShowMore] = useState(false);
   const forceUpdate = React.useReducer(bool => !bool)[1];
-  
+
   useEffect(() => {
     // console.log('trying to init data');
     // console.log(props);
     // console.log(props.data.total > perPage);
     // console.log(props.data.results);
-    setSearchResults(props.data.results);
+    setNextPageAvailable(props.data.total > perPage);
+    setOffset(0);
 
-    try {
-      let reslen = props.data.results.length;
-      if (reslen > 24) {
-        toShow = props.data.results.slice(0, 24);
-        listed = listed + 24;
-        setShowMore(true);
+   const checkNextPage = async () => {
+      if (nextPageAvailable) {
+        console.table(props.data);
+        let newData = props.data.results;
+        setSearchResultsDisplayed(newData);
+        // console.log('search next page available');
       } else {
-        toShow = props.data.results;
-        setShowMore(false);
+        // console.log('search next page not available', searchResultsDisplayed);
+        // console.log('searchResults', searchResults);
+        // console.log('props results', props.data.results);
+        setSearchResultsDisplayed(props.data.results);
+        setOffset(0);
+        forceUpdate();
       }
-      document.querySelector('.page-title-search').innerHTML = `${props.data.results.length} Search Result(s)`;
-    } catch (e) {
-      //continue;
+  
     }
-    setSearchResultsDisplayed(toShow);
+    checkNextPage();
     forceUpdate();
 
   }, [props]);
@@ -70,7 +71,6 @@ const SearchResults = (props) => {
       setIsLoading(false);
     } else {
       setIsLoading(true);
-      document.querySelector('.page-title-search').innerHTML = `Searching...`;
     }
   }, [searchResults]);
 
@@ -80,18 +80,21 @@ const SearchResults = (props) => {
   };
 
   const handleExpandMore = () => {
-    let reslen = props.data.results.length;
-    if (reslen > (listed+24)) {
-      toShow = toShow.concat(props.data.results.slice(listed, (listed+24)));
-      listed += 24;
-      setShowMore(true);
+    console.log('clicked expand more');
+    if (props.data.length > searchResultsDisplayed.length) {
+      let newOffset = offset + perPage;
+      let newData = searchResults.slice(newOffset, newOffset + perPage);
+  
+      setOffset(newOffset);
+      // console.log('new data...', [ ...searchResultsDisplayed, ...newData]);
+      setSearchResultsDisplayed(searchResultsDisplayed => [ ...searchResultsDisplayed, ...newData]);
+      checkNextPageAvailable();
     } else {
-      toShow = props.data.results;
-      setShowMore(false);
+      checkNextPageAvailable();
     }
-
-    setSearchResultsDisplayed(toShow);
-    forceUpdate();
+    
+    // console.log('offset', newOffset);
+    // console.log('new data', newData);
   }
 
   useEffect(() => {
@@ -122,8 +125,8 @@ const SearchResults = (props) => {
               )
               )
           ):(
-            <center><b>{`👀 Looked here, there and everywhere - but couldn't find the person you're looking for.`}</b></center>
-            //null
+            //<center><b>{`👀 We looked meticulously, but could find anyone maching your criteria in the directory.`}</b></center>
+            null
           ))
           ) : 
           (
@@ -136,13 +139,13 @@ const SearchResults = (props) => {
       <Grid className='search-results-expand-more' container justify='center'
         style={{ display: nextPageAvailable ? 'flex' : 'none' }}
       > 
-        {showMore ? (<Grid item>
-          <Tooltip title={showMore ? 'Show more results' : 'All results already shown'} placement='right-end'>
+        <Grid item>
+          <Tooltip title={nextPageAvailable ? 'Show more results' : 'All results already shown'} placement='right-end'>
             <ExpandButton onClick={handleExpandMore}>
               <ExpandMoreIcon color='primary' fontSize='large' />
             </ExpandButton>
           </Tooltip>
-        </Grid>):(null)}
+        </Grid>
       </Grid>
     </div>
   );

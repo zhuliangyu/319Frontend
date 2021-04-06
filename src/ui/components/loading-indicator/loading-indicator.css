@@ -1,5 +1,5 @@
 .loader-wrapper {
-    position: absolute;
+    position: fixed;
     height: calc(100vh  -15px);
 
     width: calc(100vw -17.5px);
@@ -10,6 +10,8 @@
     bottom: 0px;
     left: 0px;
     top:0px;
+
+    z-index: 5;
 }
 
 .loader-container {

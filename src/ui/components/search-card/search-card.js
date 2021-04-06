@@ -18,42 +18,34 @@ const SearchCard = (props) => {
 
   const data_to_display = JSON.stringify(props.data);
 
-  const [keyword, setKeyword] = useState(props.data.keyword);
-  const [filters, setFilters] = useState(props.data.filterObject);
+  const [uri, setURI] = useState(props.data.uri);
+  //const [filters, setFilters] = useState(props.data.filterObject);
 
   // console.log(data_to_display);
 
   // TODO: needs to apply filters as well
   const handleCardOnClick = async () => {
-    console.log("search history card was clicked");
-    console.log(qs.stringify(keyword));
-    history.push(`/search?${qs.stringify(keyword)}`);
+    //console.log("search history card was clicked");
+    //console.log(qs.stringify(keyword));
+    history.push(`/search?q=${uri}`);
     // document.getElementById("search_button_target").click();
     // window.location.reload();
   };
 
   return (
-    <Card className="profile-grid-card">
+    <Card className="profile-grid-card history-card">
       <CardActions className="card-actions-wrapper" disableSpacing>
-        <IconButton className="delete-button" onClick={props.deleteFn} size="small">
+        {/*<IconButton className="delete-button" onClick={props.deleteFn} size="small">
           <CloseIcon className="delete-button-icon" />
-        </IconButton>
+  </IconButton>*/}
       </CardActions>
 
       <CardActionArea onClick={handleCardOnClick}>
-        <div className="profile-details">
+        <div className="profile-details history-card">
           <CardContent padding={0}>
             <Typography align={"left"}>
-              Someone with the {Object.keys(keyword)[0]}{" "}
+              {props.data.name}
             </Typography>
-            <Typography color="textSecondary">
-                {keyword[Object.keys(keyword)[0]]}
-              </Typography>
-            {Object.keys(filters).length - 1 > 0 ? (
-              <Typography variant="subtitle2" align={"left"}>
-                and {Object.keys(filters).length - 1} other filter(s)
-              </Typography>
-            ) : null}
           </CardContent>
         </div>
       </CardActionArea>

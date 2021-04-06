@@ -9,14 +9,16 @@ import SearchCard from "../../../components/search-card";
 // TODO: link search card to search page
 
 const ResumeSearch = (props) => {
-  const [searchHistoryLS, syncSearchHistoryLS] = useState(
-    JSON.parse(storage.ls.getPair("searchHistory"))
-  );
+  const [searchHistoryLS, syncSearchHistoryLS] = useState([]);
 
   // console.log(searchHistoryLS);
 
-  useEffect(() => {
-    syncSearchHistoryLS(JSON.parse(storage.ls.getPair("searchHistory")));
+  useEffect(async() => {
+    let data = await storage.db.toArray('searchHistory');
+    data = data.reverse();
+    data = data.slice(0,4);
+    console.log(data);
+    syncSearchHistoryLS(data);
   }, []);
 
   const handleDelete = () => {

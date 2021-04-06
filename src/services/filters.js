@@ -43,7 +43,7 @@ filters.get = () => {
     return queryObj;
 }
 
-filters.getQS = (selection, attach = null) => {
+filters.getQS = (selection, attach = null, raw = []) => {
     
     return new Promise(async(resolve) => {
         let localQuueryObj = {};
@@ -76,7 +76,7 @@ filters.getQS = (selection, attach = null) => {
             localQuueryObj[filterName].values.push(obj);
     
         }
-
+        localQuueryObj.meta = raw;
         if (attach != null) {
             localQuueryObj = Object.assign(localQuueryObj, attach);
         }

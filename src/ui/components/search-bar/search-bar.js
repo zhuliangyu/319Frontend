@@ -75,10 +75,10 @@ const SearchBar = (props) => {
     let choices = [
       "try searching for 'Susan'...",
       "try searching for 'acmes@acme.ca'...",
-      "try searching for 'Name'...",
+      "try searching for 'Victor'...",
       "Search here...",
       "try searching for 'Victoria'...",
-      "Get ready for a superfast search experience :)",
+      "Your brand new search expeirence is here :)",
       "Pro tip: use arrow keys to select autocomplete options!",
       "Pro tip: Press enter to do a blank search"
     ]
@@ -115,6 +115,22 @@ const SearchBar = (props) => {
       let allFilters = await storage.db.toArray('metadata');
       let allProfiles = await storage.db.toArray('viewHistory');
 
+      let supplimentaryData = [];
+      let buildManifest = [];
+      for (let x of allFilters) {
+        let val = `${x.call_name}_${x.value_name}`;
+        if(!supplimentaryData.includes(val)) {
+          supplimentaryData.push(val);
+          buildManifest.push(x);
+        } else {
+          let meta_id = buildManifest[supplimentaryData.indexOf(val)].meta_id;
+          meta_id = meta_id + `__${x.meta_id}`;
+          buildManifest[supplimentaryData.indexOf(val)].meta_id = meta_id;
+        }
+      }
+
+      allFilters = buildManifest;
+
       let filterResults = allFilters.filter((item) => {
         return item.value_name.toLowerCase().includes(element.value.toLowerCase());
       });
@@ -147,20 +163,26 @@ const SearchBar = (props) => {
     // console.log("handleOnChange newValue", newValue);
   };
 
-  const handleInitiateSearch = async(e, metadata = null) => {
+  const handleInitiateSearch = async(e, metadata = null, attach = null) => {
     // console.log(value);
     handleInputBlur();
     let queries = await makeQueries();
+    let raw = [metadata];
     if (metadata == null) {
       metadata = [];
+      raw = [];
+      await storage.ss.setPair('basisName', queries[Object.keys(queries)[0]].values[0]);
     } else {
-      metadata = [metadata];
+      metadata = metadata.split("__");
+      document.querySelector('#searchInput').value = '';
+      await storage.ss.setPair('search_key', null);
+      await storage.ss.setPair('basisName', attach);
       queries = null;
     }
-    let qstr = await filters.getQS(metadata, queries);
+    let qstr = await filters.getQS(metadata, queries, raw);
+    await storage.ss.setPair('basisURI', qstr);
+    await storage.ss.setPair('currentURI', null);
     console.table(qstr);
-    //{inputValue: "Name", filter_name: "Name", queryId: "name"}
-
     history.push(`/search?q=${qstr}`);
     // window.dispatchEvent(new Event('update_search'));
     // props.dispatch(performSearch(value));
@@ -203,7 +225,7 @@ const SearchBar = (props) => {
         </section>
 
         {filterDocs !== null ? (filterDocs.map((filterDoc) => (
-          <section className="searchAuto-item" key={`filter-${filterDocs.indexOf(filterDoc)}`} id={`searchAuto-item-${filterOffset + filterDocs.indexOf(filterDoc)}`} onClick={(event) => {handleInitiateSearch(event, filterDoc.meta_id)}}>
+          <section className="searchAuto-item" key={`filter-${filterDocs.indexOf(filterDoc)}`} id={`searchAuto-item-${filterOffset + filterDocs.indexOf(filterDoc)}`} onClick={(event) => {handleInitiateSearch(event, filterDoc.meta_id, filterDoc.value_name)}}>
           <section className="searchAuto-wrapper">  
             <p>{filterDoc.value_name}</p>
             <span>{filterDoc.display_name}</span>

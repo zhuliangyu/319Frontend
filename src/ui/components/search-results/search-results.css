@@ -15,5 +15,6 @@
 .search-results-expand-more {
   background-color: #F2F2F2;
   padding-bottom: 40px;
+  display: flex !important;
 }
 

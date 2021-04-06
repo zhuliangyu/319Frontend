@@ -101,3 +101,8 @@
   justify-content: flex-end;
   width: 23.5%;
 }
+
+.history-card {
+  min-height: 0px !important;
+  height: 55px !important;
+}

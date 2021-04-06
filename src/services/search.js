@@ -1,12 +1,14 @@
 import axios from "axios";
 import filters from "./filters";
 import storage from "./storage";
+
+import isSubset from 'is-subset';
+import { uuid } from 'uuidv4';
 const search = {};
 const util = {};
 
 search.postSearchResults = async(queries, uri = null) => {
   // console.log("search service queries? ", queries);
-
   if (uri == null) {
     const value = queries;
     const filterName = Object.keys(value)[0];
@@ -25,15 +27,44 @@ search.postSearchResults = async(queries, uri = null) => {
           ? util.createBodyForNameSearch(inputValue)
           : util.createBodyNameForNumberOrEmail(filterName, inputValue);
 
-      // console.log('performing search action...');
+      // Decide Here
+      
 
       let res = await util.searchOnline(body, value);
-
-      return res;
     }
   } else {
-    let res = await util.searchOnline(uri);
-
+    let basis = await storage.ss.getPair('basisURI');
+    let current = await storage.ss.getPair('currentURI');
+    let evaluation = false;
+    try {
+      evaluation = isSubset(JSON.parse(decodeURIComponent(current)), JSON.parse(decodeURIComponent(basis)));
+    } catch (error) {
+      //Continue.
+    }
+    let res = {};
+    if ((basis === current) && (basis) && (current)) {
+      let data = await storage.db.toArray('searchResults');
+      res.results = data;
+      res.total = data.length;
+    } else if (evaluation) {
+      let hist = await storage.db.toArray('searchHistory');
+      if(hist.length > 0) {
+        hist.shift();
+      }
+      hist.unshift({uid: uuid(), name: await storage.ss.getPair('basisName'), uri: encodeURIComponent(JSON.stringify(uri))});
+      await storage.db.clearTable('searchHistory');
+      await storage.db.updateDocuments('searchHistory', hist);
+      res = await util.searchOnline(uri);
+    } else {
+      let hist = await storage.db.toArray('searchHistory');
+      if(hist.length >= 4) {
+        hist.pop();
+      }
+      hist.unshift({uid: uuid(), name: await storage.ss.getPair('basisName'), uri: encodeURIComponent(JSON.stringify(uri))});
+      await storage.db.clearTable('searchHistory');
+      await storage.db.updateDocuments('searchHistory', hist);
+      res = await util.searchOnline(uri);
+    }
     return res;
   }
 };
@@ -205,5 +236,9 @@ util.parseFilterMetaId = async (meta_id_string) => {
   const value = await storage.db.searchDocument("metadata", {meta_id: meta_id_string});
   return value[0];
 };
+
+util.searchOffline = (uri) => {
+  /* REMOVE */
+}
 
 export default search;

@@ -30,21 +30,23 @@ const SearchPage = () => {
   
   useEffect(async () => {
     let query = qs.parse(location.search);
+    
     if (query.q) {
       setSearchResults([]);
       let data = JSON.parse(decodeURIComponent(query.q));
       search.postSearchResults(null, data)
-      .then(res => {
+      .then(async(res) => {
         //console.log(res);
         setSearchResults(res);
-      })
+        await storage.ss.setPair('currentURI', encodeURIComponent(JSON.stringify(data)));
+      });
     }
   }, [history.location.key]);
 
   return (
     <div>
       <PageHeader />
-      <PageTitleSearch data={{ title: heading_text }} />
+      <PageTitleSearch data={ {title: heading_text} } />
       <SearchResults data={searchResults} />
     </div>
   );

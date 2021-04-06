@@ -14,12 +14,15 @@ import Header from './pages/landing-page/landing-header';
 import EventEmitter from './hooks/event-manager';
 import LoadingIndicator  from '../ui/components/loading-indicator';
 import AlertBanner  from '../ui/components/alert';
+import storage from '../services/storage';
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(async()=> {
     await filters.init();
+    //await storage.ss.setPair('basisURI', null);
+    //await storage.ss.setPair('currentURI', null);
     EventEmitter.emit('onInit');
   }, [] );
 

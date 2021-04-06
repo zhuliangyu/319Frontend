@@ -16,7 +16,7 @@
 .explore-wrapper {
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
 }
 
@@ -24,6 +24,5 @@
   margin-top: 15px;
   margin-left: -1%;
   width: 100%;
-  max-width: 1400px;
   min-width: 800px;
 }
