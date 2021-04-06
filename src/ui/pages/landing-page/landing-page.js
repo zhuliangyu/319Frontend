@@ -42,8 +42,6 @@ const LandingPage = () => {
           loc_id = filteredResult[0].value_id[0];
 
         } else {
-          console.log(locales)
-          alert(`Unknown Location "${result}", defaulting to "${locales[0].value_name}"`);
           setCity(locales[0].value_name);
           loc_id = locales[0].value_id[0];
         }
