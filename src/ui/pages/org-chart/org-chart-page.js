@@ -34,7 +34,7 @@ const OrgChartPage = () => {
     const container = useRef(null);
 
     useEffect(() => {
-        container.current.getElement().scrollTo(3100, 1100);
+        container.current.getElement().scrollTo(2075, 400);
     }, []);
 
     return (
@@ -52,7 +52,7 @@ const OrgChartPage = () => {
                 options={{
                     limitToBounds: false,
                     minScale: 0.3,
-                    maxScale: 2
+                    maxScale: 1.3
                 }}
                 wheel={{
                     disabled: true

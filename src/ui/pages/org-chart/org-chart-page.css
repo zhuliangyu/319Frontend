@@ -157,8 +157,8 @@ div.page-wrapper {
 
 div.orgchart-wrapper {
     background-color: #F2F2F2;
-    width: 10000px;
-    height: 3500px;
+    width: 7000px;
+    height: 1700px;
     display: flex;
     align-items: center;
 }
@@ -166,7 +166,7 @@ div.orgchart-wrapper {
 div.container {
     width: 100%;
     text-align: center;
-    height: 2000px;
+    height: 650px;
 
     /*background-color: #F2F2F2;*/
 }
