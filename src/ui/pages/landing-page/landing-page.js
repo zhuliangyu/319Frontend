@@ -20,6 +20,7 @@ const LandingPage = () => {
       EventEmitter.emit('Loading');
       filters.clear();
       document.querySelector("#searchInput").focus();
+      let locales = await storage.db.searchDocument("metadata", {call_name: "Location"});
       setPinnedProfiles(await storage.db.searchDocument("pinnedProfiles", {status: "pinned"}));
       storage.ss.setPair('search_key', null);
       storage.ss.setPair('current_search', null);
@@ -27,9 +28,8 @@ const LandingPage = () => {
         storage.ls.setPair('searchHistory', JSON.stringify([]));
       }
 
-      fetch("https://ipapi.co/city/", {"method": "GET"}).then(async(data) => {
+      fetch("https://ipapi.co/24.85.219.188/city", {"method": "GET"}).then(async(data) => {
         let result = await data.text();
-        let locales = await storage.db.searchDocument("metadata", {call_name: "Location"});
 
         let filteredResult = locales.filter((locale) => {
           if (locale.value_name == result) return true;
@@ -42,7 +42,8 @@ const LandingPage = () => {
           loc_id = filteredResult[0].value_id[0];
 
         } else {
-          //alert(`Unknown Location "${result}", defaulting to "${locales[0].value_name}"`);
+          console.log(locales)
+          alert(`Unknown Location "${result}", defaulting to "${locales[0].value_name}"`);
           setCity(locales[0].value_name);
           loc_id = locales[0].value_id[0];
         }
