@@ -27,6 +27,7 @@ const SearchPage = () => {
         setSearchResults(res);
       })
   }, [location]);*/
+
   
   useEffect(async () => {
     let query = qs.parse(location.search);

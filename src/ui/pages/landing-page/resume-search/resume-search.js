@@ -15,7 +15,6 @@ const ResumeSearch = (props) => {
 
   useEffect(async() => {
     let data = await storage.db.toArray('searchHistory');
-    data = data.reverse();
     data = data.slice(0,4);
     console.log(data);
     syncSearchHistoryLS(data);
@@ -30,7 +29,7 @@ const ResumeSearch = (props) => {
     <div className="searches">
       <div className="searches-title">Resume Search</div>
       <div className="searches-history-cards">
-        {searchHistoryLS !== null ? searchHistoryLS.map((historyItem) => (
+        {searchHistoryLS != null ? searchHistoryLS.map((historyItem) => (
           <SearchCard key={searchHistoryLS.indexOf(historyItem)} data={historyItem} deleteFn={() => {handleDelete()}} />
         )) : null }
       </div>

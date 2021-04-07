@@ -171,7 +171,12 @@ const SearchBar = (props) => {
     if (metadata == null) {
       metadata = [];
       raw = [];
-      await storage.ss.setPair('basisName', queries[Object.keys(queries)[0]].values[0]);
+      try {
+        await storage.ss.setPair('basisName', queries[Object.keys(queries)[0]].values[0]);
+      } catch (error) {
+        await storage.ss.setPair('basisName', '(Blank Search)');
+      }
+      
     } else {
       metadata = metadata.split("__");
       document.querySelector('#searchInput').value = '';
