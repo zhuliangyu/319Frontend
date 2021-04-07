@@ -82,6 +82,7 @@ const LandingPage = () => {
           resolve(colleg_data);
         })
         // handle unresolved promise
+        // default to Burnaby
         .catch(async () => {
           EventEmitter.emit('Loaded')
           let result = 'Burnaby';
