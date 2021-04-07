@@ -9,6 +9,7 @@ import {Box, withStyles} from "@material-ui/core";
 import ProfileSkill from "../profile-skill/profile-skill";
 import {getOrgChartResults} from "../../../services/org-chart";
 import storage from "../../../services/storage";
+import "./skills-accordion.css"
 import EventEmitter from "../../hooks/event-manager";
 
 const useStyles = makeStyles((theme) => ({
@@ -65,9 +66,9 @@ const SkillsAccordion = (props) => {
     };
     let [skillArray, setSkillArray] = useState([]);
     useEffect(async () => {
-       storage.db.searchDocument('metadata', {call_name: "Skill"}).then((res) => {
+        storage.db.searchDocument('metadata', {call_name: "Skill"}).then((res) => {
 
-           let skillIdArray = props.data;
+            let skillIdArray = props.data;
             let tempArray = [];
             skillIdArray.forEach((skill) => {
                 let skillName;
@@ -82,9 +83,12 @@ const SkillsAccordion = (props) => {
             });
 
             setSkillArray(tempArray);
-       })
+        })
 
     }, []);
+
+    let hasSkills = skillArray.length !== 0
+    console.log(hasSkills)
 
     return (
         <Box marginTop={2} marginBottom={2}>
@@ -100,12 +104,17 @@ const SkillsAccordion = (props) => {
                         </h1>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <div >
-                                {skillArray.map((skill) =>
-                                    <ProfileSkill data={skill} />
+                        { hasSkills? (
+                                <div >
+                                    {skillArray.map((skill) =>
+                                        <ProfileSkill data={skill} />
                                     )
-                                }
-                        </div>
+                                    }
+                                </div>
+                        ) : (
+                            <p className={"no-skills"}>no info available</p>
+                        )
+                        }
                     </AccordionDetails>
                 </Accordion>
             </div>
