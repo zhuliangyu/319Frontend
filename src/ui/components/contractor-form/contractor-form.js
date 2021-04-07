@@ -443,7 +443,7 @@ const ContractorForm = (props) => {
                         <TextField
                             fullWidth={true}
                             name="extraInfo"
-                            label="Exra Information"
+                            label="Extra Information"
                             onChange={handleInputChange}
                             multiline
                             rows={4}

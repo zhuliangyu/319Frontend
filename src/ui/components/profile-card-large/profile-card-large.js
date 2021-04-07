@@ -17,6 +17,7 @@ import storage from '../../../services/storage';
 import Button from '@material-ui/core/Button';
 import EventEmitter from '../../hooks/event-manager';
 import SmartphoneIcon from '@material-ui/icons/Smartphone';
+import filters from "../../../services/filters";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -171,6 +172,12 @@ const ProfileCardLarge = (props) => {
         document.querySelector("#profile-addpin").style.display = 'block';
     }
 
+    const handleSearch = async (e, meta_id) => {
+        let qstr = await filters.getQS([meta_id], null, [meta_id]);
+        await storage.ss.setPair('basisURI', qstr);
+        history.push(`/search/?q=${qstr}&name=`);
+    }
+
     return (
         <Box mt={3} mb={3}>
             <Card className="profile-card-large">
@@ -195,8 +202,12 @@ const ProfileCardLarge = (props) => {
                             <CardContent>
                                 <h1 align={"left"}>{props.data.firstName} {props.data.lastName}</h1>
                                 <h2 align={"left"}>{props.data.title}</h2>
-                                <h3 align={"left"}> {props.data.groupName}</h3>
-                                <h4 align={"left"}> {props.data.officeName} Office @ {props.data.companyName} </h4>
+                                <div className={"group-div"}>
+                                    <h3 align={"left"} className={"searchable-subheader-inline"} onClick={(event => {handleSearch(event, props.data.info.group.meta_id)})}> {props.data.groupName}</h3> <br/>
+                                </div>
+                                <h4 align={"left"} className={"searchable-subheader-inline"} onClick={(event => {handleSearch(event, props.data.info.office.meta_id)})}> {props.data.officeName} Office  </h4>
+                                <h4 align={"left"} className={"inline"}> @ </h4>
+                                <h4 align={"left"} className={"searchable-subheader-inline"} onClick={(event => {handleSearch(event, props.data.info.company.meta_id)})}> {props.data.companyName}  </h4>
                                 <p align={"left"}>{props.data.bio}</p>
                             </CardContent>
                         </div>
@@ -226,7 +237,7 @@ const ProfileCardLarge = (props) => {
                                 </div>
                                 <div className="profile-content">
                                     <RoomIcon className="icon" align={"left"}/>
-                                    <IconTypography align={"left"}>Works from {props.data.locationName} </IconTypography><br/>
+                                    <IconTypography align={"left"} className={"searchable-icon"} onClick={(event => {handleSearch(event, props.data.info.loc.meta_id)})} >Works from {props.data.locationName}</IconTypography> <br/>
                                 </div>
                                 <div className="profile-orgChartLink">
                                     <Link

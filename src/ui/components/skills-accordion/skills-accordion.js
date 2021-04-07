@@ -88,7 +88,6 @@ const SkillsAccordion = (props) => {
     }, []);
 
     let hasSkills = skillArray.length !== 0
-    console.log(hasSkills)
 
     return (
         <Box marginTop={2} marginBottom={2}>
