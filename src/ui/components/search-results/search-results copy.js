@@ -31,10 +31,6 @@ const SearchResults = (props) => {
   const forceUpdate = React.useReducer(bool => !bool)[1];
 
   useEffect(() => {
-    // console.log('trying to init data');
-    // console.log(props);
-    // console.log(props.data.total > perPage);
-    // console.log(props.data.results);
     setNextPageAvailable(props.data.total > perPage);
     setOffset(0);
 
@@ -43,11 +39,7 @@ const SearchResults = (props) => {
         console.table(props.data);
         let newData = props.data.results;
         setSearchResultsDisplayed(newData);
-        // console.log('search next page available');
       } else {
-        // console.log('search next page not available', searchResultsDisplayed);
-        // console.log('searchResults', searchResults);
-        // console.log('props results', props.data.results);
         setSearchResultsDisplayed(props.data.results);
         setOffset(0);
         forceUpdate();
@@ -80,21 +72,17 @@ const SearchResults = (props) => {
   };
 
   const handleExpandMore = () => {
-    console.log('clicked expand more');
     if (props.data.length > searchResultsDisplayed.length) {
       let newOffset = offset + perPage;
       let newData = searchResults.slice(newOffset, newOffset + perPage);
   
       setOffset(newOffset);
-      // console.log('new data...', [ ...searchResultsDisplayed, ...newData]);
       setSearchResultsDisplayed(searchResultsDisplayed => [ ...searchResultsDisplayed, ...newData]);
       checkNextPageAvailable();
     } else {
       checkNextPageAvailable();
     }
     
-    // console.log('offset', newOffset);
-    // console.log('new data', newData);
   }
 
   useEffect(() => {
@@ -125,7 +113,6 @@ const SearchResults = (props) => {
               )
               )
           ):(
-            //<center><b>{`👀 We looked meticulously, but could find anyone maching your criteria in the directory.`}</b></center>
             null
           ))
           ) : 
