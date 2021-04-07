@@ -34,7 +34,7 @@ const OrgChartPage = () => {
     const container = useRef(null);
 
     useEffect(() => {
-        container.current.getElement().scrollTo(2075, 400);
+        container.current.getElement().scrollTo(1875, 400);
     }, []);
 
     return (
