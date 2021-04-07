@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import "./sub-header.css";
 import FilterIcon from "../../../../assets/filter-icon.svg";
 import CloseIcon from "../../../../assets/close-icon.svg";
-import { Button, Divider, Typography } from "@material-ui/core";
+import { Button, Divider, Typography, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import FilterChip from "../../filter-chip";
 import filters from "../../../../services/filters";
