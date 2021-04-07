@@ -14,8 +14,6 @@ search.postSearchResults = async(queries, uri = null) => {
     const filterName = Object.keys(value)[0];
     const inputValue = value[filterName];
 
-    // TODO: separate the query string from filters to go back to the state easily?
-
     if (Object.keys(value).length === 0) {
       let body = filters.get();
       let res = await util.searchOnline(body, value);

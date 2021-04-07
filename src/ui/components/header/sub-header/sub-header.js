@@ -1,5 +1,3 @@
-// TODO: make the height of sub-header change to accomodate for filters overflow
-
 import React, { useState, useEffect } from "react";
 import "./sub-header.css";
 import FilterIcon from "../../../../assets/filter-icon.svg";
