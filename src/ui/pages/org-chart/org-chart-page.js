@@ -62,6 +62,7 @@ const OrgChartPage = () => {
                 }}
 
             >
+
                 {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
                     <React.Fragment>
                         <div className="page-title-wrapper">
@@ -89,8 +90,7 @@ const OrgChartPage = () => {
                     </React.Fragment>
                 )}
             </TransformWrapper>
-
-            <Footer />
+            <div className={"page-bottom"}> </div>
         </div>
     );
 };

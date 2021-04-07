@@ -1,10 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './explore-ae-locations.css';
 import ProfileCard from '../../../../ui/components/profile-card';
 
+import EventEmitter from '../../../hooks/event-manager';
+import storage from '../../../../services/storage';
+
 const ExploreAELocations = (props) => {
-  console.log(props.data);
-  let profiles = props.data.results;
+  let [profiles, setProfiles] = useState(props.data.results);
+  useEffect(async() => {
+    setProfiles(props.data.results);
+  }, [props])
+  useEffect(async() => {
+
+    let state = await storage.ss.getFlag('filters');
+    if (state) {
+      if (props.data.results.length == 0) {
+        EventEmitter.emit('triggerLoc');
+      }
+    }
+  }, []);
   return (
     <div className="explore">
       <div className="explore-title">

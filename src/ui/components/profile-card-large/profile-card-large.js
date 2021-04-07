@@ -16,6 +16,7 @@ import { useHistory } from "react-router-dom";
 import storage from '../../../services/storage';
 import Button from '@material-ui/core/Button';
 import EventEmitter from '../../hooks/event-manager';
+import SmartphoneIcon from '@material-ui/icons/Smartphone';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -204,8 +205,12 @@ const ProfileCardLarge = (props) => {
                         <div className="profile-cardContent">
                             <div className="profile-outerBox">
                                 <div className="profile-content">
+                                    <SmartphoneIcon className="icon" align={"left"}/>
+                                    <IconTypography align={"left"}> {props.data.workCell} (mobile) </IconTypography> <br/>
+                                </div>
+                                <div className="profile-content">
                                     <PhoneIcon className="icon" align={"left"}/>
-                                    <IconTypography align={"left"}> {props.data.workCell}/{props.data.workPhone} </IconTypography> <br/>
+                                    <IconTypography align={"left"}> {props.data.workPhone} (work)  </IconTypography> <br/>
                                 </div>
                                 <div className="profile-content">
                                     <EmailIcon className="icon" align={"left"}/>

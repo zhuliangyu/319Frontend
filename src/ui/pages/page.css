@@ -11,3 +11,11 @@
   max-width: 1400px;
   min-width: 900px;
 }
+
+.generic-msg {
+  font-family: Poppins;
+  font-weight: 500;
+}
+.msg-white {
+  color: white;
+}

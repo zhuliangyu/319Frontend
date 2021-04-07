@@ -166,9 +166,7 @@ div.orgchart-wrapper {
 div.container {
     width: 100%;
     text-align: center;
-    height: 650px;
-
-    /*background-color: #F2F2F2;*/
+    height: 800px;
 }
 
 div.react-transform-component {

@@ -62,8 +62,16 @@ function TabPanel(props) {
               let data = JSON.parse(decodeURIComponent(query.q));
               console.warn(data.meta);
               if(data.meta) {
+                // TODO: trigger filter chips event, traverse through whole array every time
                 selectionRaw = data.meta;
                 setSelectionData(selectionRaw);
+                selection = [];
+                for (let x of selectionRaw) {
+                  let item = x.split("__");
+                  selection = selection.concat(item);
+                }
+
+                console.log(selection);
               }
             }
             //selection = [];
@@ -99,8 +107,13 @@ function TabPanel(props) {
         
         if (event.target.checked) {
             selectionRaw.push(event.target.value);
+            // handles duplicates by spliting by __ (ie group administration)
             let userSel = event.target.value.split("__");
             selection = selection.concat(userSel);
+            // TODO: trigger filter chips event, traverse through whole array every time
+
+            // event.target.value == selectionRaw
+            // delete
         } else if (selectionRaw.indexOf(event.target.value) > -1) {
             selectionRaw.splice(selectionRaw.indexOf(event.target.value),1);
             let userSel = event.target.value.split("__");

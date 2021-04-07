@@ -22,3 +22,18 @@ title {
 div.content {
     display: flex;
 }
+
+.italic-text {
+    font-style: italic;
+    color: #868D98;
+    font-size: 18px;
+    font-family: Poppins;
+    font-weight: 200;
+    margin: 0;
+}
+
+.no-skills-container {
+    text-align: center;
+    margin: 0;
+    width: 100%;
+}

@@ -71,6 +71,18 @@ const ProfilePage = (props) => {
                 hiredDate.getDate() +
                 ", " +
                 hiredDate.getFullYear();
+            if (res.terminationDate !== null) {
+                let terminationDate = new Date(res.terminationDate)
+                res.hiredOn =
+                    "Associated from " +
+                    month[hiredDate.getMonth()] +
+                    " " +
+                    hiredDate.getFullYear() +
+                    " to " +
+                    month[terminationDate.getMonth()] +
+                    " " +
+                    terminationDate.getFullYear();
+            }
             res.groupAndOffice = res.groupName + "(" + res.officeName + ")";
             setProfileResults(res);
             setSkills(res.skills);
@@ -90,7 +102,7 @@ const ProfilePage = (props) => {
             }]);
         });
     }, []);
-
+    console.log(profileResults)
     // Control loading indicator
     // Based on availability of first name, could be buggy
     useEffect(() => {
