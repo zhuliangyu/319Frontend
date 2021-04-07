@@ -64,7 +64,7 @@ const OrgChart = (props) => {
     function createOrgChartLinkHtml(employeeNumber) {
         let orgChartLink = linkBase + "/orgchart/" + employeeNumber.toString()
         let orgChartLinkHtml = '<a class="link-wrapper" href=' + orgChartLink + '> ' +
-            '<span class="material-icons">group_work</span>' +
+            '<span class="material-icons">account_tree</span>' +
             '</a>'
         return orgChartLinkHtml;
     }
@@ -134,7 +134,7 @@ const OrgChart = (props) => {
                         '<a class="email-text" href="mailto:'+email+'">'+ email +'</a>' +
                         '<div class="link-div-wrapper">' +
                             '<a class="link-wrapper" href='+profilePageLink+'>' +
-                                '<span class="material-icons">account_circle</span>' +
+                                '<span class="material-icons">account_circle</span> <i> </i>' +
                             '</a>' +
                             orgChartLinkHtml +
                         '</div>' +
