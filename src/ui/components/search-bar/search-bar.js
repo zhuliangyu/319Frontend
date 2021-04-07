@@ -187,8 +187,6 @@ const SearchBar = (props) => {
     await storage.ss.setPair('currentURI', null);
     console.table(qstr);
     history.push(`/search?q=${qstr}`);
-    // window.dispatchEvent(new Event('update_search'));
-    // props.dispatch(performSearch(value));
   };
 
   const makeQueries = async () => {

@@ -8,6 +8,7 @@ import FilterChip from "../../filter-chip";
 import filters from "../../../../services/filters";
 import search from "../../../../services/search";
 import storage from "../../../../services/storage";
+import EventEmitter from "../../../hooks/event-manager";
 
 const useStyles = makeStyles((theme) => ({
     button: {},
@@ -35,42 +36,55 @@ const useStyles = makeStyles((theme) => ({
 const Subheader = (props) => {
     const classes = useStyles();
     const location = window.location.pathname;
-    const [selectedFilters, setSelectedFilters] = useState([]);
     const [selectedFilterDocs, setSelectedFilterDocs] = useState([]);
-
+    
     const [searchState, syncStorageSearch] = useState(
-        storage.ss.getPair("current_search")
+        storage.ss.getPair("currentURI")
     );
 
-    const updateSearch = async (e) => {
-        syncStorageSearch(storage.ss.getPair("current_search"));
-    };
+    // const updateSearch = async (e) => {
+    //     syncStorageSearch(storage.ss.getPair("currentURI"));
+    // };
+
+    // useEffect(() => {
+    //     window.addEventListener("update_search", updateSearch);
+    //     return () => {
+    //         window.removeEventListener("update_search", updateSearch);
+    //     };
+    // }, []);
 
     useEffect(() => {
-        window.addEventListener("update_search", updateSearch);
-        return () => {
-            window.removeEventListener("update_search", updateSearch);
-        };
-    }, []);
-
-    useEffect(async () => {
-        console.table(searchState);
-        const chips_data = await search.parseFilter(searchState);
-        const chips_meta_ids = Array.from(chips_data, (d) => d.meta_id);
-        setSelectedFilters(chips_data);
-        setSelectedFilterDocs(chips_meta_ids);
-    }, [searchState]);
+        // console.log('selectedFilterDocs', selectedFilterDocs);
+    }, [selectedFilterDocs]);
 
     const handleChipDelete = async (uuid_to_delete) => {
-        let newFilters = selectedFilters.filter(
-            (chip) => chip._uuid !== uuid_to_delete
-        );
-        setSelectedFilters(newFilters);
-        let docs = Array.from(newFilters, (d) => d.meta_id);
-        setSelectedFilterDocs(docs);
-        await filters.set(docs);
-        document.getElementById("search_button_target").click();
+        // let newFilters = selectedFilters.filter(
+        //     (chip) => chip._uuid !== uuid_to_delete
+        // );
+        // setSelectedFilters(newFilters);
+        // let docs = Array.from(newFilters, (d) => d.meta_id);
+        // setSelectedFilterDocs(docs);
+        // console.log(docs);
+        // console.log(newFilters);
+        // await filters.set(docs);
+        console.log('clicked chip delete');
     };
+
+
+    // Listener to update chips data
+    EventEmitter.addListener('updateChips', (data) => {
+        let filtersRaw = [...data];
+        let filters = [];
+
+        // only push one meta id
+        // check if it is has a double underscore, which means duplicate group
+        for (let x of filtersRaw) {
+            let splitFilterByUnderscore = x.split("__");
+            filters.push(splitFilterByUnderscore[0]);
+        }
+
+        setSelectedFilterDocs(filters);
+    });
 
     return (
         <div>
@@ -92,7 +106,7 @@ const Subheader = (props) => {
                             orientation="vertical"
                         />
                         <div className="filter-chips">
-                            {selectedFilters.map((filter_data) => (
+                            {selectedFilterDocs.map((filter_data) => (
                                 <FilterChip
                                     key={filter_data._uuid}
                                     data={filter_data}

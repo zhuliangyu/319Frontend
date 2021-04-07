@@ -14,6 +14,8 @@ import Button from '@material-ui/core/Button';
 import storage from '../../../services/storage';
 import { useHistory, useLocation } from "react-router-dom";
 import * as qs from 'query-string';
+import EventEmitter from '../../hooks/event-manager';
+
 function TabPanel(props) {
     const {children, value, index} = props;
   
@@ -62,7 +64,6 @@ function TabPanel(props) {
               let data = JSON.parse(decodeURIComponent(query.q));
               console.warn(data.meta);
               if(data.meta) {
-                // TODO: trigger filter chips event, traverse through whole array every time
                 selectionRaw = data.meta;
                 setSelectionData(selectionRaw);
                 selection = [];
@@ -70,8 +71,9 @@ function TabPanel(props) {
                   let item = x.split("__");
                   selection = selection.concat(item);
                 }
-
-                console.log(selection);
+                // Emit updateChips to update the chips selection
+                EventEmitter.emit('updateChips', selectionRaw);
+                // console.log('selection', selection);
               }
             }
             //selection = [];
@@ -110,10 +112,6 @@ function TabPanel(props) {
             // handles duplicates by spliting by __ (ie group administration)
             let userSel = event.target.value.split("__");
             selection = selection.concat(userSel);
-            // TODO: trigger filter chips event, traverse through whole array every time
-
-            // event.target.value == selectionRaw
-            // delete
         } else if (selectionRaw.indexOf(event.target.value) > -1) {
             selectionRaw.splice(selectionRaw.indexOf(event.target.value),1);
             let userSel = event.target.value.split("__");
@@ -125,18 +123,18 @@ function TabPanel(props) {
         selection = [...new Set(selection)];
         selectionRaw = [...new Set(selectionRaw)];
         setSelectionData(selectionRaw);
-        
+
+        // Emit updateChips to update the chips selection
+        EventEmitter.emit('updateChips', selectionRaw);
     }
 
     const handleSubmit = async() => {
-        // console.log('filter modal selection', selection);
         let attach = await storage.ss.getPair('search_key');
         attach = JSON.parse(attach);
         let qstr = await filters.getQS(selection, attach, selectionRaw);
         await storage.ss.setPair('currentURI', null);
         setOpen(false);
         history.push(`/search?q=${qstr}`);
-        //document.getElementById("search_button_target").click();
     }
 
     const handleFormReset = async() => {

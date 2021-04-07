@@ -9,6 +9,7 @@ const util = {};
 
 search.postSearchResults = async(queries, uri = null) => {
   // console.log("search service queries? ", queries);
+  console.log('uri', uri);
   if (uri == null) {
     const value = queries;
     const filterName = Object.keys(value)[0];
@@ -78,7 +79,6 @@ util.searchOnline = (body, value = {}) => {
         let results = response.data.results;
         let total = response.data.total;
         await util.saveResult(results);
-        // console.log("value", value);
         if (Object.keys(value).length !== 0) {
           searchItem = {
             keyword: value,
@@ -244,5 +244,10 @@ util.parseFilterMetaId = async (meta_id_string) => {
 util.searchOffline = (uri) => {
   /* REMOVE */
 }
+
+search.parseFilterMetaId = async (meta_id_string) => {
+  const value = await storage.db.searchDocument("metadata", {meta_id: meta_id_string});
+  return value[0];
+};
 
 export default search;

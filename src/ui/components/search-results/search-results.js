@@ -33,10 +33,6 @@ const SearchResults = (props) => {
   const forceUpdate = React.useReducer(bool => !bool)[1];
   
   useEffect(() => {
-    // console.log('trying to init data');
-    // console.log(props);
-    // console.log(props.data.total > perPage);
-    // console.log(props.data.results);
     setSearchResults(props.data.results);
 
     try {
