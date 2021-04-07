@@ -84,7 +84,7 @@ const LandingPage = () => {
         // handle unresolved promise
         .catch(async () => {
           EventEmitter.emit('Loaded')
-          let result = 'Vancouver';
+          let result = 'Burnaby';
 
           let filteredResult = locales.filter((locale) => {
             if (locale.value_name == result) return true;
