@@ -24,8 +24,7 @@ const PinnedProfiles = (profiles) => {
               )
               )
           ):(
-           
-            null
+           <div><center><p class="generic-msg msg-white">Frequently search for someone? Pin their profile here for quick access ⚡</p></center></div>
           ))
           ) : 
           (

@@ -64,10 +64,13 @@ function TabPanel(props) {
               if(data.meta) {
                 selectionRaw = data.meta;
                 setSelectionData(selectionRaw);
+                selection = [];
                 for (let x of selectionRaw) {
                   let item = x.split("__");
                   selection = selection.concat(item);
                 }
+
+                console.log(selection);
               }
             }
             //selection = [];

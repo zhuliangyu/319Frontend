@@ -42,6 +42,8 @@ search.postSearchResults = async(queries, uri = null) => {
       //Continue.
     }
     let res = {};
+    let basisName = await storage.ss.getPair('basisName');
+    if (basisName == '') basisName = "(Blank Search)";
     if ((basis === current) && (basis) && (current)) {
       let data = await storage.db.toArray('searchResults');
       res.results = data;
@@ -49,18 +51,18 @@ search.postSearchResults = async(queries, uri = null) => {
     } else if (evaluation) {
       let hist = await storage.db.toArray('searchHistory');
       if(hist.length > 0) {
-        hist.shift();
+        hist.pop();
       }
-      hist.unshift({uid: uuid(), name: await storage.ss.getPair('basisName'), uri: encodeURIComponent(JSON.stringify(uri))});
+      hist.push({uid: uuid(), name: basisName, uri: encodeURIComponent(JSON.stringify(uri))});
       await storage.db.clearTable('searchHistory');
       await storage.db.updateDocuments('searchHistory', hist);
       res = await util.searchOnline(uri);
     } else {
       let hist = await storage.db.toArray('searchHistory');
       if(hist.length >= 4) {
-        hist.pop();
+        hist = hist.splice(0,4);
       }
-      hist.unshift({uid: uuid(), name: await storage.ss.getPair('basisName'), uri: encodeURIComponent(JSON.stringify(uri))});
+      hist.push({uid: uuid(), name: basisName, uri: encodeURIComponent(JSON.stringify(uri))});
       await storage.db.clearTable('searchHistory');
       await storage.db.updateDocuments('searchHistory', hist);
       res = await util.searchOnline(uri);
@@ -136,11 +138,15 @@ util.saveResult = async(results) => {
   return new Promise(async(resolve) => {
     await storage.db.clearTable('searchResults');
     if (results) {
-      for (let result of results) {
-        let group = await storage.db.searchDocument('metadata', {meta_id: `Group,${result.companyCode},${result.officeCode},${result.groupCode}`});
-        result.groupName = group[0].value_name;
-        result.skills = result.skills.toString();
-        await storage.db.addDocument('searchResults', result);
+      try {
+        for (let result of results) {
+          let group = await storage.db.searchDocument('metadata', {meta_id: `Group,${result.companyCode},${result.officeCode},${result.groupCode}`});
+          result.groupName = group[0].value_name;
+          result.skills = result.skills.toString();
+          await storage.db.addDocument('searchResults', result);
+        }
+      } catch(e) {
+        window.location.reload();
       }
     }
 
