@@ -13,8 +13,6 @@ import Autocomplete, {
   createFilterOptions,
 } from "@material-ui/lab/Autocomplete";
 import FilterIcon from "../../../assets/filter-icon.svg";
-import { connect } from "react-redux";
-import { performSearch } from "../../redux/actions/search-actions";
 import { useHistory, useLocation } from "react-router-dom";
 import * as qs from "query-string";
 import storage from "../../../services/storage";
@@ -55,52 +53,38 @@ const SearchBar = (props) => {
   const [inputValue, setInputValue] = useState("");
   const [selectedFilters, setSelectedFilters] = useState([]);
 
-  // useEffect(() => {
-  //   const currentPath = location.pathname;
-  //   const searchParams = new URLSearchParams(location.search);
-  // }, [location]);
-
   const handleOnChange = (event, newValue) => {
     setValue(newValue);
     console.log(selectedFilters);
     console.log(newValue);
-    // TODO: not accurate. needs to set the value filter, not the whole array
     setSelectedFilters([newValue]);
 
-    // console.log("handleOnChange newValue", newValue);
   };
 
   const handleInputChange = (event, newInputValue) => {
-    // console.log('newInputValue: ', newInputValue);
     setInputValue(newInputValue);
   };
 
   const handleGetOptionLabel = (option) => {
     // Value selected with enter, right from the input
     if (typeof option === "string") {
-      // console.log('getOptionLabel option is string');
       return option;
     }
     // Add 'xxx' option created dynamically
     if (option.inputValue) {
-      // console.log('getOptionLabel is inputValue');
       return option.inputValue;
     }
     // Regular option
-    // console.log('getOptionLabel regular');
     return option;
   };
 
   const handleInitiateSearch = async () => {
     console.log("search button was clicked");
-    // console.log(value);
     let queries = await makeQueries();
 
     const stringified = qs.stringify(queries);
 
     history.push(`/search?${stringified}`);
-    // window.dispatchEvent(new Event('update_search'));
-    // props.dispatch(performSearch(value));
   };
 
   const makeQueries = async () => {
@@ -122,7 +106,6 @@ const SearchBar = (props) => {
         queries = JSON.parse(resp);
       }
     }
-    console.log(selectedFilters.length);
     return queries;
   }
 
@@ -249,10 +232,4 @@ const SearchBar = (props) => {
   );
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    performSearch: (value) => dispatch(performSearch(value)),
-  };
-};
-
-export default connect(mapDispatchToProps)(SearchBar);
+export default SearchBar;

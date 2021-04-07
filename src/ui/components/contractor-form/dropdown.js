@@ -7,6 +7,7 @@ const DropDown = (props) => {
 
     return (
         <FormControl
+            required
                      fullWidth={true}
                      defaultValue=""
                      {...(error && {error:true})}>

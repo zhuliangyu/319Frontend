@@ -49,37 +49,72 @@ const LandingPage = () => {
 
   const locs = (locales) => {
     return new Promise(resolve => {
-      fetch("https://ipapi.co/city", {"method": "GET"}).then(async(data) => {
-        let result = await data.text();
+      fetch("https://ipapi.co/city", {"method": "GET"})
+        .then(async(data) => {
+          let result = await data.text();
 
-        let filteredResult = locales.filter((locale) => {
-          if (locale.value_name == result) return true;
-          else return false;
+          let filteredResult = locales.filter((locale) => {
+            if (locale.value_name == result) return true;
+            else return false;
+          });
+
+          let loc_id = 0;
+          if (filteredResult.length != 0) {
+            setCity(filteredResult[0].value_name);
+            loc_id = filteredResult[0].value_id[0];
+
+          } else {
+            setCity(locales[0].value_name);
+            loc_id = locales[0].value_id[0];
+          }
+
+          let colleg = await fetch("/api/search/", {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": `{"Location":{"type":"OR","values":[{"LocationId":"${loc_id}"}]}}`
+          });
+
+          let colleg_data = await colleg.json();
+          colleg_data = colleg_data.results;
+          EventEmitter.emit('Loaded');
+          resolve(colleg_data);
+        })
+        // handle unresolved promise
+        // default to Burnaby
+        .catch(async () => {
+          EventEmitter.emit('Loaded')
+          let result = 'Burnaby';
+
+          let filteredResult = locales.filter((locale) => {
+            if (locale.value_name == result) return true;
+            else return false;
+          });
+
+          let loc_id = 0;
+          if (filteredResult.length != 0) {
+            setCity(filteredResult[0].value_name);
+            loc_id = filteredResult[0].value_id[0];
+
+          } else {
+            setCity(locales[0].value_name);
+            loc_id = locales[0].value_id[0];
+          }
+
+          let colleg = await fetch("/api/search/", {
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": `{"Location":{"type":"OR","values":[{"LocationId":"${loc_id}"}]}}`
+          });
+
+          let colleg_data = await colleg.json();
+          colleg_data = colleg_data.results;
+          EventEmitter.emit('Loaded');
+          resolve(colleg_data);
         });
-
-        let loc_id = 0;
-        if (filteredResult.length != 0) {
-          setCity(filteredResult[0].value_name);
-          loc_id = filteredResult[0].value_id[0];
-
-        } else {
-          setCity(locales[0].value_name);
-          loc_id = locales[0].value_id[0];
-        }
-
-        let colleg = await fetch("/api/search/", {
-          "method": "POST",
-          "headers": {
-            "Content-Type": "application/json"
-          },
-          "body": `{"Location":{"type":"OR","values":[{"LocationId":"${loc_id}"}]}}`
-        });
-
-        let colleg_data = await colleg.json();
-        colleg_data = colleg_data.results;
-        EventEmitter.emit('Loaded');
-        resolve(colleg_data);
-      });
     });
   }
 

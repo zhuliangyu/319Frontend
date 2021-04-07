@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 const ADD_SUCCESS_TITLE = "Add Success";
 const ADD_SUCCESS_TEXT = "Contractor was added successfully."
 const ADD_FAIL_TITLE = "Add Failed";
-const ADD_FAIL_TEXT = "Failed to add the contractor. Please ensure all information is entered correctly."
+const ADD_FAIL_TEXT = "Failed to add the contractor. Please enter a valid supervisor Id."
 
 const EDIT_SUCCESS_TITLE = "Edit Success";
 const EDIT_SUCCESS_TEXT = "Contractor was edited successfully."
@@ -117,6 +117,8 @@ const ContractorForm = (props) => {
             temp.workPhone = (/^\d{3}\-\d{3}\-\d{4}$/).test(fieldValues.workPhone) ? "" : "Phone number is not valid."
         if ('workCell' in fieldValues && fieldValues.workCell !== "")
             temp.workCell = (/^\d{3}\-\d{3}\-\d{4}$/).test(fieldValues.workCell)  ? "" : "Phone number is not valid."
+        if ('yearsPriorExperience' in fieldValues)
+            temp.yearsPriorExperience = fieldValues.yearsPriorExperience >= 0 ? "" : "Please enter a number greater than or equal to zero."
 
         setErrors({
             ...temp
@@ -272,7 +274,6 @@ const ContractorForm = (props) => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <DropDown
-                            required
                             name="companyCode"
                             label="Company"
                             placeHolder={defaultCompany}
@@ -286,7 +287,6 @@ const ContractorForm = (props) => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <DropDown
-                            required
                             name="officeCode"
                             label="Office"
                             placeHolder={defaultOffice}
@@ -300,7 +300,6 @@ const ContractorForm = (props) => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <DropDown
-                            required
                             name="groupCode"
                             label="Group"
                             placeHolder={defaultGroup}
@@ -316,7 +315,7 @@ const ContractorForm = (props) => {
                         <DropDown
                             required
                             name="locationId"
-                            label="Physical LocationId"
+                            label="Physical Location"
                             value={values.locationId.value_name}
                             onChange={handleInputChange}
                             options={locations}
@@ -379,6 +378,8 @@ const ContractorForm = (props) => {
                             name="yearsPriorExperience"
                             value={values.yearsPriorExperience}
                             onChange={handleInputChange}
+                            error =  {errors.yearsPriorExperience}
+                            helperText={errors.yearsPriorExperience}
                         />
                     </Grid>
                     <Grid item xs={12} sm={3}>
