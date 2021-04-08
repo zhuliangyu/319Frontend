@@ -1,5 +1,5 @@
 .alert-wrapper {
-    position: absolute;
+    position: fixed;
     height: 25vh;
 
     width: calc(100vw -17.5px);
