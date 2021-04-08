@@ -16,7 +16,6 @@ const ResumeSearch = (props) => {
     }, []);
 
     const handleDelete = async (uid) => {
-        console.log("delete search history card clicked");
         let items = [...searchHistory];
         async function updateSearchHistory() {
           items = items.filter(item => item.uid !== uid);
@@ -44,7 +43,7 @@ const ResumeSearch = (props) => {
                         />
                     ))
                 ) : (
-                  <div><center><p class="generic-msg">🔎 No recent searches</p></center></div>
+                  <div><center><p className="generic-msg">🔎 No recent searches</p></center></div>
                 )}
             </div>
         </div>

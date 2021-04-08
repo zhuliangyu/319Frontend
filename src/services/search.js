@@ -42,6 +42,7 @@ search.postSearchResults = async(queries, uri = null) => {
     }
     let res = {};
     let basisName = await storage.ss.getPair('basisName');
+    let basisKeyName = await storage.ss.getPair('basisKeyName');
     if (basisName == '') basisName = "(Blank Search)";
     if ((basis === current) && (basis) && (current)) {
       let data = await storage.db.toArray('searchResults');
@@ -53,7 +54,7 @@ search.postSearchResults = async(queries, uri = null) => {
       if(hist.length > 0) {
         hist.pop();
       }
-      let obj = {uid: uuid(), name: basisName, uri: encodeURIComponent(JSON.stringify(uri))}
+      let obj = {uid: uuid(), name: basisName, basisKeyName: basisKeyName, uri: encodeURIComponent(JSON.stringify(uri))}
       let newHist = util.removeDuplicateSearchHistory(obj, hist);
 
       // hist.push({uid: uuid(), name: basisName, uri: encodeURIComponent(JSON.stringify(uri))});
@@ -66,7 +67,7 @@ search.postSearchResults = async(queries, uri = null) => {
         hist = hist.splice(0,8);
       }
 
-      let obj = {uid: uuid(), name: basisName, uri: encodeURIComponent(JSON.stringify(uri))}
+      let obj = {uid: uuid(), name: basisName, basisKeyName: basisKeyName, uri: encodeURIComponent(JSON.stringify(uri))}
       let newHist = util.removeDuplicateSearchHistory(obj, hist);
 
       // hist.push({uid: uuid(), name: basisName, uri: encodeURIComponent(JSON.stringify(uri))});

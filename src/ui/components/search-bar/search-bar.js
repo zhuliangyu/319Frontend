@@ -171,6 +171,7 @@ const SearchBar = (props) => {
       raw = [];
       try {
         await storage.ss.setPair('basisName', queries[Object.keys(queries)[0]].values[0]);
+        await storage.ss.setPair('basisKeyName', JSON.stringify({ key: Object.keys(queries)[0], name: queries[Object.keys(queries)[0]].values[0]}));
       } catch (error) {
         await storage.ss.setPair('basisName', '(Blank Search)');
       }
