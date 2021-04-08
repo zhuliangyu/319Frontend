@@ -5,6 +5,7 @@
 import storage from './storage';
 import querystring from 'querystring';
 import { resolve } from 'path';
+import EventEmitter from 'events';
 const filters = {};
 const util = {};
 
@@ -45,7 +46,6 @@ filters.get = () => {
 }
 
 filters.getQS = (selection, attach = null, raw = []) => {
-    
     return new Promise(async(resolve) => {
         let localQuueryObj = {};
         for (const e of selection) {
@@ -78,6 +78,9 @@ filters.getQS = (selection, attach = null, raw = []) => {
     
         }
         localQuueryObj.meta = raw;
+        // storage.ss.setPair('selection', JSON.stringify(selection));
+        // storage.ss.setPair('attach', JSON.stringify(attach));
+        storage.ss.setPair('rawMetas', JSON.stringify(raw));
         if (attach != null) {
             localQuueryObj = Object.assign(localQuueryObj, attach);
         }

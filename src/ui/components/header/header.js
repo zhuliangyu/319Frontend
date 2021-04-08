@@ -24,7 +24,7 @@ const Header = (props) => {
     <section className="header-wrapper">
       <div className="header-under-box-wrapper">
         <div className="header-under-box">
-        <Subheader />
+        <Subheader selectionsRaw={props.data} />
         <Filter_modal />
         </div>
       </div>

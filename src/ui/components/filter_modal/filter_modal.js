@@ -2,7 +2,7 @@
     Filter Modal Component
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 import Modal from '@material-ui/core/Modal';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -14,6 +14,8 @@ import Button from '@material-ui/core/Button';
 import storage from '../../../services/storage';
 import { useHistory, useLocation } from "react-router-dom";
 import * as qs from 'query-string';
+import EventEmitter from '../../hooks/event-manager';
+
 function TabPanel(props) {
     const {children, value, index} = props;
   
@@ -57,12 +59,11 @@ function TabPanel(props) {
         document.getElementById("filter_open_button").onclick = async() => {
             setOpen(true);
             let query = qs.parse(location.search);
-            console.log(query);
+            // console.log(query);
             if (query.q) {
               let data = JSON.parse(decodeURIComponent(query.q));
               console.warn(data.meta);
               if(data.meta) {
-                // TODO: trigger filter chips event, traverse through whole array every time
                 selectionRaw = data.meta;
                 setSelectionData(selectionRaw);
                 selection = [];
@@ -70,11 +71,11 @@ function TabPanel(props) {
                   let item = x.split("__");
                   selection = selection.concat(item);
                 }
-
-                console.log(selection);
               }
             }
+
             //selection = [];
+            // make all the filters to be displayed in the modal
             let filterManifest = await filters.getFilterList("Selection");
 
             for (let i = 0; (i < filterManifest.length); i++) {
@@ -105,15 +106,11 @@ function TabPanel(props) {
     
     const handleFilterSelection = (event) => {
         
+        // event.target.value is the meta id for the filter modal
         if (event.target.checked) {
             selectionRaw.push(event.target.value);
-            // handles duplicates by spliting by __ (ie group administration)
             let userSel = event.target.value.split("__");
             selection = selection.concat(userSel);
-            // TODO: trigger filter chips event, traverse through whole array every time
-
-            // event.target.value == selectionRaw
-            // delete
         } else if (selectionRaw.indexOf(event.target.value) > -1) {
             selectionRaw.splice(selectionRaw.indexOf(event.target.value),1);
             let userSel = event.target.value.split("__");
@@ -125,18 +122,17 @@ function TabPanel(props) {
         selection = [...new Set(selection)];
         selectionRaw = [...new Set(selectionRaw)];
         setSelectionData(selectionRaw);
-        
+
     }
 
     const handleSubmit = async() => {
-        // console.log('filter modal selection', selection);
         let attach = await storage.ss.getPair('search_key');
         attach = JSON.parse(attach);
+
         let qstr = await filters.getQS(selection, attach, selectionRaw);
         await storage.ss.setPair('currentURI', null);
         setOpen(false);
         history.push(`/search?q=${qstr}`);
-        //document.getElementById("search_button_target").click();
     }
 
     const handleFormReset = async() => {
@@ -164,6 +160,51 @@ function TabPanel(props) {
       setTabValue(newValue);
     };
 
+    // Listen for chip delete from sub-header.js
+    // EventEmitter.addListener('deleteChip', async (data) => {
+    //   console.log('clicked delete chip', data);
+
+    //   async function updateGlobalSelections() {
+    //     selectionRaw = data.newSelection;
+    //     let tempSelectionRaw = data.newSelection;
+    //     for (let x of tempSelectionRaw) {
+    //       let item = x.split("__");
+    //       selection = selection.concat(item);
+    //     }
+  
+    //     selection = [...new Set(selection)];
+    //     selectionRaw = [...new Set(selectionRaw)];
+    //     setSelectionData(selectionRaw);
+
+    //     console.log('after delete selection raw', selectionRaw);
+    //     console.log('after delete selection', selection);
+    //   }
+    //   await updateGlobalSelections();
+
+    //   // let attach = await storage.ss.getPair('search_key');
+    //   // attach = JSON.parse(attach);
+    //   // let qstr;
+    //   // if (selection.length > 0 && selectionRaw.length > 0) {
+    //   //   qstr = await filters.getQS(selection, attach, selectionRaw);
+    //   // } else {
+    //   //   qstr = await filters.getQS([], attach, []);
+    //   // }
+    //   // await storage.ss.setPair('currentURI', null);
+    //   // history.push(`/search?q=${qstr}`);
+    // });
+
+    // useEffect(() => {
+    //   async function updateSelections() {
+    //     console.log('selectionRaw', selectionRaw);
+    //     let attach = storage.ss.getPair('search_key');
+    //     attach = JSON.parse(attach);
+    //     let qstr = await filters.getQS(selection, attach, selectionRaw);
+    //     await storage.ss.setPair('currentURI', null);
+    //     history.push(`/search?q=${qstr}`);
+    //   }
+    //   updateSelections();
+    // }, [selectionRaw]);
+     
     return (
         <div>
           <Modal
