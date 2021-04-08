@@ -44,9 +44,7 @@ const ResumeSearch = (props) => {
                         />
                     ))
                 ) : (
-                    <center>
-                        <b>{`💬 No recent searches.`}</b>
-                    </center>
+                  <div><center><p class="generic-msg">🔎 No recent searches</p></center></div>
                 )}
             </div>
         </div>
