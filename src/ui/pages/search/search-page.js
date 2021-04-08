@@ -44,8 +44,6 @@ const SearchPage = () => {
         //   let selectionRaw = data.meta;
         //   setSelectionsRaw(selectionRaw);
         // }
-          // // Emit updateChips to update the chips selection
-          // EventEmitter.emit('updateChips', data.meta);
           if (metas.length > 0) {
             setSelectionsRaw(metas);
           }

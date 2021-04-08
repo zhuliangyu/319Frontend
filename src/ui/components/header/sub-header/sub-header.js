@@ -5,7 +5,7 @@ import CloseIcon from "../../../../assets/close-icon.svg";
 import { Button, Divider, Typography, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import FilterChip from "../../filter-chip";
-import filters from "../../../../services/filters";
+import filtersService from "../../../../services/filters";
 import search from "../../../../services/search";
 import storage from "../../../../services/storage";
 import EventEmitter from "../../../hooks/event-manager";
@@ -64,26 +64,25 @@ const Subheader = (props) => {
     // }, [props]);
 
     const handleChipDelete = async (item) => {
-        let filter_to_delete;
+        // let filter_to_delete;
         let newFilters;
         async function setNewData() {
             // make new selectedFilters
             newFilters = filters.filter((d) => d.raw !== item.raw);
 
             // get the filter to delete
-            filter_to_delete = filters.find((d) => d.raw === item.raw);
+            // filter_to_delete = filters.find((d) => d.raw === item.raw);
 
             // update state
             // setFilters(newFilters);
         }
         await setNewData();
         
-        let event_filter_meta_id = filter_to_delete.raw;
+        // let event_filter_meta_id = filter_to_delete.raw;
         let event_selection = Array.from(newFilters, (d) => d.raw);
 
         // emit deleteChip event to filter modal
         EventEmitter.emit("deleteChip", {
-            filterToDelete: event_filter_meta_id,
             newSelection: event_selection,
         });
 
@@ -105,7 +104,6 @@ const Subheader = (props) => {
     // }, [selectedMetaIds]);
 
     // Listener to update chips data
-    // EventEmitter.addListener("updateChips", (data) => {
     //     // let selectionRaw = [...data];
     //     // let metaIds = [];
 
@@ -121,9 +119,11 @@ const Subheader = (props) => {
     // });
 
     EventEmitter.addListener("updateChips", async (data) => {
+        let selectionRaw;
+        let metaIds;
         const parse = async () => {
-            let selectionRaw = [...data];
-            let metaIds = [];
+            selectionRaw = [...data];
+            metaIds = [];
 
             // only push one meta id
             // check if it is has a double underscore, which means duplicate group
@@ -136,7 +136,16 @@ const Subheader = (props) => {
             setFilters(metaIds);
         }
         await parse();
-        // console.log(filters);
+        // // console.log(filters);
+        // let attach = await storage.ss.getPair('search_key');
+        // attach = JSON.parse(attach);
+
+        // console.log('metaIds', metaIds);
+        // let selection = Array.from(metaIds, d => d.metaIdNoDup);
+
+        // let qstr = await filtersService.getQS(selection, attach, selectionRaw);
+        // await storage.ss.setPair('currentURI', null);
+        // history.push(`/search?q=${qstr}`);
     })
 
     // // parse all filter metaids and create new objects to set selectedFilters

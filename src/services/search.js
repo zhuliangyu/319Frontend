@@ -47,7 +47,7 @@ search.postSearchResults = async(queries, uri = null) => {
       let data = await storage.db.toArray('searchResults');
       res.results = data;
       res.total = data.length;
-      
+
     } else if (evaluation) {
       let hist = await storage.db.toArray('searchHistory');
       if(hist.length > 0) {
@@ -90,7 +90,7 @@ util.searchOnline = (body, value = {}) => {
             filterObject: body,
           }
         }
-        storage.ss.setPair('current_search', JSON.stringify(searchItem));
+        // storage.ss.setPair('current_search', JSON.stringify(searchItem));
         resolve({results: results, total: total});
       },
       (error) => {
@@ -99,22 +99,8 @@ util.searchOnline = (body, value = {}) => {
       }
     );
   })
-  .then((res) => {
-    window.dispatchEvent(new Event('update_search'));
-
-    // TODO: handle null searches
-    // Update search history if unique search
-    /*let search_history = JSON.parse(storage.ls.getPair('searchHistory'));
-    search_history.push(searchItem);
-    let search_history_serialized = search_history.map(e => JSON.stringify(e));
-    let search_history_serialized_set = new Set(search_history_serialized);
-    let unique_search_history = [...search_history_serialized_set];
-    const unique_arr = unique_search_history.map(e => JSON.parse(e));
-    // console.log(unique_arr);
-
-    storage.ls.setPair('searchHistory', JSON.stringify(unique_arr));*/
-
-    return res;
+  .catch((err) => {
+    console.log(err);
   });
 }
 

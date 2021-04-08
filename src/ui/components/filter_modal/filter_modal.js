@@ -65,7 +65,6 @@ function TabPanel(props) {
               console.warn(data.meta);
               if(data.meta) {
                 selectionRaw = data.meta;
-                // EventEmitter.emit('updateChips', selectionRaw);
                 setSelectionData(selectionRaw);
                 selection = [];
                 for (let x of selectionRaw) {
@@ -162,36 +161,37 @@ function TabPanel(props) {
     };
 
     // Listen for chip delete from sub-header.js
-    EventEmitter.addListener('deleteChip', async (data) => {
-      console.log('clicked delete chip', data);
+    // EventEmitter.addListener('deleteChip', async (data) => {
+    //   console.log('clicked delete chip', data);
 
-      async function updateGlobalSelections() {
-        selectionRaw = data.newSelection;
-        let tempSelectionRaw = data.newSelection;
-        for (let x of tempSelectionRaw) {
-          let item = x.split("__");
-          selection = selection.concat(item);
-        }
+    //   async function updateGlobalSelections() {
+    //     selectionRaw = data.newSelection;
+    //     let tempSelectionRaw = data.newSelection;
+    //     for (let x of tempSelectionRaw) {
+    //       let item = x.split("__");
+    //       selection = selection.concat(item);
+    //     }
   
-        selection = [...new Set(selection)];
-        selectionRaw = [...new Set(selectionRaw)];
-        setSelectionData(selectionRaw);
+    //     selection = [...new Set(selection)];
+    //     selectionRaw = [...new Set(selectionRaw)];
+    //     setSelectionData(selectionRaw);
 
-        console.log('after delete selection raw', selectionRaw);
-        console.log('after delete selection', selection);
-      }
-      await updateGlobalSelections();
-      let attach = await storage.ss.getPair('search_key');
-      attach = JSON.parse(attach);
-      let qstr;
-      if (selection.length > 0 && selectionRaw.length > 0) {
-        qstr = await filters.getQS(selection, attach, selectionRaw);
-      } else {
-        qstr = await filters.getQS([], attach, []);
-      }
-      await storage.ss.setPair('currentURI', null);
-      history.push(`/search?q=${qstr}`);
-    });
+    //     console.log('after delete selection raw', selectionRaw);
+    //     console.log('after delete selection', selection);
+    //   }
+    //   await updateGlobalSelections();
+
+    //   // let attach = await storage.ss.getPair('search_key');
+    //   // attach = JSON.parse(attach);
+    //   // let qstr;
+    //   // if (selection.length > 0 && selectionRaw.length > 0) {
+    //   //   qstr = await filters.getQS(selection, attach, selectionRaw);
+    //   // } else {
+    //   //   qstr = await filters.getQS([], attach, []);
+    //   // }
+    //   // await storage.ss.setPair('currentURI', null);
+    //   // history.push(`/search?q=${qstr}`);
+    // });
 
     // useEffect(() => {
     //   async function updateSelections() {
