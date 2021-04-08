@@ -47,6 +47,7 @@ search.postSearchResults = async(queries, uri = null) => {
       let data = await storage.db.toArray('searchResults');
       res.results = data;
       res.total = data.length;
+      
     } else if (evaluation) {
       let hist = await storage.db.toArray('searchHistory');
       if(hist.length > 0) {
@@ -75,7 +76,7 @@ util.searchOnline = (body, value = {}) => {
   return new Promise(async(resolve) => {
     return axios.post("/api/search", body).then(
       async(response) => {
-        console.table(body);
+        // console.table(body);
         let results = response.data.results;
         let total = response.data.total;
         await util.saveResult(results);

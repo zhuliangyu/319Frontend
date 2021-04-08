@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ReactDOM from "react-dom";
 import "./css/index.css";
 import App from "./ui/App";
@@ -9,11 +9,11 @@ import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-    </ThemeProvider>
+      <ThemeProvider theme={theme}>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+      </ThemeProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
