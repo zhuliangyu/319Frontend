@@ -153,7 +153,6 @@ function TabPanel(props) {
         selection = [...new Set(selection)];
         selectionRaw = [...new Set(selectionRaw)];
         setSelectionData(selectionRaw);
-
     }
 
     const handleSkill = async(val) => {

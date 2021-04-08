@@ -81,10 +81,6 @@ filters.getQS = (selection, attach = null, raw = [], skillType = 'OR') => {
         if (localQuueryObj.Skill) {
             localQuueryObj.Skill.type = skillType;
         }
-        //alert(localQuueryObj.Skill.type);
-        // storage.ss.setPair('selection', JSON.stringify(selection));
-        // storage.ss.setPair('attach', JSON.stringify(attach));
-        storage.ss.setPair('rawMetas', JSON.stringify(raw));
         if (attach != null) {
             localQuueryObj = Object.assign(localQuueryObj, attach);
         }

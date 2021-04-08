@@ -87,7 +87,7 @@
 
 .delete-button {
   position: absolute;
-  transform: translate(-100%, -80%)
+  transform: translate(-100%, -70%);
 }
 
 .delete-button-icon {
@@ -105,4 +105,9 @@
 .history-card {
   min-height: 0px !important;
   height: 55px !important;
+}
+
+.card-key {
+  color: #868D98;
+  font-weight: 300;
 }

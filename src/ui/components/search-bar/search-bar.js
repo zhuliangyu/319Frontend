@@ -178,6 +178,8 @@ const SearchBar = (props) => {
       try {
         if (queries[Object.keys(queries)[0]].values[0] != "") {
           await storage.ss.setPair('basisName', queries[Object.keys(queries)[0]].values[0]);
+          // await storage.ss.setPair('basisKeyName', JSON.stringify({ key: Object.keys(queries)[0], name: queries[Object.keys(queries)[0]].values[0]}));
+  
         } else {
           await storage.ss.setPair('basisName', null);
           alert('Blank Search - You must select at least one filter or enter a keyword to search');
@@ -196,6 +198,8 @@ const SearchBar = (props) => {
       document.querySelector('#searchInput').value = '';
       await storage.ss.setPair('search_key', null);
       await storage.ss.setPair('basisName', attach);
+      // await storage.ss.setPair('basisKeyName', JSON.stringify({ key: Object.keys(queries)[0], name: queries[Object.keys(queries)[0]].values[0]}));
+
       queries = null;
     }
     let qstr = await filters.getQS(metadata, queries, raw);

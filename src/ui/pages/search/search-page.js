@@ -46,40 +46,45 @@ const SearchPage = () => {
       }
       setSearchResults([]);
       let data = JSON.parse(decodeURIComponent(query.q));
+      console.log('data decoded', data);
       if(data.Name) {
         await storage.ss.setPair('search_key', JSON.stringify({Name: data.Name}));
         await storage.ss.setPair('basisName', data.Name.values[0]);
+        await storage.ss.setPair('basisKeyName', JSON.stringify({key: 'Name', name: data.Name.values[0]}))
         document.getElementById('searchInput').value = data.Name.values[0];
       } else if(data.Email) {
         await storage.ss.setPair('search_key', JSON.stringify({Email: data.Email}));
         await storage.ss.setPair('basisName', data.Email.values[0]);
+        await storage.ss.setPair('basisKeyName', JSON.stringify({key: 'Email', name: data.Email.values[0]}))
         document.getElementById('searchInput').value = data.Email.values[0];
       } else if (data.WorkCell) {
         await storage.ss.setPair('search_key', JSON.stringify({Email: data.WorkCell}));
         await storage.ss.setPair('basisName', data.WorkCell.values[0]);
         document.getElementById('searchInput').value = data.WorkCell.values[0];
+        await storage.ss.setPair('basisKeyName', JSON.stringify({key: 'WorkCell', name: data.WorkCell.values[0]}))
+
       } else {
         //await storage.ss.setPair('basisName', await storage.db.searchDocument('metadata', {meta_id: }));
       }
       search.postSearchResults(null, data)
       .then(async(res) => {
-        console.log(res);
+        // console.log(res);
         setSearchResults(res);
         await storage.ss.setPair('currentURI', encodeURIComponent(JSON.stringify(data)));
         return data;
       })
       .then(async (data) => {
-        
-      if(data.meta) {
-        if(data.meta.length > 0) {
-          let selectionRaw = data.meta;
-          setSelectionsRaw(selectionRaw);
-          EventEmitter.emit("updateChips", selectionRaw);
-        } else {
-          EventEmitter.emit("updateChips", []);
+        console.log('search-page data', data);
+        if(data.meta) {
+          if(data.meta.length > 0) {
+            let selectionRaw = data.meta;
+            setSelectionsRaw(selectionRaw);
+            EventEmitter.emit("updateChips", selectionRaw);
+          } else {
+            EventEmitter.emit("updateChips", []);
+          }
         }
-      }
-      });
+        });
     }
   } 
 
@@ -98,6 +103,10 @@ const SearchPage = () => {
   //   }
   // }, [history.location.key]);
 
+  EventEmitter.addListener('deleteChip', (data) => {
+    // console.log('deleteChip', data);
+    setSelectionsRaw(data.selectionsRaw);
+  })
 
 
   return (

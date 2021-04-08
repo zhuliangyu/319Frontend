@@ -105,30 +105,6 @@ const Subheader = (props) => {
         return metaIdParsed;
     };
 
-    // useEffect(() => {
-    //     async function parse() {
-    //         let filters = await parseAllRawFilters(selectedMetaIds);
-    //         // console.log(filters);
-    //         setSelectedFilters(filters);
-    //     }
-    //     parse();
-    // }, [selectedMetaIds]);
-
-    // Listener to update chips data
-    //     // let selectionRaw = [...data];
-    //     // let metaIds = [];
-
-    //     // // only push one meta id
-    //     // // check if it is has a double underscore, which means duplicate group
-    //     // for (let x of selectionRaw) {
-    //     //     let splitFilterByUnderscore = x.split("__");
-    //     //     let obj = { raw: x, metaIdNoDup: splitFilterByUnderscore[0] };
-    //     //     metaIds.push(obj);
-    //     // }
-    //     // setSelectedMetaIds(metaIds);
-    //     console.log('data from filter-modal update chips', data);
-    // });
-
     EventEmitter.addListener("updateChips", async (data) => {
         let selectionRaw;
         let metaIds;
@@ -147,29 +123,7 @@ const Subheader = (props) => {
             setFilters(metaIds);
         }
         await parse();
-        // // console.log(filters);
-        // let attach = await storage.ss.getPair('search_key');
-        // attach = JSON.parse(attach);
-
-        // console.log('metaIds', metaIds);
-        // let selection = Array.from(metaIds, d => d.metaIdNoDup);
-
-        // let qstr = await filtersService.getQS(selection, attach, selectionRaw);
-        // await storage.ss.setPair('currentURI', null);
-        // history.push(`/search?q=${qstr}`);
     })
-
-    // // parse all filter metaids and create new objects to set selectedFilters
-    // const parseAllRawFilters = async (data) => {
-    //     let filtersToReturn = [];
-    //     for (let x of data) {
-    //         let temp = x;
-    //         let obj = await parseFilterMetaId(x.metaIdNoDup);
-    //         temp.details = obj;
-    //         filtersToReturn.push(temp);
-    //     }
-    //     return filtersToReturn;
-    // };
 
     return (
         <div>
