@@ -27,6 +27,13 @@ const SearchPage = () => {
     let query = qs.parse(location.search);
     console.log('query', query);
     if (query.q) {
+      alert(query.q);
+      if (query.q == `{"meta":[]}`) {
+
+        alert("Blank search not allowed");
+        window.history.back();
+        return;
+      }
       setSearchResults([]);
       let data = JSON.parse(decodeURIComponent(query.q));
       search.postSearchResults(null, data)
@@ -38,10 +45,10 @@ const SearchPage = () => {
       })
       .then(async (data) => {
         let metas = JSON.parse(storage.ss.getPair('rawMetas'));
+        let basis = await storage.ss.setPair('basisName');
         console.log(metas);
         
       if(data.meta) {
-        alert(data.meta);
         if(data.meta.length > 0) {
           let selectionRaw = data.meta;
           setSelectionsRaw(selectionRaw);
