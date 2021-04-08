@@ -62,7 +62,7 @@ const Subheader = (props) => {
         }
         parse();
 
-    }, []);
+    }, [props]);
 
     const handleChipDelete = async (item) => {
         // let filter_to_delete;
@@ -84,8 +84,8 @@ const Subheader = (props) => {
         setNewData();
 
         // update state
-        setFilters(newFilters);
-        setSelectionsRaw(selectionsRaw);
+        // setFilters(newFilters);
+        // setSelectionsRaw(selectionsRaw);
         
         // emit deleteChip event to filter modal
         // EventEmitter.emit("deleteChip", {
@@ -97,6 +97,8 @@ const Subheader = (props) => {
         let qstr = await filtersService.getQS(selectionNoDup, attach, selectionsRaw);
         await storage.ss.setPair('currentURI', null);
         history.push(`/search?q=${qstr}`);
+
+        EventEmitter.emit('deleteChip', {selectionNoDup: selectionNoDup, selectionsRaw: selectionsRaw});
 
     };
 

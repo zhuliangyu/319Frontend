@@ -68,6 +68,10 @@ const SearchPage = () => {
   //   }
   // }, [history.location.key]);
 
+  EventEmitter.addListener('deleteChip', (data) => {
+    console.log('deleteChip', data);
+    setSelectionsRaw(data.selectionsRaw);
+  })
 
 
   return (
