@@ -31,6 +31,7 @@ const SearchPage = () => {
 
     doSearch();
     await storage.ss.setPair('currentURI', null);
+    window.scrollTo(0, 0);
   }, [location.search])
 
   const doSearch = async() => {

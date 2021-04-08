@@ -156,12 +156,15 @@ function TabPanel(props) {
 
     }
 
+    const handleSkill = async(val) => {
+      await storage.ss.setPair('skillType', val);
+    }
+
     const handleSubmit = async() => {
         let attach = await storage.ss.getPair('search_key');
         attach = JSON.parse(attach);
 
-        let skillType = document.getElementById('skillType').value;
-        await storage.ss.setPair('skillType', skillType);
+        let skillType = await storage.ss.getPair('skillType');
         let qstr = await filters.getQS(selection, attach, selectionRaw, skillType);
         await storage.ss.setPair('currentURI', null);
         setOpen(false);
@@ -257,7 +260,7 @@ function TabPanel(props) {
                 <div className="filter-model-selbox">
                   <center>
                     <span> Filtering Mode: </span>
-                    <select name="skillType" id="skillType">
+                    <select name="skillType" id="skillType" onChange={() => {handleSkill(document.getElementById('skillType').value)}}>
                       <option value="OR" selected={ORSkill}>Any of these</option>
                       <option value="AND" selected={ANDSkill}>All of these</option>
                     </select>
