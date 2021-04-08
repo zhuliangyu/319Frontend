@@ -122,7 +122,6 @@ function TabPanel(props) {
         selection = [...new Set(selection)];
         selectionRaw = [...new Set(selectionRaw)];
         setSelectionData(selectionRaw);
-
     }
 
     const handleSubmit = async() => {
@@ -130,6 +129,9 @@ function TabPanel(props) {
         attach = JSON.parse(attach);
 
         let qstr = await filters.getQS(selection, attach, selectionRaw);
+
+        EventEmitter.emit('updateChips', selectionRaw);
+
         await storage.ss.setPair('currentURI', null);
         setOpen(false);
         history.push(`/search?q=${qstr}`);
@@ -161,7 +163,7 @@ function TabPanel(props) {
     };
 
     // Listen for chip delete from sub-header.js
-    // EventEmitter.addListener('deleteChip', async (data) => {
+    // EventEmitter.once('deleteChip', async (data) => {
     //   console.log('clicked delete chip', data);
 
     //   async function updateGlobalSelections() {
@@ -181,16 +183,11 @@ function TabPanel(props) {
     //   }
     //   await updateGlobalSelections();
 
-    //   // let attach = await storage.ss.getPair('search_key');
-    //   // attach = JSON.parse(attach);
-    //   // let qstr;
-    //   // if (selection.length > 0 && selectionRaw.length > 0) {
-    //   //   qstr = await filters.getQS(selection, attach, selectionRaw);
-    //   // } else {
-    //   //   qstr = await filters.getQS([], attach, []);
-    //   // }
-    //   // await storage.ss.setPair('currentURI', null);
-    //   // history.push(`/search?q=${qstr}`);
+    //   let attach = await storage.ss.getPair('search_key');
+    //   attach = JSON.parse(attach);
+    //   let qstr = await filters.getQS(selection, attach, selectionRaw);
+    //   await storage.ss.setPair('currentURI', null);
+    //   history.push(`/search?q=${qstr}`);
     // });
 
     // useEffect(() => {

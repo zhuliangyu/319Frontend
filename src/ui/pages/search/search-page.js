@@ -23,9 +23,9 @@ const SearchPage = () => {
   const [selectionsRaw, setSelectionsRaw] = useState([]);
   const [selectionsData, setSelectionsData] = useState([]);
   
-  useEffect(async () => {
+  useEffect(() => {
     let query = qs.parse(location.search);
-    console.log('query', query);
+    // console.log('query', query);
     if (query.q) {
       setSearchResults([]);
       let data = JSON.parse(decodeURIComponent(query.q));
@@ -34,9 +34,8 @@ const SearchPage = () => {
         console.log(res);
         setSearchResults(res);
         await storage.ss.setPair('currentURI', encodeURIComponent(JSON.stringify(data)));
-        return data;
       })
-      .then(async (data) => {
+      .then(() => {
         let metas = JSON.parse(storage.ss.getPair('rawMetas'));
         console.log(metas);
         
@@ -44,10 +43,11 @@ const SearchPage = () => {
         //   let selectionRaw = data.meta;
         //   setSelectionsRaw(selectionRaw);
         // }
-          if (metas.length > 0) {
-            setSelectionsRaw(metas);
-          }
-          EventEmitter.emit("updateChips", metas);
+          // if (metas.length > 0) {
+          //   setSelectionsRaw(metas);
+          // }
+          // EventEmitter.emit("updateChips", metas);
+          setSelectionsRaw(metas);
       });
       
     }

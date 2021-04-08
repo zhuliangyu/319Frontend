@@ -41,50 +41,62 @@ const Subheader = (props) => {
 
     const [selectedFilters, setSelectedFilters] = useState([]);
     const [selectedMetaIds, setSelectedMetaIds] = useState([]);
-    const [selectionsRaw, setSelectionsRaw] = useState(props.selectionsRaw);
+    const [selectionsRaw, setSelectionsRaw] = useState([]);
     const [filters, setFilters] = useState([]);
 
-    // useEffect(() => {
-    //     const parse = async () => {
-    //         let selectionRaw = [...props.selectionsRaw];
-    //         let metaIds = [];
+    useEffect(() => {
+        const parse = async () => {
+            let selectionRaw = [...props.selectionsRaw];
+            let metaIds = [];
 
-    //         // only push one meta id
-    //         // check if it is has a double underscore, which means duplicate group
-    //         for (let x of selectionRaw) {
-    //             let splitFilterByUnderscore = x.split("__");
-    //             let detail = await parseFilterMetaId(splitFilterByUnderscore[0]);
-    //             let obj = { raw: x, metaIdNoDup: splitFilterByUnderscore[0], details: detail };
-    //             metaIds.push(obj);
-    //         }
-    //         setFilters(metaIds);
-    //     }
-    //     parse();
+            // only push one meta id
+            // check if it is has a double underscore, which means duplicate group
+            for (let x of selectionRaw) {
+                let splitFilterByUnderscore = x.split("__");
+                let detail = await parseFilterMetaId(splitFilterByUnderscore[0]);
+                let obj = { raw: x, metaIdNoDup: splitFilterByUnderscore[0], details: detail };
+                metaIds.push(obj);
+            }
+            setFilters(metaIds);
+            setSelectionsRaw(selectionRaw);
+        }
+        parse();
 
-    // }, [props]);
+    }, []);
 
     const handleChipDelete = async (item) => {
         // let filter_to_delete;
         let newFilters;
+        let selectionsRaw;
+        let selectionNoDup;
+
         async function setNewData() {
-            // make new selectedFilters
+            // make new filters
             newFilters = filters.filter((d) => d.raw !== item.raw);
 
-            // get the filter to delete
-            // filter_to_delete = filters.find((d) => d.raw === item.raw);
+            // make new raw filters (with __)
+            selectionsRaw = Array.from(newFilters, (d) => d.raw);
 
-            // update state
-            // setFilters(newFilters);
+            // make new selections (no __)
+            selectionNoDup = Array.from(newFilters, d => d.metaIdNoDup);
+
         }
-        await setNewData();
-        
-        // let event_filter_meta_id = filter_to_delete.raw;
-        let event_selection = Array.from(newFilters, (d) => d.raw);
+        setNewData();
 
+        // update state
+        setFilters(newFilters);
+        setSelectionsRaw(selectionsRaw);
+        
         // emit deleteChip event to filter modal
-        EventEmitter.emit("deleteChip", {
-            newSelection: event_selection,
-        });
+        // EventEmitter.emit("deleteChip", {
+        //     newSelection: event_selection,
+        // });
+        let attach = await storage.ss.getPair('search_key');
+        attach = JSON.parse(attach);
+
+        let qstr = await filtersService.getQS(selectionNoDup, attach, selectionsRaw);
+        await storage.ss.setPair('currentURI', null);
+        history.push(`/search?q=${qstr}`);
 
     };
 
@@ -118,7 +130,7 @@ const Subheader = (props) => {
     //     console.log('data from filter-modal update chips', data);
     // });
 
-    EventEmitter.addListener("updateChips", async (data) => {
+    EventEmitter.once("updateChips", async (data) => {
         let selectionRaw;
         let metaIds;
         const parse = async () => {
@@ -137,15 +149,6 @@ const Subheader = (props) => {
         }
         await parse();
         // // console.log(filters);
-        // let attach = await storage.ss.getPair('search_key');
-        // attach = JSON.parse(attach);
-
-        // console.log('metaIds', metaIds);
-        // let selection = Array.from(metaIds, d => d.metaIdNoDup);
-
-        // let qstr = await filtersService.getQS(selection, attach, selectionRaw);
-        // await storage.ss.setPair('currentURI', null);
-        // history.push(`/search?q=${qstr}`);
     })
 
     // // parse all filter metaids and create new objects to set selectedFilters

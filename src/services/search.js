@@ -9,7 +9,7 @@ const util = {};
 
 search.postSearchResults = async(queries, uri = null) => {
   // console.log("search service queries? ", queries);
-  console.log('uri', uri);
+  // console.log('uri', uri);
   if (uri == null) {
     const value = queries;
     const filterName = Object.keys(value)[0];
