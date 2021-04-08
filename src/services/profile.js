@@ -14,8 +14,12 @@ export const getProfileResults = async(employeeID) => {
                     result.officeName = office[0].value_name;
                     result.companyName = company[0].value_name;
                     result.locationName = loc[0].value_name;
+                    result.info = {}
+                    result.info.group = group[0];
+                    result.info.office = office[0];
+                    result.info.company = company[0];
+                    result.info.loc = loc[0];
                     return result;
-                    console.log(response);
                 } catch (error) {
                     window.location.reload();
                 }

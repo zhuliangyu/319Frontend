@@ -208,3 +208,28 @@ a.link:hover {
 #profile-addpin {
     display: none;
 }
+
+.inline {
+    display: inline;
+    margin-left: .25rem;
+    margin-right: .25rem;
+}
+
+.searchable-subheader-inline {
+    display: inline;
+}
+
+.searchable-subheader-inline:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.searchable-icon:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.group-div {
+    margin-bottom: 16px;
+    margin-top: 16px;
+}

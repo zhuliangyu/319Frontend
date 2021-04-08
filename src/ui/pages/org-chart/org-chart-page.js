@@ -34,7 +34,9 @@ const OrgChartPage = () => {
     const container = useRef(null);
 
     useEffect(() => {
-        container.current.getElement().scrollTo(2075, 400);
+        let pageWidth = document.getElementById('titleWrapper').offsetWidth
+        console.log(pageWidth)
+        container.current.getElement().scrollTo(2830-pageWidth/2, 400);
     }, []);
 
     return (
@@ -65,7 +67,7 @@ const OrgChartPage = () => {
 
                 {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
                     <React.Fragment>
-                        <div className="page-title-wrapper">
+                        <div className="page-title-wrapper" id={"titleWrapper"}>
                             <div className="page-title-box">
                                 <div className="page-title">
                                     <div className={"title"}> {heading_text} </div>

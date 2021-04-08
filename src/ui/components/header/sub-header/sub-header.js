@@ -1,15 +1,15 @@
-// TODO: make the height of sub-header change to accomodate for filters overflow
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import "./sub-header.css";
 import FilterIcon from "../../../../assets/filter-icon.svg";
 import CloseIcon from "../../../../assets/close-icon.svg";
 import { Button, Divider, Typography, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import FilterChip from "../../filter-chip";
-import filters from "../../../../services/filters";
+import filtersService from "../../../../services/filters";
 import search from "../../../../services/search";
 import storage from "../../../../services/storage";
+import EventEmitter from "../../../hooks/event-manager";
+import { useHistory, useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     button: {},
@@ -36,76 +36,118 @@ const useStyles = makeStyles((theme) => ({
 
 const Subheader = (props) => {
     const classes = useStyles();
-    const location = window.location.pathname;
+    let history = useHistory();
+    const location = useLocation();
+
     const [selectedFilters, setSelectedFilters] = useState([]);
-    const [selectedFilterDocs, setSelectedFilterDocs] = useState([]);
+    const [selectedMetaIds, setSelectedMetaIds] = useState([]);
+    const [selectionsRaw, setSelectionsRaw] = useState(props.selectionsRaw);
+    const [filters, setFilters] = useState([]);
 
-    const [searchState, syncStorageSearch] = useState(
-        storage.ss.getPair("current_search")
-    );
+    // useEffect(() => {
+    //     const parse = async () => {
+    //         let selectionRaw = [...props.selectionsRaw];
+    //         let metaIds = [];
 
-    const updateSearch = async (e) => {
-        syncStorageSearch(storage.ss.getPair("current_search"));
+    //         // only push one meta id
+    //         // check if it is has a double underscore, which means duplicate group
+    //         for (let x of selectionRaw) {
+    //             let splitFilterByUnderscore = x.split("__");
+    //             let detail = await parseFilterMetaId(splitFilterByUnderscore[0]);
+    //             let obj = { raw: x, metaIdNoDup: splitFilterByUnderscore[0], details: detail };
+    //             metaIds.push(obj);
+    //         }
+    //         setFilters(metaIds);
+    //     }
+    //     parse();
+
+    // }, [props]);
+
+    const handleChipDelete = async (item) => {
+        // let filter_to_delete;
+        let newFilters;
+        async function setNewData() {
+            // make new selectedFilters
+            newFilters = filters.filter((d) => d.raw !== item.raw);
+
+            // get the filter to delete
+            // filter_to_delete = filters.find((d) => d.raw === item.raw);
+
+            // update state
+            // setFilters(newFilters);
+        }
+        await setNewData();
+        
+        // let event_filter_meta_id = filter_to_delete.raw;
+        let event_selection = Array.from(newFilters, (d) => d.raw);
+        let sel = [];
+        for (let x of event_selection) {
+            let item = x.split("__");
+            sel = sel.concat(item);
+          }
+
+        // emit deleteChip event to filter modal
+        let attach = await storage.ss.getPair('search_key');
+        attach = JSON.parse(attach);
+        let skillType = await storage.ss.getPair('skillType');
+        if (!skillType) {
+            skillType = 'OR';
+        }
+        let qstr = await filtersService.getQS(sel, attach, event_selection, skillType);
+        await storage.ss.setPair('currentURI', null);
+        history.push(`/search?q=${qstr}`);
+
     };
 
-    useEffect(() => {
-        window.addEventListener("update_search", updateSearch);
-        return () => {
-            window.removeEventListener("update_search", updateSearch);
-        };
-    }, []);
-
-    useEffect(async () => {
-        console.table(searchState);
-        const chips_data = await search.parseFilter(searchState);
-        const chips_meta_ids = Array.from(chips_data, (d) => d.meta_id);
-        setSelectedFilters(chips_data);
-        setSelectedFilterDocs(chips_meta_ids);
-    }, [searchState]);
-
-    const handleChipDelete = async (uuid_to_delete) => {
-        let newFilters = selectedFilters.filter(
-            (chip) => chip._uuid !== uuid_to_delete
-        );
-        setSelectedFilters(newFilters);
-        let docs = Array.from(newFilters, (d) => d.meta_id);
-        setSelectedFilterDocs(docs);
-        await filters.set(docs);
-        document.getElementById("search_button_target").click();
+    // parse one filter meta id to get all details
+    const parseFilterMetaId = async (metaId) => {
+        let metaIdParsed = await search.parseFilterMetaId(metaId);
+        return metaIdParsed;
     };
+
+    EventEmitter.addListener("updateChips", async (data) => {
+        let selectionRaw;
+        let metaIds;
+        const parse = async () => {
+            selectionRaw = [...data];
+            metaIds = [];
+
+            // only push one meta id
+            // check if it is has a double underscore, which means duplicate group
+            for (let x of selectionRaw) {
+                let splitFilterByUnderscore = x.split("__");
+                let detail = await parseFilterMetaId(splitFilterByUnderscore[0]);
+                let obj = { raw: x, metaIdNoDup: splitFilterByUnderscore[0], details: detail };
+                metaIds.push(obj);
+            }
+            setFilters(metaIds);
+        }
+        await parse();
+    })
 
     return (
         <div>
             <div className="subheader-wrapper">
-                {location.includes("search") ? (
-                    <>
-                        <Button
-                            className={classes.button}
-                            id="filter_open_button"
-                        >
-                            <img width="24" height="24" src={FilterIcon}></img>
-                            <Typography className={classes.buttonText}>
-                                Filter
-                            </Typography>
-                        </Button>
-                        <Divider
-                            className={classes.divider}
-                            color="primary"
-                            orientation="vertical"
+                <Button className={classes.button} id="filter_open_button">
+                    <img width="24" height="24" src={FilterIcon}></img>
+                    <Typography className={classes.buttonText}>
+                        Filter
+                    </Typography>
+                </Button>
+                <Divider
+                    className={classes.divider}
+                    color="primary"
+                    orientation="vertical"
+                />
+                <div className="filter-chips">
+                    {filters.map((d) => (
+                        <FilterChip
+                            key={d.metaIdNoDup}
+                            data={d}
+                            handleDelete={() => handleChipDelete(d)}
                         />
-                        <div className="filter-chips">
-                            {selectedFilters.map((filter_data) => (
-                                <FilterChip
-                                    key={filter_data._uuid}
-                                    data={filter_data}
-                                    handleDelete={() =>
-                                        handleChipDelete(filter_data._uuid)
-                                    }
-                                />
-                            ))}
-                        </div>
-                    </>
-                ) : null}
+                    ))}
+                </div>
             </div>
         </div>
     );

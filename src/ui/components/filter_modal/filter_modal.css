@@ -64,3 +64,21 @@
     margin-top: 5px;
     margin-bottom: 15px;
 }
+
+#filter_modal .vertical-tabpanel .filter-model-selbox {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    background-color: #fffdd0;
+    border-radius: 7px;
+    font-family: Poppins;
+    font-size: 10pt;
+    font-weight: 450;
+}
+
+#filter_modal .vertical-tabpanel .filter-model-selbox select{
+    padding: 2px !important;
+    border-radius: 5px;
+    font-family: Poppins;
+    font-size: 10pt;
+    margin-left: 1.5px;
+}

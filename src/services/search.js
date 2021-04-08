@@ -9,12 +9,11 @@ const util = {};
 
 search.postSearchResults = async(queries, uri = null) => {
   // console.log("search service queries? ", queries);
+  // console.log('uri', uri);
   if (uri == null) {
     const value = queries;
     const filterName = Object.keys(value)[0];
     const inputValue = value[filterName];
-
-    // TODO: separate the query string from filters to go back to the state easily?
 
     if (Object.keys(value).length === 0) {
       let body = filters.get();
@@ -43,44 +42,68 @@ search.postSearchResults = async(queries, uri = null) => {
     }
     let res = {};
     let basisName = await storage.ss.getPair('basisName');
+    let basisKeyName = await storage.ss.getPair('basisKeyName');
     if (basisName == '') basisName = "(Blank Search)";
     if ((basis === current) && (basis) && (current)) {
       let data = await storage.db.toArray('searchResults');
       res.results = data;
       res.total = data.length;
+
     } else if (evaluation) {
       let hist = await storage.db.toArray('searchHistory');
       if(hist.length > 0) {
         hist.pop();
       }
-      hist.push({uid: uuid(), name: basisName, uri: encodeURIComponent(JSON.stringify(uri))});
+      let obj = {uid: uuid(), name: basisName, basisKeyName: basisKeyName, uri: encodeURIComponent(JSON.stringify(uri))}
+      let newHist = util.removeDuplicateSearchHistory(obj, hist);
+
+      // hist.push({uid: uuid(), name: basisName, uri: encodeURIComponent(JSON.stringify(uri))});
       await storage.db.clearTable('searchHistory');
-      await storage.db.updateDocuments('searchHistory', hist);
+      await storage.db.updateDocuments('searchHistory', newHist);
       res = await util.searchOnline(uri);
     } else {
       let hist = await storage.db.toArray('searchHistory');
-      if(hist.length >= 4) {
-        hist = hist.splice(0,4);
+      if(hist.length >= 8) {
+        hist = hist.splice(0,8);
       }
-      hist.push({uid: uuid(), name: basisName, uri: encodeURIComponent(JSON.stringify(uri))});
+
+      let obj = {uid: uuid(), name: basisName, basisKeyName: basisKeyName, uri: encodeURIComponent(JSON.stringify(uri))}
+      let newHist = util.removeDuplicateSearchHistory(obj, hist);
+
+      // hist.push({uid: uuid(), name: basisName, uri: encodeURIComponent(JSON.stringify(uri))});
       await storage.db.clearTable('searchHistory');
-      await storage.db.updateDocuments('searchHistory', hist);
+      await storage.db.updateDocuments('searchHistory', newHist);
       res = await util.searchOnline(uri);
     }
     return res;
   }
 };
 
+// add new history object
+// remove duplicates
+// return new history array to set db
+util.removeDuplicateSearchHistory = (historyObj, history) => {
+  history.push(historyObj);
+
+  // console.log('history obj uri ', JSON.parse(decodeURIComponent(historyObj.uri) ));
+  let unique_arr = history.filter((v,i,a) =>
+    a.findIndex(t =>
+      (JSON.stringify(JSON.parse(decodeURIComponent(t.uri))) === JSON.stringify(JSON.parse(decodeURIComponent(v.uri)))))
+      ===
+      i
+    );
+  return unique_arr;
+}
+
 util.searchOnline = (body, value = {}) => {
   let searchItem = {};
   return new Promise(async(resolve) => {
     return axios.post("/api/search", body).then(
       async(response) => {
-        console.table(body);
+        // console.table(body);
         let results = response.data.results;
         let total = response.data.total;
         await util.saveResult(results);
-        // console.log("value", value);
         if (Object.keys(value).length !== 0) {
           searchItem = {
             keyword: value,
@@ -91,7 +114,7 @@ util.searchOnline = (body, value = {}) => {
             filterObject: body,
           }
         }
-        storage.ss.setPair('current_search', JSON.stringify(searchItem));
+        // storage.ss.setPair('current_search', JSON.stringify(searchItem));
         resolve({results: results, total: total});
       },
       (error) => {
@@ -100,22 +123,8 @@ util.searchOnline = (body, value = {}) => {
       }
     );
   })
-  .then((res) => {
-    window.dispatchEvent(new Event('update_search'));
-
-    // TODO: handle null searches
-    // Update search history if unique search
-    /*let search_history = JSON.parse(storage.ls.getPair('searchHistory'));
-    search_history.push(searchItem);
-    let search_history_serialized = search_history.map(e => JSON.stringify(e));
-    let search_history_serialized_set = new Set(search_history_serialized);
-    let unique_search_history = [...search_history_serialized_set];
-    const unique_arr = unique_search_history.map(e => JSON.parse(e));
-    // console.log(unique_arr);
-
-    storage.ls.setPair('searchHistory', JSON.stringify(unique_arr));*/
-
-    return res;
+  .catch((err) => {
+    console.log(err);
   });
 }
 
@@ -246,5 +255,10 @@ util.parseFilterMetaId = async (meta_id_string) => {
 util.searchOffline = (uri) => {
   /* REMOVE */
 }
+
+search.parseFilterMetaId = async (meta_id_string) => {
+  const value = await storage.db.searchDocument("metadata", {meta_id: meta_id_string});
+  return value[0];
+};
 
 export default search;

@@ -1,30 +1,38 @@
-import React, { forwardRef } from "react";
+import React, { useEffect, useState } from "react";
 import { Chip } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import search from "../../../services/search";
 
 const useStyles = makeStyles((theme) => ({
-  chip: {
-    fontSize: 14,
-    color: "#ffffff",
-    margin: 4,
-    padding: 4,
-  },
+    chip: {
+        fontSize: 14,
+        color: "#ffffff",
+        margin: 4,
+        padding: 4,
+    },
 }));
 
 const FilterChip = (props) => {
-  const classes = useStyles();
-  // console.log(props);
-  const filter_label = props.data.call_name + ' - ' + props.data.value_name;
+    const classes = useStyles();
+    const [label, setLabel] = useState("");
 
-  return (
-    <Chip
-      color="secondary"
-      className={classes.chip}
-      size="small"
-      label={filter_label}
-      onDelete={props.handleDelete}
-    />
-  );
+    useEffect(() => {
+        let tempLabel =
+            props.data.details.display_name +
+            " - " +
+            props.data.details.value_name;
+        setLabel(tempLabel);
+    }, []);
+
+    return (
+        <Chip
+            color="secondary"
+            className={classes.chip}
+            size="small"
+            label={label}
+            onDelete={props.handleDelete}
+        />
+    );
 };
 
 export default FilterChip;

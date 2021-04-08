@@ -102,6 +102,13 @@ const SearchBar = (props) => {
     document.querySelector(`#${exitId}`).classList.remove("searchAuto-selected");
     document.querySelector(`#searchAuto-item-1`).classList.add("searchAuto-selected");
     let detectedFilter = search.detectType(element.value)
+    if(detectedFilter.toLowerCase() == 'workcell') {
+      let number = element.value;
+      let neutral = ('' + number).replace(/\D/g, '');
+      let components = neutral.match(/^(\d{3})(\d{3})(\d{4})$/);
+      number = components[1] + '-' + components[2] + '-' + components[3];
+      element.value = number;
+    }
     setValue({inputValue: element.value, filter_name: detectedFilter, queryId: detectedFilter.toLowerCase()});
     if (element.value != "") {
       document.getElementById('searchAuto').style.setProperty("display", "block");
@@ -162,7 +169,6 @@ const SearchBar = (props) => {
   };
 
   const handleInitiateSearch = async(e, metadata = null, attach = null) => {
-    // console.log(value);
     handleInputBlur();
     let queries = await makeQueries();
     let raw = [metadata];
@@ -170,16 +176,30 @@ const SearchBar = (props) => {
       metadata = [];
       raw = [];
       try {
-        await storage.ss.setPair('basisName', queries[Object.keys(queries)[0]].values[0]);
+        if (queries[Object.keys(queries)[0]].values[0] != "") {
+          await storage.ss.setPair('basisName', queries[Object.keys(queries)[0]].values[0]);
+          // await storage.ss.setPair('basisKeyName', JSON.stringify({ key: Object.keys(queries)[0], name: queries[Object.keys(queries)[0]].values[0]}));
+  
+        } else {
+          await storage.ss.setPair('basisName', null);
+          alert('Blank Search - You must select at least one filter or enter a keyword to search');
+          return;
+        }
       } catch (error) {
-        await storage.ss.setPair('basisName', '(Blank Search)');
+        alert('Blank Search - You must select at least one filter or enter a keyword to search');
+        return;
       }
       
     } else {
+      if (document.getElementById('searchInput').value == "") {
+        return;
+      }
       metadata = metadata.split("__");
       document.querySelector('#searchInput').value = '';
       await storage.ss.setPair('search_key', null);
       await storage.ss.setPair('basisName', attach);
+      // await storage.ss.setPair('basisKeyName', JSON.stringify({ key: Object.keys(queries)[0], name: queries[Object.keys(queries)[0]].values[0]}));
+
       queries = null;
     }
     let qstr = await filters.getQS(metadata, queries, raw);
@@ -187,8 +207,6 @@ const SearchBar = (props) => {
     await storage.ss.setPair('currentURI', null);
     console.table(qstr);
     history.push(`/search?q=${qstr}`);
-    // window.dispatchEvent(new Event('update_search'));
-    // props.dispatch(performSearch(value));
   };
 
   const makeQueries = async () => {
