@@ -13,6 +13,16 @@ import { useHistory } from "react-router-dom";
 import "./search-card.css";
 import search from "../../../services/search";
 import storage from "../../../services/storage";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+    popover: {
+        pointerEvents: "none",
+    },
+    paper: {
+        padding: theme.spacing(1),
+    },
+}));
 
 const NoFilterCardDiv = (props) => {
     return (
@@ -29,18 +39,19 @@ const NoFilterCardDiv = (props) => {
 };
 
 const HasFilterCardDiv = (props) => {
+    const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handlePopoverOpen = (event) => {
-      setAnchorEl(event.currentTarget);
+        setAnchorEl(event.currentTarget);
     };
-  
+
     const handlePopoverClose = () => {
-      setAnchorEl(null);
+        setAnchorEl(null);
     };
 
     const open = Boolean(anchorEl);
-  
+
     return (
         <div className="profile-details">
             <CardContent padding={0}>
@@ -51,7 +62,8 @@ const HasFilterCardDiv = (props) => {
                 </Typography>
                 {props.data.filters.length > 0 ? (
                     <Typography variant="subtitle2" align={"left"}>
-                        with the filter: {props.data.filters[0].details.call_name} - {" "}
+                        with the filter:{" "}
+                        {props.data.filters[0].details.call_name} -{" "}
                         {props.data.filters[0].details.value_name}
                     </Typography>
                 ) : null}
@@ -67,7 +79,8 @@ const HasFilterCardDiv = (props) => {
                         </Typography>
                         <Popover
                             open={open}
-                            style={{ pointerEvents: 'none' }}
+                            className={classes.popover}
+                            classes={{paper: classes.paper}}
                             anchorEl={anchorEl}
                             anchorOrigin={{
                                 vertical: "bottom",
@@ -86,7 +99,8 @@ const HasFilterCardDiv = (props) => {
                                         key={`${props.data.uid}-${filter.raw}`}
                                         variant="subtitle2"
                                     >
-                                        {filter.details.call_name} - {filter.details.value_name}
+                                        {filter.details.call_name} -{" "}
+                                        {filter.details.value_name}
                                     </Typography>
                                 ))}
                         </Popover>
@@ -168,7 +182,7 @@ const SearchCard = (props) => {
     // Handle card click
     // Starts a search based on uri
     const handleCardOnClick = async () => {
-        await storage.ss.setPair('currentURI', null);
+        await storage.ss.setPair("currentURI", null);
         history.push(`/search?q=${uri}`);
     };
 
