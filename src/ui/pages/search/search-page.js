@@ -26,6 +26,7 @@ const SearchPage = () => {
   useEffect(async () => {
     let query = qs.parse(location.search);
     if (query.q) {
+      
       if (query.q == `{"meta":[]}`) {
 
         alert("Blank Search - You must select at least one filter or enter a keyword to search");
@@ -48,6 +49,8 @@ const SearchPage = () => {
           let selectionRaw = data.meta;
           setSelectionsRaw(selectionRaw);
           EventEmitter.emit("updateChips", selectionRaw);
+        } else {
+          EventEmitter.emit("updateChips", []);
         }
       }
       });

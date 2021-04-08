@@ -16,8 +16,9 @@ const ProfileSkill = (props) => {
         //todo: search by skill when the skill is clicked
         console.log(props.data);
         let qstr = await filters.getQS([meta_id], null, [meta_id]);
+        storage.ss.setPair('search_key', null);
         await storage.ss.setPair('basisURI', qstr);
-        history.push(`/search/?q=${qstr}&name=`);
+        history.push(`/search/?q=${qstr}`);
     };
 
     return (

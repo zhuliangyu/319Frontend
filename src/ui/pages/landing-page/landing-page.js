@@ -84,8 +84,7 @@ const LandingPage = () => {
         // handle unresolved promise
         // default to Burnaby
         .catch(async () => {
-          EventEmitter.emit('Loaded')
-          let result = 'Burnaby';
+          let result = locales[0].value_name;
 
           let filteredResult = locales.filter((locale) => {
             if (locale.value_name == result) return true;
@@ -101,7 +100,6 @@ const LandingPage = () => {
             setCity(locales[0].value_name);
             loc_id = locales[0].value_id[0];
           }
-
           let colleg = await fetch("/api/search/", {
             "method": "POST",
             "headers": {

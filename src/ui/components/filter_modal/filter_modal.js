@@ -92,9 +92,27 @@ function TabPanel(props) {
                   meta_id = meta_id + `__${metaitem.meta_id}`;
                   buildManifest[supplimentaryData.indexOf(val)].meta_id = meta_id;
                 }
+
                 filterManifest[i].metadata = buildManifest;
               }
             }
+
+            for (let i = 0; (i < filterManifest.length); i++) {
+              filterManifest[i].metadata = filterManifest[i].metadata.sort(function(a, b) {
+                var val1 = a.value_name.toLowerCase(); // ignore upper and lowercase
+                var val2 = b.value_name.toLowerCase(); // ignore upper and lowercase
+                if (val1 < val2) {
+                  return -1;
+                }
+                if (val1 > val2) {
+                  return 1;
+                }
+                return 0;
+              });
+              
+            }
+
+            console.table(filterManifest);
             setFilterDocs(filterManifest);
         }
 

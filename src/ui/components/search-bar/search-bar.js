@@ -102,6 +102,13 @@ const SearchBar = (props) => {
     document.querySelector(`#${exitId}`).classList.remove("searchAuto-selected");
     document.querySelector(`#searchAuto-item-1`).classList.add("searchAuto-selected");
     let detectedFilter = search.detectType(element.value)
+    if(detectedFilter.toLowerCase() == 'workcell') {
+      let number = element.value;
+      let neutral = ('' + number).replace(/\D/g, '');
+      let components = neutral.match(/^(\d{3})(\d{3})(\d{4})$/);
+      number = components[1] + '-' + components[2] + '-' + components[3];
+      element.value = number;
+    }
     setValue({inputValue: element.value, filter_name: detectedFilter, queryId: detectedFilter.toLowerCase()});
     if (element.value != "") {
       document.getElementById('searchAuto').style.setProperty("display", "block");
@@ -173,11 +180,11 @@ const SearchBar = (props) => {
           await storage.ss.setPair('basisName', queries[Object.keys(queries)[0]].values[0]);
         } else {
           await storage.ss.setPair('basisName', null);
-          alert('Please enter a keyword to search');
+          alert('Blank Search - You must select at least one filter or enter a keyword to search');
           return;
         }
       } catch (error) {
-        alert('Please enter a keyword to search');
+        alert('Blank Search - You must select at least one filter or enter a keyword to search');
         return;
       }
       
