@@ -31,13 +31,13 @@ const SearchPage = () => {
       let data = JSON.parse(decodeURIComponent(query.q));
       search.postSearchResults(null, data)
       .then(async(res) => {
-        console.log(res);
+        // console.log(res);
         setSearchResults(res);
         await storage.ss.setPair('currentURI', encodeURIComponent(JSON.stringify(data)));
       })
       .then(() => {
         let metas = JSON.parse(storage.ss.getPair('rawMetas'));
-        console.log(metas);
+        // console.log(metas);
         
         // if(data.meta) {
         //   let selectionRaw = data.meta;
@@ -69,7 +69,7 @@ const SearchPage = () => {
   // }, [history.location.key]);
 
   EventEmitter.addListener('deleteChip', (data) => {
-    console.log('deleteChip', data);
+    // console.log('deleteChip', data);
     setSelectionsRaw(data.selectionsRaw);
   })
 
