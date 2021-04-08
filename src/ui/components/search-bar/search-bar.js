@@ -162,7 +162,6 @@ const SearchBar = (props) => {
   };
 
   const handleInitiateSearch = async(e, metadata = null, attach = null) => {
-    // console.log(value);
     handleInputBlur();
     let queries = await makeQueries();
     let raw = [metadata];

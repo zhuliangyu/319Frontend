@@ -25,12 +25,10 @@ const SearchPage = () => {
   
   useEffect(async () => {
     let query = qs.parse(location.search);
-    console.log('query', query);
     if (query.q) {
-      alert(query.q);
       if (query.q == `{"meta":[]}`) {
 
-        alert("Blank search not allowed");
+        alert("Blank Search - You must select at least one filter or enter a keyword to search");
         window.history.back();
         return;
       }
@@ -44,9 +42,6 @@ const SearchPage = () => {
         return data;
       })
       .then(async (data) => {
-        let metas = JSON.parse(storage.ss.getPair('rawMetas'));
-        let basis = await storage.ss.setPair('basisName');
-        console.log(metas);
         
       if(data.meta) {
         if(data.meta.length > 0) {
