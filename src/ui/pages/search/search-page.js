@@ -23,7 +23,17 @@ const SearchPage = () => {
   const [selectionsRaw, setSelectionsRaw] = useState([]);
   const [selectionsData, setSelectionsData] = useState([]);
   
-  useEffect(async () => {
+  // useEffect(async () => {
+  //   doSearch();
+  // }, []);
+
+  useEffect(async() => {
+
+    doSearch();
+    await storage.ss.setPair('currentURI', null);
+  }, [location.search])
+
+  const doSearch = async() => {
     let query = qs.parse(location.search);
     if (query.q) {
       
@@ -35,6 +45,21 @@ const SearchPage = () => {
       }
       setSearchResults([]);
       let data = JSON.parse(decodeURIComponent(query.q));
+      if(data.Name) {
+        await storage.ss.setPair('search_key', JSON.stringify({Name: data.Name}));
+        await storage.ss.setPair('basisName', data.Name.values[0]);
+        document.getElementById('searchInput').value = data.Name.values[0];
+      } else if(data.Email) {
+        await storage.ss.setPair('search_key', JSON.stringify({Email: data.Email}));
+        await storage.ss.setPair('basisName', data.Email.values[0]);
+        document.getElementById('searchInput').value = data.Email.values[0];
+      } else if (data.WorkCell) {
+        await storage.ss.setPair('search_key', JSON.stringify({Email: data.WorkCell}));
+        await storage.ss.setPair('basisName', data.WorkCell.values[0]);
+        document.getElementById('searchInput').value = data.WorkCell.values[0];
+      } else {
+        //await storage.ss.setPair('basisName', await storage.db.searchDocument('metadata', {meta_id: }));
+      }
       search.postSearchResults(null, data)
       .then(async(res) => {
         console.log(res);
@@ -55,7 +80,7 @@ const SearchPage = () => {
       }
       });
     }
-  }, [history.location.key]);
+  } 
 
   // useEffect(async () => {
   //   let query = qs.parse(location.search);

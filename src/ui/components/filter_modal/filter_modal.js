@@ -53,6 +53,8 @@ function TabPanel(props) {
     const [value, setTabValue] = React.useState(0);
     const [filterDocs, setFilterDocs] = React.useState(null);
     let [selectionData, setSelectionData] = useState(selectionRaw);
+    let [ORSkill, setORSkill] = useState(false);
+    let [ANDSkill, setANDSkill] = useState(true);
     let idx = 0;
     
     useEffect(() => {
@@ -62,7 +64,18 @@ function TabPanel(props) {
             // console.log(query);
             if (query.q) {
               let data = JSON.parse(decodeURIComponent(query.q));
-              console.warn(data.meta);
+              if (data.Skill) {
+                if (data.Skill.type.toLowerCase() == 'or') {
+                  setORSkill(true);
+                  setANDSkill(false);
+                  await storage.ss.setPair('skillType', 'OR');
+                } else {
+                  setORSkill(false);
+                  setANDSkill(true);
+                  await storage.ss.setPair('skillType', 'AND');
+                }
+              }
+              console.warn(data);
               if(data.meta) {
                 selectionRaw = data.meta;
                 setSelectionData(selectionRaw);
@@ -99,8 +112,8 @@ function TabPanel(props) {
 
             for (let i = 0; (i < filterManifest.length); i++) {
               filterManifest[i].metadata = filterManifest[i].metadata.sort(function(a, b) {
-                var val1 = a.value_name.toLowerCase(); // ignore upper and lowercase
-                var val2 = b.value_name.toLowerCase(); // ignore upper and lowercase
+                var val1 = a.value_name.toLowerCase();
+                var val2 = b.value_name.toLowerCase();
                 if (val1 < val2) {
                   return -1;
                 }
@@ -147,7 +160,9 @@ function TabPanel(props) {
         let attach = await storage.ss.getPair('search_key');
         attach = JSON.parse(attach);
 
-        let qstr = await filters.getQS(selection, attach, selectionRaw);
+        let skillType = document.getElementById('skillType').value;
+        await storage.ss.setPair('skillType', skillType);
+        let qstr = await filters.getQS(selection, attach, selectionRaw, skillType);
         await storage.ss.setPair('currentURI', null);
         setOpen(false);
         history.push(`/search?q=${qstr}`);
@@ -238,6 +253,17 @@ function TabPanel(props) {
 
             {filterDocs !== null ? (filterDocs.map((filterDoc) => (
               <TabPanel key={'panel-'+idx} value={value} index={idx++}>
+              { filterDoc.call_name.toLowerCase() == "skill" ? ( 
+                <div className="filter-model-selbox">
+                  <center>
+                    <span> Filtering Mode: </span>
+                    <select name="skillType" id="skillType">
+                      <option value="OR" selected={ORSkill}>Any of these</option>
+                      <option value="AND" selected={ANDSkill}>All of these</option>
+                    </select>
+                  </center>
+                </div>
+              ) : (null)}
                     {filterDoc.metadata.map((e) => (
                         <FormGroup row key={`panelrow-${idx}-${e.meta_id}`}>
                             <FormControlLabel

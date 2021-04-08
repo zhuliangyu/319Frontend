@@ -172,10 +172,30 @@ const ProfileCardLarge = (props) => {
         document.querySelector("#profile-addpin").style.display = 'block';
     }
 
-    const handleSearch = async (e, meta_id) => {
-        let qstr = await filters.getQS([meta_id], null, [meta_id]);
+    const handleSearch = async (e, meta_id, prefix) => {
+        let data = await storage.db.searchDocument('metadata', {meta_id: `${meta_id}`});
+        let all = await storage.db.searchDocument('metadata', {call_name: `${prefix}`});
+        let raw = "";
+        let metas = [];
+
+        for (let x of all) {
+            let firstMatch = 0;
+            if (x.value_name == data[0].value_name) {
+                metas.push(x.meta_id);
+                if (firstMatch == 0) {
+                    raw = x.meta_id
+                    firstMatch = 1;
+                } else {
+
+                    raw = raw + "__" + x.meta_id;
+                }
+            }
+        }
+        
+        let qstr = await filters.getQS(metas, null, [raw]);
+        storage.ss.setPair('search_key', null);
         await storage.ss.setPair('basisURI', qstr);
-        history.push(`/search/?q=${qstr}&name=`);
+        history.push(`/search/?q=${qstr}`);
     }
 
     return (
@@ -203,11 +223,11 @@ const ProfileCardLarge = (props) => {
                                 <h1 align={"left"}>{props.data.firstName} {props.data.lastName}</h1>
                                 <h2 align={"left"}>{props.data.title}</h2>
                                 <div className={"group-div"}>
-                                    <h3 align={"left"} className={"searchable-subheader-inline"} onClick={(event => {handleSearch(event, props.data.info.group.meta_id)})}> {props.data.groupName}</h3> <br/>
+                                    <h3 align={"left"} className={"searchable-subheader-inline"} onClick={(event => {handleSearch(event, props.data.info.group.meta_id, "Group")})}> {props.data.groupName}</h3> <br/>
                                 </div>
-                                <h4 align={"left"} className={"searchable-subheader-inline"} onClick={(event => {handleSearch(event, props.data.info.office.meta_id)})}> {props.data.officeName} Office  </h4>
+                                <h4 align={"left"} className={"searchable-subheader-inline"} onClick={(event => {handleSearch(event, props.data.info.office.meta_id, "Office")})}> {props.data.officeName} Office  </h4>
                                 <h4 align={"left"} className={"inline"}> @ </h4>
-                                <h4 align={"left"} className={"searchable-subheader-inline"} onClick={(event => {handleSearch(event, props.data.info.company.meta_id)})}> {props.data.companyName}  </h4>
+                                <h4 align={"left"} className={"searchable-subheader-inline"} onClick={(event => {handleSearch(event, props.data.info.company.meta_id, "Company")})}> {props.data.companyName}  </h4>
                                 <p align={"left"}>{props.data.bio}</p>
                             </CardContent>
                         </div>

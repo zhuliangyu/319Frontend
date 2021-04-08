@@ -189,6 +189,9 @@ const SearchBar = (props) => {
       }
       
     } else {
+      if (document.getElementById('searchInput').value == "") {
+        return;
+      }
       metadata = metadata.split("__");
       document.querySelector('#searchInput').value = '';
       await storage.ss.setPair('search_key', null);

@@ -89,8 +89,11 @@ const Subheader = (props) => {
         // emit deleteChip event to filter modal
         let attach = await storage.ss.getPair('search_key');
         attach = JSON.parse(attach);
-
-        let qstr = await filtersService.getQS(sel, attach, event_selection);
+        let skillType = await storage.ss.getPair('skillType');
+        if (!skillType) {
+            skillType = 'OR';
+        }
+        let qstr = await filtersService.getQS(sel, attach, event_selection, skillType);
         await storage.ss.setPair('currentURI', null);
         history.push(`/search?q=${qstr}`);
 
