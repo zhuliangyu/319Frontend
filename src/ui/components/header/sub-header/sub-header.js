@@ -80,11 +80,19 @@ const Subheader = (props) => {
         
         // let event_filter_meta_id = filter_to_delete.raw;
         let event_selection = Array.from(newFilters, (d) => d.raw);
+        let sel = [];
+        for (let x of event_selection) {
+            let item = x.split("__");
+            sel = sel.concat(item);
+          }
 
         // emit deleteChip event to filter modal
-        EventEmitter.emit("deleteChip", {
-            newSelection: event_selection,
-        });
+        let attach = await storage.ss.getPair('search_key');
+        attach = JSON.parse(attach);
+
+        let qstr = await filtersService.getQS(sel, attach, event_selection);
+        await storage.ss.setPair('currentURI', null);
+        history.push(`/search?q=${qstr}`);
 
     };
 

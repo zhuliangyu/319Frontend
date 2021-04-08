@@ -160,16 +160,18 @@ function TabPanel(props) {
       setTabValue(newValue);
     };
 
-    // Listen for chip delete from sub-header.js
     // EventEmitter.addListener('deleteChip', async (data) => {
     //   console.log('clicked delete chip', data);
 
-    //   async function updateGlobalSelections() {
-    //     selectionRaw = data.newSelection;
-    //     let tempSelectionRaw = data.newSelection;
+    //   selectionRaw = data;
+    //     let tempSelectionRaw = data;
     //     for (let x of tempSelectionRaw) {
     //       let item = x.split("__");
     //       selection = selection.concat(item);
+    //     }
+
+    //     if (tempSelectionRaw.length == 0) {
+    //       selection = [];
     //     }
   
     //     selection = [...new Set(selection)];
@@ -178,19 +180,7 @@ function TabPanel(props) {
 
     //     console.log('after delete selection raw', selectionRaw);
     //     console.log('after delete selection', selection);
-    //   }
-    //   await updateGlobalSelections();
 
-    //   // let attach = await storage.ss.getPair('search_key');
-    //   // attach = JSON.parse(attach);
-    //   // let qstr;
-    //   // if (selection.length > 0 && selectionRaw.length > 0) {
-    //   //   qstr = await filters.getQS(selection, attach, selectionRaw);
-    //   // } else {
-    //   //   qstr = await filters.getQS([], attach, []);
-    //   // }
-    //   // await storage.ss.setPair('currentURI', null);
-    //   // history.push(`/search?q=${qstr}`);
     // });
 
     // useEffect(() => {

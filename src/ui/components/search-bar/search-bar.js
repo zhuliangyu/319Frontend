@@ -170,9 +170,16 @@ const SearchBar = (props) => {
       metadata = [];
       raw = [];
       try {
-        await storage.ss.setPair('basisName', queries[Object.keys(queries)[0]].values[0]);
+        if (queries[Object.keys(queries)[0]].values[0] != "") {
+          await storage.ss.setPair('basisName', queries[Object.keys(queries)[0]].values[0]);
+        } else {
+          await storage.ss.setPair('basisName', null);
+          alert('Please enter a keyword to search');
+          return;
+        }
       } catch (error) {
-        await storage.ss.setPair('basisName', '(Blank Search)');
+        alert('Please enter a keyword to search');
+        return;
       }
       
     } else {

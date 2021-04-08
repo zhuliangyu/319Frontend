@@ -40,16 +40,15 @@ const SearchPage = () => {
         let metas = JSON.parse(storage.ss.getPair('rawMetas'));
         console.log(metas);
         
-        // if(data.meta) {
-        //   let selectionRaw = data.meta;
-        //   setSelectionsRaw(selectionRaw);
-        // }
-          if (metas.length > 0) {
-            setSelectionsRaw(metas);
-          }
-          EventEmitter.emit("updateChips", metas);
+      if(data.meta) {
+        alert(data.meta);
+        if(data.meta.length > 0) {
+          let selectionRaw = data.meta;
+          setSelectionsRaw(selectionRaw);
+          EventEmitter.emit("updateChips", selectionRaw);
+        }
+      }
       });
-      
     }
   }, [history.location.key]);
 
