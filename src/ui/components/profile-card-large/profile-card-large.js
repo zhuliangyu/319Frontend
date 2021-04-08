@@ -257,7 +257,7 @@ const ProfileCardLarge = (props) => {
                                 </div>
                                 <div className="profile-content">
                                     <RoomIcon className="icon" align={"left"}/>
-                                    <IconTypography align={"left"} className={"searchable-icon"} onClick={(event => {handleSearch(event, props.data.info.loc.meta_id)})} >Works from {props.data.locationName}</IconTypography> <br/>
+                                    <IconTypography align={"left"} className={"searchable-icon"} onClick={(event => {handleSearch(event, props.data.info.loc.meta_id, "Location")})} >Works from {props.data.locationName}</IconTypography> <br/>
                                 </div>
                                 <div className="profile-orgChartLink">
                                     <Link
