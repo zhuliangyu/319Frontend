@@ -22,9 +22,10 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         padding: theme.spacing(1),
     },
-}));
+}));  
 
 const NoFilterCardDiv = (props) => {
+    console.log('no filters card', props);
     return (
         <div className="profile-details">
             <CardContent padding={0}>
@@ -51,6 +52,8 @@ const HasFilterCardDiv = (props) => {
     };
 
     const open = Boolean(anchorEl);
+
+    console.log('has name card', props );
 
     return (
         <div className="profile-details">
@@ -102,7 +105,81 @@ const HasFilterCardDiv = (props) => {
                                         {filter.details.call_name} -{" "}
                                         {filter.details.value_name}
                                     </Typography>
-                                ))}
+                                ))
+                            }
+                        </Popover>
+                    </>
+                ) : null}
+            </CardContent>
+        </div>
+    );
+};
+
+const HasFilterCardNoBasisKeyNameDiv = (props) => {
+    const classes = useStyles();
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handlePopoverOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handlePopoverClose = () => {
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
+
+    return (
+        <div className="profile-details">
+            <CardContent padding={0}>
+                <Typography>
+                    Someone with the filter
+                </Typography>
+                {props.data.filters.length > 0 ? (
+                    <Typography>
+                        <b className="card-key">
+                            {props.data.filters[0].details.call_name} -{" "}
+                            {props.data.filters[0].details.value_name}
+                        </b>                        
+                    </Typography>
+                ) : null}
+                {props.data.filters.length - 1 > 0 ? (
+                    <>
+                        <Typography
+                            onMouseEnter={handlePopoverOpen}
+                            onMouseLeave={handlePopoverClose}
+                            variant="subtitle2"
+                            align={"left"}
+                        >
+                            and {props.data.filters.length - 1} other filter(s)
+                        </Typography>
+                        <Popover
+                            open={open}
+                            className={classes.popover}
+                            classes={{paper: classes.paper}}
+                            anchorEl={anchorEl}
+                            anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                            }}
+                            transformOrigin={{
+                                vertical: "top",
+                                horizontal: "left",
+                            }}
+                            onClose={handlePopoverClose}
+                        >
+                            {props.data.filters
+                                .slice(1, props.data.filters.length)
+                                .map((filter) => (
+                                    <Typography
+                                        key={`${props.data.uid}-${filter.raw}`}
+                                        variant="subtitle2"
+                                    >
+                                        {filter.details.call_name} -{" "}
+                                        {filter.details.value_name}
+                                    </Typography>
+                                ))
+                            }
                         </Popover>
                     </>
                 ) : null}
@@ -121,8 +198,6 @@ const SearchCard = (props) => {
     useEffect(() => {
         async function parseUri() {
             let decodedURI = JSON.parse(decodeURIComponent(uri));
-            // console.log('decodedURI', decodedURI);
-            // console.log('props data', props);
             setDecodedUri(decodedURI);
             if (decodedURI.meta) {
                 let allData;
@@ -147,6 +222,7 @@ const SearchCard = (props) => {
                     }
                     let obj = {
                         hasFilters: true,
+                        hasName: props.data.name !== 'null',
                         filters: filtersData,
                         name: props.data.name,
                         keyName: JSON.parse(props.data.basisKeyName),
@@ -187,7 +263,7 @@ const SearchCard = (props) => {
     };
 
     return (
-        <Card className="profile-grid-card">
+        <Card className="profile-grid-card" >
             <CardActions className="card-actions-wrapper" disableSpacing>
                 <IconButton
                     className="delete-button"
@@ -200,7 +276,11 @@ const SearchCard = (props) => {
 
             <CardActionArea onClick={handleCardOnClick}>
                 {data.hasFilters ? (
-                    <HasFilterCardDiv data={data} />
+                    data.hasName ? (
+                        <HasFilterCardDiv data={data} />
+                    ) : (
+                        <HasFilterCardNoBasisKeyNameDiv data={data} />
+                    )
                 ) : (
                     <NoFilterCardDiv data={data} />
                 )}
