@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
 }));  
 
 const NoFilterCardDiv = (props) => {
-    console.log('no filters card', props);
     return (
         <div className="profile-details">
             <CardContent padding={0}>
@@ -52,8 +51,6 @@ const HasFilterCardDiv = (props) => {
     };
 
     const open = Boolean(anchorEl);
-
-    console.log('has name card', props );
 
     return (
         <div className="profile-details">
