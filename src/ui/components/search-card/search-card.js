@@ -35,9 +35,9 @@ const SearchCard = (props) => {
   return (
     <Card className="profile-grid-card history-card">
       <CardActions className="card-actions-wrapper" disableSpacing>
-        {/*<IconButton className="delete-button" onClick={props.deleteFn} size="small">
+        <IconButton className="delete-button" onClick={props.deleteFn} size="small">
           <CloseIcon className="delete-button-icon" />
-  </IconButton>*/}
+        </IconButton>
       </CardActions>
 
       <CardActionArea onClick={handleCardOnClick}>

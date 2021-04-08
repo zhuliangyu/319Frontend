@@ -53,23 +53,46 @@ search.postSearchResults = async(queries, uri = null) => {
       if(hist.length > 0) {
         hist.pop();
       }
-      hist.push({uid: uuid(), name: basisName, uri: encodeURIComponent(JSON.stringify(uri))});
+      let obj = {uid: uuid(), name: basisName, uri: encodeURIComponent(JSON.stringify(uri))}
+      let newHist = util.removeDuplicateSearchHistory(obj, hist);
+
+      // hist.push({uid: uuid(), name: basisName, uri: encodeURIComponent(JSON.stringify(uri))});
       await storage.db.clearTable('searchHistory');
-      await storage.db.updateDocuments('searchHistory', hist);
+      await storage.db.updateDocuments('searchHistory', newHist);
       res = await util.searchOnline(uri);
     } else {
       let hist = await storage.db.toArray('searchHistory');
-      if(hist.length >= 4) {
-        hist = hist.splice(0,4);
+      if(hist.length >= 8) {
+        hist = hist.splice(0,8);
       }
-      hist.push({uid: uuid(), name: basisName, uri: encodeURIComponent(JSON.stringify(uri))});
+
+      let obj = {uid: uuid(), name: basisName, uri: encodeURIComponent(JSON.stringify(uri))}
+      let newHist = util.removeDuplicateSearchHistory(obj, hist);
+
+      // hist.push({uid: uuid(), name: basisName, uri: encodeURIComponent(JSON.stringify(uri))});
       await storage.db.clearTable('searchHistory');
-      await storage.db.updateDocuments('searchHistory', hist);
+      await storage.db.updateDocuments('searchHistory', newHist);
       res = await util.searchOnline(uri);
     }
     return res;
   }
 };
+
+// add new history object
+// remove duplicates
+// return new history array to set db
+util.removeDuplicateSearchHistory = (historyObj, history) => {
+  history.push(historyObj);
+
+  // console.log('history obj uri ', JSON.parse(decodeURIComponent(historyObj.uri) ));
+  let unique_arr = history.filter((v,i,a) =>
+    a.findIndex(t =>
+      (JSON.stringify(JSON.parse(decodeURIComponent(t.uri))) === JSON.stringify(JSON.parse(decodeURIComponent(v.uri)))))
+      ===
+      i
+    );
+  return unique_arr;
+}
 
 util.searchOnline = (body, value = {}) => {
   let searchItem = {};
