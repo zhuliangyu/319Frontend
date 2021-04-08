@@ -60,9 +60,8 @@ const SearchPage = () => {
       } else if (data.WorkCell) {
         await storage.ss.setPair('search_key', JSON.stringify({Email: data.WorkCell}));
         await storage.ss.setPair('basisName', data.WorkCell.values[0]);
-        document.getElementById('searchInput').value = data.WorkCell.values[0];
         await storage.ss.setPair('basisKeyName', JSON.stringify({key: 'WorkCell', name: data.WorkCell.values[0]}))
-
+        document.getElementById('searchInput').value = data.WorkCell.values[0];
       } else {
         //await storage.ss.setPair('basisName', await storage.db.searchDocument('metadata', {meta_id: }));
       }
@@ -74,7 +73,6 @@ const SearchPage = () => {
         return data;
       })
       .then(async (data) => {
-        console.log('search-page data', data);
         if(data.meta) {
           if(data.meta.length > 0) {
             let selectionRaw = data.meta;

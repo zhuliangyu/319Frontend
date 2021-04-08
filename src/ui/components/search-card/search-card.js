@@ -30,7 +30,6 @@ const NoFilterCardDiv = (props) => {
 
 const HasFilterCardDiv = (props) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
-    console.log('props', props);
 
     const handlePopoverOpen = (event) => {
       setAnchorEl(event.currentTarget);
