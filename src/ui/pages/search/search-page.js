@@ -48,7 +48,6 @@ const SearchPage = () => {
       let data = JSON.parse(decodeURIComponent(query.q));
       if(data.Name) {
         await storage.ss.setPair('search_key', JSON.stringify({Name: data.Name}));
-
         // check if search name with spaces
         if (data.Name.values.length > 1) {
           await storage.ss.setPair('basisName', data.Name.values.toString().replace(',', ' '));

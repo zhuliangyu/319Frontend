@@ -30,7 +30,7 @@ const SearchResults = (props) => {
   const [nextPageAvailable, setNextPageAvailable] = useState(false);
 
   const [showMore, setShowMore] = useState(false);
-  const forceUpdate = React.useReducer(bool => !bool)[1];
+  // const forceUpdate = React.useReducer(bool => !bool)[1];
   
   useEffect(() => {
     setSearchResults(props.data.results);
@@ -50,7 +50,7 @@ const SearchResults = (props) => {
       //continue;
     }
     setSearchResultsDisplayed(toShow);
-    forceUpdate();
+    // forceUpdate();
 
   }, [props]);
 
@@ -87,7 +87,7 @@ const SearchResults = (props) => {
     }
 
     setSearchResultsDisplayed(toShow);
-    forceUpdate();
+    // forceUpdate();
   }
 
   useEffect(() => {

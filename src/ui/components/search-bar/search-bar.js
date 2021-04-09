@@ -180,10 +180,10 @@ const SearchBar = (props) => {
       try {
         if (queries[Object.keys(queries)[0]].values[0] != "") {
           if (queries[Object.keys(queries)[0]].values.length > 1) {
-            console.log('length > 1')
+            // console.log('> 1', queries[Object.keys(queries)[0]].values.toString().replace(',', ' '));
             await storage.ss.setPair('basisName', queries[Object.keys(queries)[0]].values.toString().replace(',', ' '));
           } else {
-            console.log('length == 1')
+            // console.log('== 1', queries[Object.keys(queries)[0]].values[0]);
             await storage.ss.setPair('basisName', queries[Object.keys(queries)[0]].values[0]);
           }
   

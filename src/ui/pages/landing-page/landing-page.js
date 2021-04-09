@@ -24,13 +24,11 @@ const LandingPage = () => {
       document.querySelector("#searchInput").focus();
       let locales = await storage.db.searchDocument("metadata", {call_name: "Location"});
       setPinnedProfiles(await storage.db.searchDocument("pinnedProfiles", {status: "pinned"}));
+      
       storage.ss.setPair('search_key', null);
       storage.ss.setPair('basisName', null);
       storage.ss.setPair('basisKeyName', JSON.stringify({key: null, name: null}));
       storage.ss.setPair('current_search', null);
-      if (!storage.ls.getPair('searchHistory')) {
-        storage.ls.setPair('searchHistory', JSON.stringify([]));
-      }
       setCollegues(await locs(locales));
     });
   
