@@ -58,7 +58,7 @@ const SearchPage = () => {
         await storage.ss.setPair('basisKeyName', JSON.stringify({key: 'Email', name: data.Email.values[0]}))
         document.getElementById('searchInput').value = data.Email.values[0];
       } else if (data.WorkCell) {
-        await storage.ss.setPair('search_key', JSON.stringify({Email: data.WorkCell}));
+        await storage.ss.setPair('search_key', JSON.stringify({WorkCell: data.WorkCell}));
         await storage.ss.setPair('basisName', data.WorkCell.values[0]);
         await storage.ss.setPair('basisKeyName', JSON.stringify({key: 'WorkCell', name: data.WorkCell.values[0]}))
         document.getElementById('searchInput').value = data.WorkCell.values[0];
