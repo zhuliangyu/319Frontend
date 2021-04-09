@@ -84,8 +84,8 @@ search.postSearchResults = async(queries, uri = null) => {
 // remove duplicates
 // return new history array to set db
 util.removeDuplicateSearchHistory = (historyObj, history) => {
-  
-  history.push(historyObj);
+
+  history.unshift(historyObj);
 
   // console.log('history obj uri ', JSON.parse(decodeURIComponent(historyObj.uri) ));
   let unique_arr = history.filter((v,i,a) =>

@@ -11,8 +11,8 @@ const ResumeSearch = (props) => {
     useEffect(async () => {
         let data = await storage.db.toArray("searchHistory");
         data = data.slice(0, 8);
-        console.log(data.reverse());
-        syncSearchHistory(data.reverse());
+        console.log(data);
+        syncSearchHistory(data);
     }, []);
 
     const handleDelete = async (uid) => {
@@ -23,7 +23,7 @@ const ResumeSearch = (props) => {
         }
         await updateSearchHistory().then(async () => {
             await storage.db.clearTable('searchHistory');
-            await storage.db.updateDocuments('searchHistory', items.reverse());
+            await storage.db.updateDocuments('searchHistory', items);
         })
     };
 
