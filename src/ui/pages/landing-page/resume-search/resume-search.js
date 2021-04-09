@@ -6,19 +6,18 @@ import SearchCard from "../../../components/search-card";
 const ResumeSearch = (props) => {
     const [searchHistory, syncSearchHistory] = useState([]);
 
-    // console.log(searchHistoryLS);
-
     useEffect(async () => {
         let data = await storage.db.toArray("searchHistory");
         data = data.slice(0, 8);
-        console.log(data);
-        syncSearchHistory(data);
+        let sortedDataDescending = data.sort((a, b) => (a.timestamp < b.timestamp) ? 1 : -1);
+        syncSearchHistory(sortedDataDescending);
     }, []);
 
     const handleDelete = async (uid) => {
         let items = [...searchHistory];
         async function updateSearchHistory() {
           items = items.filter(item => item.uid !== uid);
+          console.log('items', items);
           syncSearchHistory(items);
         }
         await updateSearchHistory().then(async () => {
@@ -34,9 +33,9 @@ const ResumeSearch = (props) => {
                 {searchHistory.length > 0 ? (
                     searchHistory.map((historyItem) => (
                         <SearchCard
+                            // key={`${searchHistory.indexOf(historyItem)}-${historyItem.uid}`}
                             key={historyItem.uid}
                             data={historyItem}
-                            id={historyItem.uid}
                             deleteFn={() => {
                                 handleDelete(historyItem.uid);
                             }}
