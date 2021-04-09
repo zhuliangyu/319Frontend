@@ -244,7 +244,7 @@ const SearchCard = (props) => {
                 }
                 // set data state
                 setData(allData);
-                console.log(allData);
+                // console.log(allData);
             }
         }
 
