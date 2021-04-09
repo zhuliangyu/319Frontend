@@ -36,7 +36,7 @@ const ProfileSkill = (props) => {
 
         let qstr = await filters.getQS(metas, null, [raw]);
         storage.ss.setPair('search_key', null);
-        storage.ss.setPair('basisKeyName', null);
+        storage.ss.setPair('basisKeyName', {key: null, name: null});
         storage.ss.setPair('basisName', null);
         await storage.ss.setPair('basisURI', qstr);
         history.push(`/search/?q=${qstr}`);
