@@ -217,9 +217,10 @@ const SearchCard = (props) => {
                         };
                         filtersData.push(filterData);
                     }
+                    let basisKeyName = JSON.parse(props.data.basisKeyName);
                     let obj = {
                         hasFilters: true,
-                        hasName: props.data.name !== 'null' && props.data.name !== null,
+                        hasBasisKeyName: basisKeyName.key !== null && basisKeyName.name !== null,
                         filters: filtersData,
                         name: props.data.name,
                         keyName: JSON.parse(props.data.basisKeyName),
