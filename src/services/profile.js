@@ -21,7 +21,15 @@ export const getProfileResults = async(employeeID) => {
                     result.info.loc = loc[0];
                     return result;
                 } catch (error) {
-                    window.location.reload();
+                    let rFlag = null;
+                    let interval = setInterval(async() => {
+                        rFlag = await storage.ss.getFlag('filters');
+                        if (rFlag == true) {
+                            clearInterval(interval);
+                            window.location.reload();
+                        }
+
+                    }, 2000);
                 }
                 
                 },

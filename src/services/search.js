@@ -160,7 +160,15 @@ util.saveResult = async(results) => {
           await storage.db.addDocument('searchResults', result);
         }
       } catch(e) {
-        window.location.reload();
+        let rFlag = null;
+        let interval = setInterval(async() => {
+            rFlag = await storage.ss.getFlag('filters');
+            if (rFlag == true) {
+                clearInterval(interval);
+                window.location.reload();
+            }
+
+        }, 2000);
       }
     }
 
