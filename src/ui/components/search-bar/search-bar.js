@@ -232,13 +232,13 @@ const SearchBar = (props) => {
           vals.push(rest);
           queries = {
             ...queries,
-            [selectedFilters[i].filter_name]: {type:"OR",values:vals},
+            [selectedFilters[i].filter_name]: {type:"AND",values:vals},
           };
 
         } else if (splitName.length === 2) {
           queries = {
             ...queries,
-            [selectedFilters[i].filter_name]: {type:"OR",values:splitName},
+            [selectedFilters[i].filter_name]: {type:"AND",values:splitName},
           };
         // single word name
         } else {
