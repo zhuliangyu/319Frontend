@@ -52,7 +52,6 @@ search.postSearchResults = async(queries, uri = null) => {
 
     } else if (evaluation) {
       let hist = await storage.db.toArray('searchHistory');
-      console.table(hist);
       if(hist.length > 0) {
         hist.pop();
       }
@@ -65,7 +64,6 @@ search.postSearchResults = async(queries, uri = null) => {
       res = await util.searchOnline(uri);
     } else {
       let hist = await storage.db.toArray('searchHistory');
-      console.table(hist);
 
       if(hist.length >= 8) {
         hist = hist.splice(0,8);
