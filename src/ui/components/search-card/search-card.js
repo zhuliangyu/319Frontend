@@ -24,6 +24,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));  
 
+
+// no filters
 const NoFilterCardDiv = (props) => {
     return (
         <div className="profile-details">
@@ -38,6 +40,7 @@ const NoFilterCardDiv = (props) => {
     );
 };
 
+// basis name (name, cell, email) and filters
 const HasFilterAndNameCardDiv = (props) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -112,6 +115,7 @@ const HasFilterAndNameCardDiv = (props) => {
     );
 };
 
+// only filters
 const HasFilterCardNoBasisKeyNameDiv = (props) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -234,12 +238,13 @@ const SearchCard = (props) => {
                     );
                     for (let key of keys) {
                         let value = decodedURI[key].values[0];
-                        let obj = { hasFilters: false, key: key, value: value };
+                        let obj = { hasFilters: false, hasBasisKeyName: false, key: key, value: value };
                         allData = obj;
                     }
                 }
                 // set data state
                 setData(allData);
+                console.log(allData);
             }
         }
 
@@ -273,15 +278,17 @@ const SearchCard = (props) => {
             </CardActions>
 
             <CardActionArea onClick={handleCardOnClick}>
-                {data.hasFilters ? (
-                    data.hasName ? (
-                        <HasFilterAndNameCardDiv data={data} />
+                {
+                    data.hasFilters ? (
+                        data.hasBasisKeyName ? (
+                            <HasFilterAndNameCardDiv data={data} />
+                        ) : (
+                            <HasFilterCardNoBasisKeyNameDiv data={data} />
+                        )
                     ) : (
-                        <HasFilterCardNoBasisKeyNameDiv data={data} />
+                        <NoFilterCardDiv data={data} />
                     )
-                ) : (
-                    <NoFilterCardDiv data={data} />
-                )}
+                }
             </CardActionArea>
         </Card>
     );
