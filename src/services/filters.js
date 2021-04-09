@@ -45,7 +45,7 @@ filters.get = () => {
     return queryObj;
 }
 
-filters.getQS = (selection, attach = null, raw = [], skillType = 'OR') => {
+filters.getQS = (selection, attach = null, raw = [], skillType = 'AND') => {
     return new Promise(async(resolve) => {
         let localQuueryObj = {};
         for (const e of selection) {
