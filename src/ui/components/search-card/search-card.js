@@ -31,9 +31,9 @@ const SearchCard = (props) => {
     const [uri, setURI] = useState(props.data.uri);
     const [decodedUri, setDecodedUri] = useState(null);
     const [data, setData] = useState([]);
+    const [skillType, setSkillType] = useState('AND');
 
     useEffect(async () => {
-        // EventEmitter.emit('Loading');
         let temp = await parseUri();
         setData(temp);
     }, []);
@@ -44,7 +44,14 @@ const SearchCard = (props) => {
 
             let allData;
             let decodedURI = JSON.parse(decodeURIComponent(props.data.uri));
+            let decodedSkillType;
             setDecodedUri(decodedURI);
+
+            if (Object.keys(decodedURI).includes('Skill')) {
+                decodedSkillType = decodedURI.Skill.type;
+                setSkillType(decodedURI.Skill.type);
+            }
+
             if (decodedURI.meta) {
                 // if there are filters
                 if (decodedURI.meta.length > 0) {
@@ -69,6 +76,8 @@ const SearchCard = (props) => {
             async function parseObjectWithMetas() {
                 let selectionRaw = decodedURI.meta;
                 let filtersData = [];
+                let skills = [];
+                
                 // only push one meta id
                 // check if it is has a double underscore, which means duplicate group
                 await createFiltersData();
@@ -77,6 +86,7 @@ const SearchCard = (props) => {
                     hasFilters: true,
                     hasBasisKeyName: basisKeyName.key !== null &&
                         basisKeyName.name !== null,
+                    hasMoreThanOneSkill: skills.length > 1,
                     filters: filtersData,
                     name: props.data.name,
                     keyName: basisKeyName,
@@ -92,11 +102,11 @@ const SearchCard = (props) => {
                             metaIdNoDup: splitFilterByUnderscore[0],
                             details: detail,
                         };
+                        if (detail.call_name === 'Skill') skills.push(filterData);
                         filtersData.push(filterData);
                     }
                 }
             }
-            // EventEmitter.emit('Loaded')
             res(allData);
         })
     }
@@ -124,9 +134,9 @@ const SearchCard = (props) => {
             <CardActionArea onClick={handleCardOnClick}>
                 {data.hasFilters ? (
                     data.hasBasisKeyName ? (
-                        <HasFilterAndNameCardDiv data={data} />
+                        <HasFilterAndNameCardDiv data={data} skillType={skillType} />
                     ) : (
-                        <HasFilterCardNoBasisKeyNameDiv data={data} />
+                        <HasFilterCardNoBasisKeyNameDiv data={data} skillType={skillType} />
                     )
                 ) : (
                     <NoFilterCardDiv data={data} />
@@ -233,6 +243,21 @@ const HasFilterAndNameCardDiv = (props) => {
                                         {filter.details.value_name}
                                     </Typography>
                                 ))}
+                            {
+                                props.data.hasMoreThanOneSkill ? (
+                                    <Typography variant="caption">
+                                        {
+                                            props.skillType === 'AND' ? (
+                                                '(all of the skills listed)'
+                                            ) : (
+                                                '(any of the skills listed)'
+                                            )
+                                        }
+                                    </Typography>
+                                ) : (
+                                    null
+                                )
+                            }
                         </Popover>
                     </>
                 ) : null}
@@ -305,7 +330,23 @@ const HasFilterCardNoBasisKeyNameDiv = (props) => {
                                         {filter.details.call_name} -{" "}
                                         {filter.details.value_name}
                                     </Typography>
-                                ))}
+                                ))
+                            }
+                            {
+                                props.data.hasMoreThanOneSkill ? (
+                                    <Typography variant="caption">
+                                        {
+                                            props.skillType === 'AND' ? (
+                                                '(all of the skills listed)'
+                                            ) : (
+                                                '(any of the skills listed)'
+                                            )
+                                        }
+                                    </Typography>
+                                ) : (
+                                    null
+                                )
+                            }
                         </Popover>
                     </>
                 ) : null}
