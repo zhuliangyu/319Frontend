@@ -198,6 +198,7 @@ const SearchBar = (props) => {
         }
       } catch (error) {
         await storage.ss.setPair('basisName', "(Blank Search)");
+
         queries = null;
         //alert('Blank Search - You must select at least one filter or enter a keyword to search');
         //return;
@@ -255,7 +256,10 @@ const SearchBar = (props) => {
             [selectedFilters[i].filter_name]: {type:"OR",values:[selectedFilters[i].inputValue]},
           };
         }
-      
+      // blank search
+      } else if (selectedFilters[i].filter_name === '') {
+        queries = '(Blank Search)';
+
       // regular query
       } else {
         queries = {

@@ -62,6 +62,8 @@ search.postSearchResults = async(queries, uri = null) => {
       await storage.db.clearTable('searchHistory');
       await storage.db.updateDocuments('searchHistory', newHist);
       res = await util.searchOnline(uri);
+    } else if (basisName === '(Blank Search)' && JSON.parse(decodeURIComponent(current)) === null) {
+      res = await util.searchOnline(uri);
     } else {
       let hist = await storage.db.toArray('searchHistory');
 
@@ -144,6 +146,8 @@ search.detectType = (input) => {
   if (regexp.test(String(input).toLowerCase())) {
     return "WorkCell";
   }
+
+  if (input === "") return ''
 
   return 'Name';
 }

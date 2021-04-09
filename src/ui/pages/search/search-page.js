@@ -70,7 +70,7 @@ const SearchPage = () => {
         document.getElementById('searchInput').value = data.WorkCell.values[0];
       } else {
         await storage.ss.setPair('basisKeyName', JSON.stringify({key: null, name: null}))
-        await storage.ss.setPair('basisName', null);
+        // await storage.ss.setPair('basisName', null);
       }
       search.postSearchResults(null, data)
       .then(async(res) => {
