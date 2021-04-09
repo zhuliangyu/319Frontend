@@ -8,13 +8,11 @@ import theme from "./ui/MuiTheme";
 import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(
-  <React.StrictMode>
-      <ThemeProvider theme={theme}>
-          <BrowserRouter>
+    <ThemeProvider theme={theme}>
+        <BrowserRouter>
             <App />
-          </BrowserRouter>
-      </ThemeProvider>
-  </React.StrictMode>,
+        </BrowserRouter>
+    </ThemeProvider>,
   document.getElementById("root")
 );
 

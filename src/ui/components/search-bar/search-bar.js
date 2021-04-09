@@ -106,22 +106,22 @@ const SearchBar = (props) => {
     let exitId = document.querySelector('.searchAuto-selected').id;
     document.querySelector(`#${exitId}`).classList.remove("searchAuto-selected");
     document.querySelector(`#searchAuto-item-1`).classList.add("searchAuto-selected");
-    let detectedFilter = search.detectType(element.value)
+    let detectedFilter = search.detectType(element.value.trim())
     if(detectedFilter.toLowerCase() == 'workcell') {
-      let number = element.value;
+      let number = element.value.trim();
       let neutral = ('' + number).replace(/\D/g, '');
       let components = neutral.match(/^(\d{3})(\d{3})(\d{4})$/);
       number = components[1] + '-' + components[2] + '-' + components[3];
       element.value = number;
     }
-    setValue({inputValue: element.value, filter_name: detectedFilter, queryId: detectedFilter.toLowerCase()});
-    if (element.value != "") {
+    setValue({inputValue: element.value.trim(), filter_name: detectedFilter, queryId: detectedFilter.toLowerCase()});
+    if (element.value.trim() != "") {
       document.getElementById('searchAuto').style.setProperty("display", "block");
     } else {
       document.getElementById('searchAuto').style.setProperty("display", "none");
     }
 
-    if (element.value.length >= 3) {
+    if (element.value.trim().length >= 3) {
       let allFilters = await storage.db.toArray('metadata');
       let allProfiles = await storage.db.toArray('viewHistory');
 
@@ -142,7 +142,7 @@ const SearchBar = (props) => {
       allFilters = buildManifest;
 
       let filterResults = allFilters.filter((item) => {
-        return item.value_name.toLowerCase().includes(element.value.toLowerCase());
+        return item.value_name.toLowerCase().includes(element.value.trim().toLowerCase());
       });
       resultMax = filterOffset + filterResults.length -1;
       setProfileOffset(filterOffset + filterResults.length);
@@ -151,7 +151,7 @@ const SearchBar = (props) => {
       let profResults = allProfiles.filter((item) => {
         if (detectedFilter == "Email") {
           try {
-            return item.email.toLowerCase().includes(element.value.toLowerCase());
+            return item.email.toLowerCase().includes(element.value.trim().toLowerCase());
           } catch (e) {
             return false;
           }
@@ -168,7 +168,7 @@ const SearchBar = (props) => {
     }
 
     // TODO: not accurate. needs to set the value filter, not the whole array
-    setSelectedFilters([{inputValue: element.value, filter_name: detectedFilter, queryId: detectedFilter.toLowerCase()}]);
+    setSelectedFilters([{inputValue: element.value.trim(), filter_name: detectedFilter, queryId: detectedFilter.toLowerCase()}]);
 
     // console.log("handleOnChange newValue", newValue);
   };
@@ -177,13 +177,19 @@ const SearchBar = (props) => {
     handleInputBlur();
     let queries = await makeQueries();
     let raw = [metadata];
+
     if (metadata == null) {
       metadata = [];
       raw = [];
       try {
         if (queries[Object.keys(queries)[0]].values[0] != "") {
-          await storage.ss.setPair('basisName', queries[Object.keys(queries)[0]].values[0]);
-          // await storage.ss.setPair('basisKeyName', JSON.stringify({ key: Object.keys(queries)[0], name: queries[Object.keys(queries)[0]].values[0]}));
+          if (queries[Object.keys(queries)[0]].values.length > 1) {
+            // console.log('> 1', queries[Object.keys(queries)[0]].values.toString().replace(',', ' '));
+            await storage.ss.setPair('basisName', queries[Object.keys(queries)[0]].values.toString().replace(',', ' '));
+          } else {
+            // console.log('== 1', queries[Object.keys(queries)[0]].values[0]);
+            await storage.ss.setPair('basisName', queries[Object.keys(queries)[0]].values[0]);
+          }
   
         } else {
           await storage.ss.setPair('basisName', '(Blank Search)');
@@ -213,7 +219,7 @@ const SearchBar = (props) => {
     let qstr = await filters.getQS(metadata, queries, raw);
     await storage.ss.setPair('basisURI', qstr);
     await storage.ss.setPair('currentURI', null);
-    console.table(qstr);
+    // console.table(qstr);
     history.push(`/search?q=${qstr}`);
   };
 
@@ -221,10 +227,47 @@ const SearchBar = (props) => {
     let queries;
 
     for (let i = 0; i < selectedFilters.length; i++) {
-      queries = {
-        ...queries,
-        [selectedFilters[i].filter_name]: {type:"OR",values:[selectedFilters[i].inputValue]},
-      };
+
+      // handle full name search
+      if (selectedFilters[i].filter_name === 'Name') {
+        let splitName = selectedFilters[i].inputValue.split(" ").filter(d => d !== "");
+
+        // longer than 3 word name
+        if (splitName.length > 2) {
+          let vals = [];
+          vals.push(splitName.shift());
+          let rest = splitName.toString().replace(',', ' ');
+          vals.push(rest);
+          queries = {
+            ...queries,
+            [selectedFilters[i].filter_name]: {type:"AND",values:vals},
+          };
+
+        } else if (splitName.length === 2) {
+          queries = {
+            ...queries,
+            [selectedFilters[i].filter_name]: {type:"AND",values:splitName},
+          };
+        // single word name
+        } else {
+          queries = {
+            ...queries,
+            [selectedFilters[i].filter_name]: {type:"OR",values:[selectedFilters[i].inputValue]},
+          };
+        }
+      
+      // regular query
+      } else {
+        queries = {
+          ...queries,
+          [selectedFilters[i].filter_name]: {type:"OR",values:[selectedFilters[i].inputValue]},
+        };
+      }
+
+      // queries = {
+      //   ...queries,
+      //   [selectedFilters[i].filter_name]: {type:"OR",values:[selectedFilters[i].inputValue]},
+      // };
     }
 
     //ONLY FOR DEMO, REMOVE LATER
@@ -236,7 +279,7 @@ const SearchBar = (props) => {
         queries = JSON.parse(resp);
       }
     }
-    console.log(selectedFilters.length);
+    // console.log(selectedFilters.length);
     return queries;
   }
 
