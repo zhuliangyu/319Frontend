@@ -38,7 +38,7 @@ const NoFilterCardDiv = (props) => {
     );
 };
 
-const HasFilterCardDiv = (props) => {
+const HasFilterAndNameCardDiv = (props) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -219,7 +219,7 @@ const SearchCard = (props) => {
                     }
                     let obj = {
                         hasFilters: true,
-                        hasName: props.data.name !== 'null',
+                        hasName: props.data.name !== 'null' && props.data.name !== null,
                         filters: filtersData,
                         name: props.data.name,
                         keyName: JSON.parse(props.data.basisKeyName),
@@ -274,7 +274,7 @@ const SearchCard = (props) => {
             <CardActionArea onClick={handleCardOnClick}>
                 {data.hasFilters ? (
                     data.hasName ? (
-                        <HasFilterCardDiv data={data} />
+                        <HasFilterAndNameCardDiv data={data} />
                     ) : (
                         <HasFilterCardNoBasisKeyNameDiv data={data} />
                     )
