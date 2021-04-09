@@ -103,6 +103,7 @@ util.searchOnline = (body, value = {}) => {
         // console.table(body);
         let results = response.data.results;
         let total = response.data.total;
+        let msg = response.data.msg;
         await util.saveResult(results);
         if (Object.keys(value).length !== 0) {
           searchItem = {
@@ -115,7 +116,7 @@ util.searchOnline = (body, value = {}) => {
           }
         }
         // storage.ss.setPair('current_search', JSON.stringify(searchItem));
-        resolve({results: results, total: total});
+        resolve({results: results, total: total, msg: msg});
       },
       (error) => {
         console.log(error);

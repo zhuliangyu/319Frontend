@@ -28,6 +28,7 @@ const SearchBar = (props) => {
   const [filterOffset, setFilterOffset] = useState(2);
   const [profileOffset, setProfileOffset] = useState(null);
 
+
   useEffect(async()=> {
     document.getElementById('searchDeselect').style.setProperty("display", "none");
     let input = document.getElementById("searchInput");
@@ -76,9 +77,9 @@ const SearchBar = (props) => {
       "try searching for 'Victor'...",
       "Search here...",
       "try searching for 'Victoria'...",
-      "Your brand new search expeirence is here :)",
+      "Your brand new search experience is here :)",
       "Pro tip: use arrow keys to select autocomplete options!",
-      "Pro tip: Press enter to do a blank search"
+      "Pro tip: you'll see profiles you've viewed in autocomplete."
     ]
     let x = Math.round(Math.random() * (choices.length-1));
     const data = choices[x];
@@ -91,6 +92,10 @@ const SearchBar = (props) => {
 
   const handleInputFocus = () => {
     document.getElementById('searchInput').removeAttribute('readonly');
+    let temp = document.getElementById('searchInput').value;
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchInput').value = temp;
+    handleOnChange(null, document.getElementById('searchInput'));
     if (document.getElementById('searchInput').value != "") {
       document.getElementById('searchAuto').style.setProperty("display", "block");
       document.getElementById('searchDeselect').style.setProperty("display", "block");
@@ -181,18 +186,21 @@ const SearchBar = (props) => {
           // await storage.ss.setPair('basisKeyName', JSON.stringify({ key: Object.keys(queries)[0], name: queries[Object.keys(queries)[0]].values[0]}));
   
         } else {
-          await storage.ss.setPair('basisName', null);
-          alert('Blank Search - You must select at least one filter or enter a keyword to search');
-          return;
+          await storage.ss.setPair('basisName', '(Blank Search)');
+          queries = null;
+          //alert('Blank Search - You must select at least one filter or enter a keyword to search');
         }
       } catch (error) {
-        alert('Blank Search - You must select at least one filter or enter a keyword to search');
-        return;
+        await storage.ss.setPair('basisName', "(Blank Search)");
+        queries = null;
+        //alert('Blank Search - You must select at least one filter or enter a keyword to search');
+        //return;
       }
       
     } else {
       if (document.getElementById('searchInput').value == "") {
-        return;
+        await storage.ss.setPair('basisName', "(Blank Search)");
+        //return;
       }
       metadata = metadata.split("__");
       document.querySelector('#searchInput').value = '';

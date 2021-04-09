@@ -67,7 +67,7 @@ const SearchPage = () => {
       }
       search.postSearchResults(null, data)
       .then(async(res) => {
-        // console.log(res);
+        //alert("!"+JSON.stringify(res));
         setSearchResults(res);
         await storage.ss.setPair('currentURI', encodeURIComponent(JSON.stringify(data)));
         return data;

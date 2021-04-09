@@ -31,6 +31,7 @@ const SearchResults = (props) => {
 
   const [showMore, setShowMore] = useState(false);
   const forceUpdate = React.useReducer(bool => !bool)[1];
+  const [msg, setMsg] = useState("Looked here, there and everywhere - but couldn't find the person you're looking for.");
   
   useEffect(() => {
     setSearchResults(props.data.results);
@@ -49,6 +50,8 @@ const SearchResults = (props) => {
     } catch (e) {
       //continue;
     }
+    //alert(JSON.stringify(props.data))
+    setMsg(props.data.msg);
     setSearchResultsDisplayed(toShow);
     forceUpdate();
 
@@ -118,7 +121,7 @@ const SearchResults = (props) => {
               )
               )
           ):(
-            <center><b>{`👀 Looked here, there and everywhere - but couldn't find the person you're looking for.`}</b></center>
+            <center><b>{`👀 ${msg}`}</b></center>
             //null
           ))
           ) : 
