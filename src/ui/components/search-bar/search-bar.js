@@ -172,13 +172,20 @@ const SearchBar = (props) => {
     handleInputBlur();
     let queries = await makeQueries();
     let raw = [metadata];
+
+    console.log('queries', queries);
     if (metadata == null) {
       metadata = [];
       raw = [];
       try {
         if (queries[Object.keys(queries)[0]].values[0] != "") {
-          await storage.ss.setPair('basisName', queries[Object.keys(queries)[0]].values[0]);
-          // await storage.ss.setPair('basisKeyName', JSON.stringify({ key: Object.keys(queries)[0], name: queries[Object.keys(queries)[0]].values[0]}));
+          if (queries[Object.keys(queries)[0]].values.length > 1) {
+            console.log('length > 1')
+            await storage.ss.setPair('basisName', queries[Object.keys(queries)[0]].values.toString().replace(',', ' '));
+          } else {
+            console.log('length == 1')
+            await storage.ss.setPair('basisName', queries[Object.keys(queries)[0]].values[0]);
+          }
   
         } else {
           await storage.ss.setPair('basisName', null);
@@ -213,14 +220,47 @@ const SearchBar = (props) => {
     let queries;
 
     for (let i = 0; i < selectedFilters.length; i++) {
+
+      // handle full name search
       if (selectedFilters[i].filter_name === 'Name') {
-        console.log('selectedFilters[i].filter_name', selectedFilters[i].filter_name);
-        console.log('selectedFilters[i].inputValue', selectedFilters[i].inputValue);  
+        let splitName = selectedFilters[i].inputValue.split(" ").filter(d => d !== "");
+
+        // longer than 3 word name
+        if (splitName.length > 2) {
+          let vals = [];
+          vals.push(splitName.shift());
+          let rest = splitName.toString().replace(',', ' ');
+          vals.push(rest);
+          queries = {
+            ...queries,
+            [selectedFilters[i].filter_name]: {type:"OR",values:vals},
+          };
+
+        } else if (splitName.length === 2) {
+          queries = {
+            ...queries,
+            [selectedFilters[i].filter_name]: {type:"OR",values:splitName},
+          };
+        // single word name
+        } else {
+          queries = {
+            ...queries,
+            [selectedFilters[i].filter_name]: {type:"OR",values:[selectedFilters[i].inputValue]},
+          };
+        }
+      
+      // regular query
+      } else {
+        queries = {
+          ...queries,
+          [selectedFilters[i].filter_name]: {type:"OR",values:[selectedFilters[i].inputValue]},
+        };
       }
-      queries = {
-        ...queries,
-        [selectedFilters[i].filter_name]: {type:"OR",values:[selectedFilters[i].inputValue]},
-      };
+
+      // queries = {
+      //   ...queries,
+      //   [selectedFilters[i].filter_name]: {type:"OR",values:[selectedFilters[i].inputValue]},
+      // };
     }
 
     //ONLY FOR DEMO, REMOVE LATER
@@ -232,7 +272,7 @@ const SearchBar = (props) => {
         queries = JSON.parse(resp);
       }
     }
-    console.log(selectedFilters.length);
+    // console.log(selectedFilters.length);
     return queries;
   }
 

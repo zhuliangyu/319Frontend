@@ -48,9 +48,17 @@ const SearchPage = () => {
       let data = JSON.parse(decodeURIComponent(query.q));
       if(data.Name) {
         await storage.ss.setPair('search_key', JSON.stringify({Name: data.Name}));
-        await storage.ss.setPair('basisName', data.Name.values[0]);
-        await storage.ss.setPair('basisKeyName', JSON.stringify({key: 'Name', name: data.Name.values[0]}))
-        document.getElementById('searchInput').value = data.Name.values[0];
+
+        // check if search name with spaces
+        if (data.Name.values.length > 1) {
+          await storage.ss.setPair('basisName', data.Name.values.toString().replace(',', ' '));
+          await storage.ss.setPair('basisKeyName', JSON.stringify({key: 'Name', name: data.Name.values.toString().replace(',', ' ')}))
+          document.getElementById('searchInput').value = data.Name.values.toString().replace(',', ' ');
+        } else {
+          await storage.ss.setPair('basisName', data.Name.values[0]);
+          await storage.ss.setPair('basisKeyName', JSON.stringify({key: 'Name', name: data.Name.values[0]}))
+          document.getElementById('searchInput').value = data.Name.values[0];  
+        }
       } else if(data.Email) {
         await storage.ss.setPair('search_key', JSON.stringify({Email: data.Email}));
         await storage.ss.setPair('basisName', data.Email.values[0]);
