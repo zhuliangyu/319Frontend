@@ -46,7 +46,6 @@ const SearchPage = () => {
       }
       setSearchResults([]);
       let data = JSON.parse(decodeURIComponent(query.q));
-      console.log('data decoded', data);
       if(data.Name) {
         await storage.ss.setPair('search_key', JSON.stringify({Name: data.Name}));
         await storage.ss.setPair('basisName', data.Name.values[0]);
@@ -64,6 +63,7 @@ const SearchPage = () => {
         document.getElementById('searchInput').value = data.WorkCell.values[0];
       } else {
         await storage.ss.setPair('basisKeyName', JSON.stringify({key: null, name: null}))
+        await storage.ss.setPair('basisName', null);
       }
       search.postSearchResults(null, data)
       .then(async(res) => {
