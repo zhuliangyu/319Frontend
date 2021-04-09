@@ -173,7 +173,6 @@ const SearchBar = (props) => {
     let queries = await makeQueries();
     let raw = [metadata];
 
-    console.log('queries', queries);
     if (metadata == null) {
       metadata = [];
       raw = [];
@@ -212,7 +211,7 @@ const SearchBar = (props) => {
     let qstr = await filters.getQS(metadata, queries, raw);
     await storage.ss.setPair('basisURI', qstr);
     await storage.ss.setPair('currentURI', null);
-    console.table(qstr);
+    // console.table(qstr);
     history.push(`/search?q=${qstr}`);
   };
 
