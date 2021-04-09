@@ -74,6 +74,8 @@ function TabPanel(props) {
                   setANDSkill(true);
                   await storage.ss.setPair('skillType', 'AND');
                 }
+              } else {
+                await storage.ss.setPair('skillType', 'AND');
               }
               console.warn(data);
               if(data.meta) {

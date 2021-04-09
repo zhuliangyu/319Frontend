@@ -38,12 +38,12 @@ const SearchPage = () => {
     let query = qs.parse(location.search);
     if (query.q) {
       
-      if (query.q == `{"meta":[]}`) {
+      /*if (query.q == `{"meta":[]}`) {
 
         alert("Blank Search - You must select at least one filter or enter a keyword to search");
         window.history.back();
         return;
-      }
+      }*/
       setSearchResults([]);
       let data = JSON.parse(decodeURIComponent(query.q));
       console.log('data decoded', data);
