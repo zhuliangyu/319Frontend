@@ -27,6 +27,7 @@ search.postSearchResults = async(queries, uri = null) => {
           : util.createBodyNameForNumberOrEmail(filterName, inputValue);
 
       // Decide Here
+      console.log('reached original search');
       
 
       let res = await util.searchOnline(body, value);
