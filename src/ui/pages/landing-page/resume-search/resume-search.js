@@ -17,7 +17,6 @@ const ResumeSearch = (props) => {
         let items = [...searchHistory];
         async function updateSearchHistory() {
           items = items.filter(item => item.uid !== uid);
-          console.log('items', items);
           syncSearchHistory(items);
         }
         await updateSearchHistory().then(async () => {
