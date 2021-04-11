@@ -110,7 +110,7 @@ util.searchOnline = (body, value = {}) => {
         let results = response.data.results;
         let total = response.data.total;
         let msg = response.data.msg;
-        await util.saveResult(results);
+        // await util.saveResult(results);
         if (Object.keys(value).length !== 0) {
           searchItem = {
             keyword: value,
