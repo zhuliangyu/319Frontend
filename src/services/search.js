@@ -45,12 +45,13 @@ search.postSearchResults = async(queries, uri = null) => {
     let basisName = await storage.ss.getPair('basisName');
     let basisKeyName = await storage.ss.getPair('basisKeyName');
     if (basisName == '') basisName = "(Blank Search)";
-    if ((basis === current) && (basis) && (current)) {
-      let data = await storage.db.toArray('searchResults');
-      res.results = data;
-      res.total = data.length;
+    // if ((basis === current) && (basis) && (current)) {
+    //   let data = await storage.db.toArray('searchResults');
+    //   res.results = data;
+    //   res.total = data.length;
 
-    } else if (evaluation) {
+    // } else 
+    if (evaluation) {
       let hist = await storage.db.toArray('searchHistory');
       if(hist.length > 0) {
         hist.pop();
